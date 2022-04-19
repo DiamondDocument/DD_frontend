@@ -5,7 +5,6 @@ import {createStore} from 'vuex'
 
 export default new createStore({
   state: {
-    userId:'', //全局状态用户ID
   },
   mutations: {
   },
