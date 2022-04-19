@@ -14,7 +14,6 @@
 <script>
 import qs from "qs";
 import { getCurrentInstance } from 'vue'
-import user from "@/store/user";
 
 export default {
   name: "Login",
@@ -26,14 +25,6 @@ export default {
   },
   methods: {
     login: function () {
-      this.$store.dispatch('saveUserInfo', {
-        user: {
-          'userId': this.userId,
-          'pwd': this.pwd
-        }
-      });
-      //window.alert(localStorage.getItem(user.state().user))
-      window.alert(this.$getUser.getUser())
 
       this.$axios({
         method: 'post',
