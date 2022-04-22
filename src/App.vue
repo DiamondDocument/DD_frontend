@@ -18,6 +18,7 @@
 
 nav {
   padding: 30px;
+  background-color: silver;
 }
 
 nav a {

@@ -16,6 +16,11 @@ const routes = [
     path: '/api/register',
     name: 'register',
     component: () => import('../views/api/Register.vue')
+  },
+  {
+    path: '/api/message',
+    name: 'message',
+    component: () => import('../views/api/Message.vue')
   }
 ]
 
