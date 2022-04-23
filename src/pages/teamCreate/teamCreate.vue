@@ -32,7 +32,7 @@ export default {
         data: qs.stringify({      /* 将 json 数据序列化发送后端 */
           teamName: this.teamName,
           teamIntroduction: this.teamIntroduction,
-          userId: this.$getUSer().userId
+          userId: this.$userId
         })
       })
           .then(res => {              /* 获取后端response */
