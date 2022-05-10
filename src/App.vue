@@ -1,26 +1,13 @@
+//主要职责：用户进入网站时，App判断用户cookie来判断是否登录，如果登录直接跳转到工作台，如果没有则进入欢迎界面
 <template>
-
-  <nav>
-    <router-link to="/">主页</router-link> |
-    <router-link to="/login">登录</router-link> |
-    <router-link to="/register">注册</router-link>
-    <button v-on:click="goLogin" > 登录</button>
-  </nav>
   <router-view/>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
 export default {
   name: 'App',
-  components: {
-    HelloWorld
-  },
-  methods:{
-    goLogin(){
-      this.$router.resolve({path:"/Login"});
-    },
+  created() {
+    this.$router.push("/welcome");
   }
 }
 </script>

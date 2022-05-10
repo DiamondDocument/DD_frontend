@@ -1,52 +1,11 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png" style="position: center">
-    <p style="position: center">Welcome to DiamondDocument!</p>
-    <div class="shell">
-      <ul class="buttons">
-        <li class="li">
-          个人中心
-          <ul>
-            <li>xxx</li>
-            <li>aaa</li>
-            <li>bbb</li>
-            <li>ccc</li>
-          </ul>
-        </li>
-
-        <li class="li">
-          我的文档
-          <ul>
-            <li>xxx</li>
-            <li>aaa</li>
-            <li>bbb</li>
-            <li>ccc</li>
-          </ul>
-        </li>
-
-        <li class="li">
-          我的团队
-          <ul>
-            <li>xxx</li>
-            <li>aaa</li>
-            <li>bbb</li>
-            <li>ccc</li>
-          </ul>
-        </li>
-
-        <li class="li">
-          我的消息
-          <ul>
-            <li><router-link to="/message">查看</router-link></li>
-            <li>啦啦啦</li>
-            <li>bbb</li>
-            <li>ccc</li>
-          </ul>
-        </li>
-      </ul>
-    </div>
-  </div>
-
+  <p>欢迎页</p>
+  <nav>
+    <router-link to="/table">工作台</router-link> |
+    <router-link to="/login">登录</router-link> |
+    <router-link to="/register">注册</router-link>
+  </nav>
+  <router-view/>
 </template>
 
 <style>
