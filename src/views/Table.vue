@@ -1,7 +1,8 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png" style="position: center">
-    <p style="position: center">Welcome to DiamondDocument!</p>
+<!--    <img alt="Vue logo" src="../assets/logo.png" style="position: center">-->
+<!--    <p style="position: center">Welcome to DiamondDocument!</p>-->
+<!--    可不可以默认显示用户文件列表——lyh-->
     <div class="shell">
       <ul class="buttons">
         <li class="li">
@@ -75,7 +76,7 @@ template {
 }
 
 .shell {
-  /*float: left;*/
+  float: left;
   width: 320px;
   height: 640px;
   background-color: ghostwhite;
