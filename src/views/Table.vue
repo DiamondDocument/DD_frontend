@@ -45,6 +45,7 @@
         </li>
       </ul>
     </div>
+  <Space></Space>
   </div>
 
 </template>
@@ -137,11 +138,14 @@ template {
   background-color: #eeeeee;
 }
 </style>
+
 <script>
+import Space from "@/views/Space";
 
 export default {
   name: 'Table',
   components: {
+    Space
   }
 }
 </script>

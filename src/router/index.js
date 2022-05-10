@@ -54,6 +54,12 @@ const routes = [
     name: 'message',
     component: () => import('../views/Message.vue')
   },
+  {
+    path: '/space/:type',
+    //type = collection, my, team, recycle
+    name: 'space',
+    component: ()=> import('../views/Space')
+  },
 ]
 
 const router = createRouter({
