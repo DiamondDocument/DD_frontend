@@ -8,7 +8,7 @@
       <button type="submit" @click="login">登录</button>
     </form>
   </div>
-  <router-link to="/api/register">没有账号？点击注册</router-link>
+  <router-link to="/register">没有账号？点击注册</router-link>
 </template>
 
 <script>

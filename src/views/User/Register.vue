@@ -9,7 +9,8 @@
       <button type="submit" @click="register">注册</button>
     </form>
   </div>
-  <router-link to="/api/login">已有账号？点击登录</router-link>
+  <router-link to="/login">已有账号？点击登录</router-link>
+  <router-view></router-view>
 </template>
 
 <script>

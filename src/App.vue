@@ -2,12 +2,11 @@
 
   <nav>
     <router-link to="/">主页</router-link> |
-    <router-link to="/api/login">登录</router-link> |
-    <router-link to="/api/register">注册</router-link>
+    <router-link to="/login">登录</router-link> |
+    <router-link to="/register">注册</router-link>
+    <button v-on:click="goLogin" > 登录</button>
   </nav>
   <router-view/>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
 </template>
 
 <script>
@@ -17,11 +16,15 @@ export default {
   name: 'App',
   components: {
     HelloWorld
+  },
+  methods:{
+    goLogin(){
+      this.$router.resolve({path:"/Login"});
+    },
   }
 }
 </script>
 
->>>>>>> f7615f7 (init)
 <style>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
