@@ -43,7 +43,7 @@ const routes = [
       },
       {
         path: 'template/:type',
-        //type为recommend、my、collection三种
+        //type为recommend、my、collection和message
         name: 'template',
         component:() =>import('../views/Template/Template.vue'),
       },

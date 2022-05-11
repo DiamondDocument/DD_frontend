@@ -38,7 +38,7 @@
         <li class="li">
           我的消息
           <ul>
-            <li><router-link to="/message">查看</router-link></li>
+            <li @click="toMessage">查看</li>
             <li>啦啦啦</li>
             <li>bbb</li>
             <li>ccc</li>
@@ -46,7 +46,12 @@
         </li>
       </ul>
     </div>
-  <Space></Space>
+    <div v-if="type==='space'">
+      <Space></Space>
+    </div>
+    <div v-else-if="type==='message'">
+      <Message></Message>
+    </div>
   </div>
 
 </template>
@@ -140,13 +145,26 @@ template {
 }
 </style>
 
+
 <script>
 import Space from "@/views/Space";
+import Message from "@/views/Message";
 
 export default {
   name: 'Table',
+  data() {
+    return {
+      type: 'space'
+    }
+  },
   components: {
-    Space
+    Space,
+    Message
+  },
+  methods: {
+    toMessage() {
+      this.type = message;
+    }
   }
 }
 </script>
