@@ -5,12 +5,14 @@ import router from './router'
 import store from './store'
 import axios from 'axios'
 import func from './utils/UserFunc'//获取用户信息的全局方法
-
+import ElementPlus from 'element-plus'
+import 'element-plus/dist/index.css'
 
 const app = createApp(App)
 axios.defaults.baseURL = 'http://123.12.123.12:8000';
 
 app.use(store)
+    .use(ElementPlus)
     .use(router)
     .use(store)
     .use(router)

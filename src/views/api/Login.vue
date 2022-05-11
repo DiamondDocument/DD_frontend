@@ -1,14 +1,40 @@
 <template>
   <div class="login">
-    <form class="login-form">
-      <h1>登录</h1>
-      <label><input v-model="userId" type="text" placeholder="用户ID" class="id"></label>
-      <label><input v-model="pwd" type="password" placeholder="密码" class="password"
-                    @keyup.enter="login"></label>
-      <button type="submit" @click="login">登录</button>
-    </form>
+    <img src="../../assets/logo.png" alt="logo">
+    <br>
+    <div >
+      <label class="title">登录</label>
+    </div>
+    <br>
+    <div class="Wireframe">
+
+      <el-form
+        label-position= "top"
+        label-width="100px"
+        style="max-width: 460px"
+        >
+
+        <el-form-item label="用户名">
+          <el-input v-model="userId" />
+        </el-form-item>
+
+        <el-form-item label="密码">
+          <el-input v-model="pwd" type="password" class="password" @keyup.enter="login" />
+        </el-form-item>
+
+      </el-form>
+
+<!--      <button type="submit" @click="login">登录</button>-->
+      <el-button type="success" @click="login">登录</el-button>
+    </div>
   </div>
-  <router-link to="/api/register">没有账号？点击注册</router-link>
+  <br>
+  <div class="Wireframe">
+    <router-link to="">忘记密码？</router-link>
+    &nbsp;
+    <router-link to="/api/register">没有账号？点击注册</router-link>
+  </div>
+
 </template>
 
 <script>
@@ -71,5 +97,19 @@ export default {
 </script>
 
 <style scoped>
-
+img {
+  width: 80px;
+}
+.title {
+  font-size: 25px;
+}
+.Wireframe {
+  margin: 0 auto;
+  width: 400px;
+  border-style:solid;
+  border-color: lightgray;
+  border-width: 1px;
+  border-radius: 5px;
+  padding: 15px;
+}
 </style>

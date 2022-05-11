@@ -1,15 +1,57 @@
 <template>
+
   <div class="register">
+
     <form class="register-form">
-      <h1>注册</h1>
-      <label><input v-model="userId" type="text" placeholder="用户ID" class="id"></label>
-      <label><input v-model="pwd" type="password" placeholder="密码" class="password"></label>
-      <label><input v-model="email" type="text" placeholder="邮箱地址 选填" class="email"></label>
-      <label><input v-model="nickname" type="text" placeholder="昵称 选填" class="nickname"></label>
-      <button type="submit" @click="register">注册</button>
+
+      <img src="../../assets/logo.png" alt="logo"> <br>
+
+      <div >
+        <label class="title">注册</label>
+      </div> <br>
+
+      <div class="Wireframe">
+
+        <el-form
+            label-position= "top"
+            label-width="100px"
+            style="max-width: 460px"
+        >
+
+          <el-form-item label="用户名">
+            <el-input v-model="userId" />
+          </el-form-item>
+
+          <el-form-item label="密码">
+            <el-input v-model="pwd" type="password" />
+          </el-form-item>
+
+          <el-form-item label = "邮箱">
+            <el-input v-model="email" type="text" />
+          </el-form-item>
+
+          <el-form-item label="验证码">
+              <el-input v-model="code" type="text" style="width:70%"/>
+              <el-button type="primary" @click="sendCode">发送验证码</el-button>
+          </el-form-item>
+
+        </el-form>
+
+        <el-button type="success" @click="register">注册</el-button>
+
+      </div>
+
     </form>
-  </div>
+    <!--      <label><input v-model="userId" type="text" placeholder="用户ID" class="id"></label>-->
+    <!--      <label><input v-model="pwd" type="password" placeholder="密码" class="password"></label>-->
+    <!--      <label><input v-model="email" type="text" placeholder="邮箱地址 选填" class="email"></label>-->
+    <!--      <label><input v-model="nickname" type="text" placeholder="昵称 选填" class="nickname"></label>-->
+    <!--      <button type="submit" @click="register">注册</button>-->
+  </div><br>
+
+  <div class="Wireframe">
   <router-link to="/api/login">已有账号？点击登录</router-link>
+  </div>
 </template>
 
 <script>
@@ -68,5 +110,19 @@ export default {
 </script>
 
 <style scoped>
-
+img {
+  width: 80px;
+}
+.title {
+  font-size: 25px;
+}
+.Wireframe {
+  margin: 0 auto;
+  width: 400px;
+  border-style:solid;
+  border-color: lightgray;
+  border-width: 1px;
+  border-radius: 5px;
+  padding: 15px;
+}
 </style>
