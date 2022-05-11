@@ -7,7 +7,22 @@
   </nav>
   <router-view/>
 </template>
+<script>
+// @ is an alias to /src
+import HelloWorld from '@/components/HelloWorld.vue'
 
+export default {
+  name: 'HomeView',
+  components: {
+    HelloWorld
+  },
+  methods:{
+    goLogin(){
+      this.$router.replace("/login");
+    }
+  }
+}
+</script>
 <style>
   .home {
     width: 100%;
@@ -96,14 +111,4 @@
     background-color: #eeeeee;
   }
 </style>
-<script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
 
-export default {
-  name: 'HomeView',
-  components: {
-    HelloWorld
-  }
-}
-</script>
