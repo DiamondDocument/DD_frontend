@@ -14,8 +14,6 @@ axios.defaults.baseURL = 'http://123.12.123.12:8000';
 app.use(store)
     .use(ElementPlus)
     .use(router)
-    .use(store)
-    .use(router)
     .use(VueAxios, axios).mount('#app')
 
 app.config.globalProperties.$userId = '' //全局属性用户ID
