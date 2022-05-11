@@ -1,4 +1,5 @@
 <template>
+  <el-menu default-active="'/' +this.$route.path.split('/')[1]"></el-menu>
   <div class="container">
     <div class="globalOperate">
       <div class="elem">| 文件名</div>
@@ -30,6 +31,16 @@
 import Template from "@/views/Template/Template";
 export default {
   name: "Space",
+  inject: ['reload'],
+  data(){
+    return {}
+  },
+  methods: {
+    delData(){
+    //在axios成功的回调里面
+      this.reload();
+    }
+  },
   components: {Template}
 }
 </script>
