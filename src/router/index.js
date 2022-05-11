@@ -60,6 +60,23 @@ const routes = [
     name: 'space',
     component: ()=> import('../views/Space')
   },
+
+//--------------------------THR 调试用---------------------------
+
+  {
+    path: '/teamCreate',
+    //type = collection, my, team, recycle
+    name: 'teamCreate',
+    component: ()=> import('../views/Team/Create')
+  },
+  {
+    path: '/team',
+    //type = collection, my, team, recycle
+    name: 'team',
+    component: ()=> import('../views/Team/Team')
+  }
+
+//---------------------------------------------------------
 ]
 
 const router = createRouter({

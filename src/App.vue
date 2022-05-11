@@ -1,18 +1,21 @@
 //主要职责：用户进入网站时，App判断用户cookie来判断是否登录，如果登录直接跳转到工作台，如果没有则进入欢迎界面
 <template>
-  <router-view/>
+  <router-view></router-view>
 </template>
 
 <script>
 export default {
   name: 'App',
-  created() {
-    this.$router.push("/welcome");
-  }
+
+  // 有问题，需修改！！！！！
+
+  // created() {
+  //   this.$router.push("/welcome");
+  // }
 }
 </script>
 
-<style>
+<style scoped>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;

@@ -1,27 +1,27 @@
 <template>
-  <div>
-    <label>
-      <input v-model="searchText" type="text" placeholder="请输入用户信息" class="text">
-    </label><br>
-    <button type="submit" @click="Find">查找</button>
-  </div>
-  <!-- 搜索后的 -->
-  <div>
+    <div>
+        <label>
+            <input v-model="searchText" type="text" placeholder="请输入用户信息" class="text">
+        </label><br>
+        <button type="submit" @click="Find">查找</button>
+    </div>
+    <!-- 搜索后的 -->
+    <div>
         <span v-if="nickName.length>0">
             {{nickName}}
             <button type="submit" @click="invite">邀请</button>
         </span>
-    <span v-if="gender.length>0">
+        <span v-if="gender.length>0">
             {{gender}}
         </span>
-    <br>
-    <span v-if="userIntroductory.length>0">
+        <br>
+        <span v-if="userIntroductory.length>0">
             {{userIntroductory}}
         </span>
-    <span v-if="email.length>0">
+        <span v-if="email.length>0">
             {{email}}
         </span>
-  </div>
+    </div>
 </template>
 
 <script>
@@ -31,12 +31,12 @@ export default {
   name: "inviteMem",
   data() {
     return {
-      searchText: "",
-      // 搜索后的展示数据
-      nickName: "",
-      gender: "",
-      userIntroductory: "", //可以为空
-      email: "" //可以为空
+        searchText: "",
+        // 搜索后的展示数据
+        nickName: "",
+        gender: "",
+        userIntroductory: "", //可以为空
+        email: "" //可以为空   
     };
   },
   methods: {
