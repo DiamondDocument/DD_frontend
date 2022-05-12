@@ -7,11 +7,20 @@
       </el-icon>
       <span style="vertical-align: middle;">搜索</span>
     </el-button>
+    <el-select v-model="value" placeholder="排序方式" style="float: right; margin-right: 20px">
+      <el-option
+        v-for="item in options"
+        :key="item.value"
+        :label="item.label"
+        :value="item.value"
+        >
+      </el-option>
+    </el-select>
   </el-menu>
-  <el-table :data="tableData" height="1000" style="width:100%">
-    <el-table-column prop="name" label="文件名" width="500"></el-table-column>
+  <el-table :data="tableData" height="900" style="width:100%">
+    <el-table-column prop="name" label="文件名" width="450"></el-table-column>
     <el-table-column prop="author" label="创建者" width="300"></el-table-column>
-    <el-table-column prop="altDate" label="修改日期" width="500"></el-table-column>
+    <el-table-column prop="altDate" label="修改日期" width="400"></el-table-column>
     <el-table-column prop="altUser" label="修改人" width="300"></el-table-column>
     <el-table-column prop="size" label="大小" width="300"></el-table-column>
   </el-table>
@@ -231,7 +240,26 @@ export default {
           altUser: 'lyh',
           size: '98K'
         },
-      ]
+      ],
+      options: [
+        {
+          value: '1',
+          label: '名称',
+        },
+        {
+          value: '2',
+          label: '创建者',
+        },
+        {
+          value: '3',
+          label: '修改时间',
+        },
+        {
+          value: '4',
+          label: '大小',
+        },
+      ],
+      value:'',
     }
   },
   setup() {
