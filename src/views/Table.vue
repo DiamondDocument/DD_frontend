@@ -1,147 +1,112 @@
-<template>
-  <div class="home">
-<!--    <img alt="Vue logo" src="../assets/logo.png" style="position: center">-->
-<!--    <p style="position: center">Welcome to DiamondDocument!</p>-->
-<!--    可不可以默认显示用户文件列表——lyh-->
-    <div class="shell">
-      <ul class="buttons">
-        <li class="li">
-          个人中心
-          <ul>
-            <li>xxx</li>
-            <li>aaa</li>
-            <li>bbb</li>
-            <li>ccc</li>
-          </ul>
-        </li>
+<template >
+  <el-container>
+    <el-header class="Header" style="height: 50px">
+      <img src="../assets/logo.png" style="width: 50px; height: 50px;">
 
-        <li class="li">
-          我的文档
-          <ul>
-            <li @click="toMySpace" style="cursor: pointer">进入个人空间</li>
-            <li>aaa</li>
-            <li>bbb</li>
-            <li>ccc</li>
-          </ul>
-        </li>
+      <div>
+        <a href="#" style="padding: 0 10px 0 0">头像</a>
+        <a href="#">消息</a>
+      </div>
+    </el-header>
+    <el-container>
+      <el-aside class="Aside" style="width: auto">
+        <el-radio-group v-model="isCollapse" >
 
-        <li class="li">
-          我的团队
-          <ul>
-            <li>xxx</li>
-            <li>aaa</li>
-            <li>bbb</li>
-            <li>ccc</li>
-          </ul>
-        </li>
+          <el-button :label="false" @click="isCollapse=!isCollapse" type="primary" icon="el-icon-s-unfold"></el-button>
+        </el-radio-group>
 
-        <li class="li">
-          我的消息
-          <ul>
-            <li @click="toMessage" style="cursor: pointer">查看</li>
-            <li>啦啦啦</li>
-            <li>bbb</li>
-            <li>ccc</li>
-          </ul>
-        </li>
-      </ul>
-    </div>
-    <div v-if="type==='space'">
-      <Space></Space>
-    </div>
-    <div v-else-if="type==='message'">
-      <Message></Message>
-    </div>
-  </div>
+        <el-menu default-active="1-4-1" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
+          <el-menu-item index="1">
+<!--            <i class="el-icon-paperclip"></i>-->
+            <el-icon><document /></el-icon>
+
+            <span slot="title"><router-link to="/about">最近浏览</router-link></span>
+          </el-menu-item>
+          <el-menu-item index="2">
+            <i class="el-icon-user-solid"></i>
+            <span slot="title">我的空间</span>
+          </el-menu-item>
+          <el-menu-item index="3">
+            <i class="el-icon-s-opportunity"></i>
+            <span slot="title">我的收藏</span>
+          </el-menu-item>
+          <el-menu-item index="4">
+            <i class="el-icon-s-custom"></i>
+            <span slot="title">我的团队</span>
+          </el-menu-item>
+
+          <el-submenu index="5">
+            <template slot="title">
+              <i class="el-icon-document"></i>
+              <span slot="title">模板</span>
+            </template>
+            <el-menu-item-group>
+              <el-menu-item index="1-1">推荐模板</el-menu-item>
+              <el-menu-item index="1-2">我的模板</el-menu-item>
+              <el-menu-item index="1-3">收藏模板</el-menu-item>
+            </el-menu-item-group>
+          </el-submenu>
+
+          <el-menu-item index="6">
+            <i class="el-icon-delete-solid"></i>
+            <span slot="title">回收站</span>
+          </el-menu-item>
+          <!--            <el-menu-item-group>-->
+          <!--              <span slot="title">分组一</span>-->
+          <!--              <el-menu-item index="1-1">选项1</el-menu-item>-->
+          <!--              <el-menu-item index="1-2">选项2</el-menu-item>-->
+          <!--            </el-menu-item-group>-->
+          <!--            <el-menu-item-group title="分组2">-->
+          <!--              <el-menu-item index="1-3">选项3</el-menu-item>-->
+          <!--            </el-menu-item-group>-->
+          <!--            <el-submenu index="1-4">-->
+          <!--              <span slot="title">选项4</span>-->
+          <!--              <el-menu-item index="1-4-1">选项1</el-menu-item>-->
+          <!--            </el-submenu>-->
+        </el-menu>
+      </el-aside>
+      <el-main class="Main" width="100%">Main</el-main>
+    </el-container>
+  </el-container>
+
 
 </template>
 
 <style>
-.home {
-  width: 100%;
-  height: 100%;
-  /*float: right;*/
-  padding: 0;
-  position: absolute;
-  text-align: center;
-}
-
 * {
   padding: 0;
   margin: 0;
+  box-sizing: border-box;
+}
+Aside {
+
+  background-color: white;
+
+}
+
+.Header {
+  background-color: #B3C0D1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 40px;
+}
+a {
   text-decoration: none;
 }
+.Main {
+  background-color: aqua;
 
-template {
-  background-color: mintcream;
-  display: flex;
-  justify-content: space-evenly;
+}
+</style>
+
+  <style>
+  .el-menu-vertical-demo:not(.el-menu--collapse) {
+    width: auto;
+    min-height: 400px;
+  }
+.el-menu-vertical-demo {
   height: 100vh;
-  align-items: center;
-}
-
-.shell {
-  float: left;
-  width: 320px;
-  height: 640px;
-  background-color: ghostwhite;
-  position: absolute;
-  top: 0;
-}
-
-.buttons {
-  margin: 60px 0;
-}
-
-.li {
-  letter-spacing: 2px;
-  font: 600 17px '';
-  padding: 25px 52px;
-  transition: .3s;
-}
-
-.li::after {
-  content: '';
-  position: absolute;
-  left: 20px;
-  margin-top: -22px;
-  display: block;
-  width: 20px;
-  height: 20px;
-  background-color: ghostwhite;
-  border-radius: 30%;
-}
-
-.li ul {
-  width: 0;
-  height: 530px;
-  padding: 60px 0;
-  position: fixed;
-  top: 80px;
-  left: 50px;
-  right: 0;
-  overflow: hidden;
-  background-color: ivory;
-  transition: .3s;
-  border-radius: 10%;
-}
-
-.li ul li {
-  padding: 20px 24px;
-  transition: .3s;
-}
-
-.li ul li router-link {
-  padding: 16px 24px;
-  transition: .3s;
-}
-
-.li:hover ul {
-  width: 228px;
-}
-
-.li ul li:hover {
-  background-color: #eeeeee;
 }
 </style>
 
@@ -154,7 +119,8 @@ export default {
   name: 'Table',
   data() {
     return {
-      type: 'space'
+      type: 'space',
+      isCollapse: true
     }
   },
   components: {
@@ -167,9 +133,17 @@ export default {
     },
     toMySpace() {
       this.type='space';
+    },
+    handleOpen(key, keyPath) {
+      console.log(key, keyPath);
+    },
+    handleClose(key, keyPath) {
+      console.log(key, keyPath);
     }
   }
 }
+
+
 </script>
 
 

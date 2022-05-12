@@ -5,7 +5,10 @@
     <el-button><router-link to="/login">登录</router-link></el-button> |
     <el-button><router-link to="/register">注册</router-link></el-button>
   </nav>
-  <router-view/>
+
+  <el-icon class="is-loading">
+    <loading />
+  </el-icon>
 </template>
 <script>
 // @ is an alias to /src
