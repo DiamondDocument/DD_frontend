@@ -3,7 +3,8 @@
   <nav>
     <el-button><router-link to="/table">工作台</router-link> </el-button> |
     <el-button><router-link to="/login">登录</router-link></el-button> |
-    <el-button><router-link to="/register">注册</router-link></el-button>
+    <el-button><router-link to="/register">注册</router-link></el-button>|
+    <el-icon :size="20"><edit /></el-icon>
   </nav>
 
   <el-icon class="is-loading">
