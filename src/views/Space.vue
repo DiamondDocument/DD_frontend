@@ -31,16 +31,6 @@
 import Template from "@/views/Template/Template";
 export default {
   name: "Space",
-  inject: ['reload'],
-  data(){
-    return {}
-  },
-  methods: {
-    delData(){
-    //在axios成功的回调里面
-      this.reload();
-    }
-  },
   components: {Template}
 }
 </script>
@@ -58,6 +48,7 @@ export default {
     width: 23%;
     height: 50px;
     display: flex;
+    cursor: pointer;
   }
   .fileSystem {
     margin-left:320px;

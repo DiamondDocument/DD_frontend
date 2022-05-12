@@ -18,7 +18,7 @@
         <li class="li">
           我的文档
           <ul>
-            <li>xxx</li>
+            <li @click="toMySpace" style="cursor: pointer">进入个人空间</li>
             <li>aaa</li>
             <li>bbb</li>
             <li>ccc</li>
@@ -38,7 +38,7 @@
         <li class="li">
           我的消息
           <ul>
-            <li @click="toMessage">查看</li>
+            <li @click="toMessage" style="cursor: pointer">查看</li>
             <li>啦啦啦</li>
             <li>bbb</li>
             <li>ccc</li>
@@ -163,7 +163,10 @@ export default {
   },
   methods: {
     toMessage() {
-      this.type = message;
+      this.type = 'message';
+    },
+    toMySpace() {
+      this.type='space';
     }
   }
 }
