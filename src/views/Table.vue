@@ -82,7 +82,7 @@ template {
 
 .shell {
   float: left;
-  width: 320px;
+  width: 20%;
   height: 640px;
   background-color: ghostwhite;
   position: absolute;
