@@ -107,6 +107,74 @@ a {
   }
 .el-menu-vertical-demo {
   height: 100vh;
+<<<<<<< HEAD
+=======
+  align-items: center;
+}
+
+.shell {
+  float: left;
+  width: 20%;
+  height: 640px;
+  background-color: ghostwhite;
+  position: absolute;
+  top: 0;
+}
+
+.buttons {
+  margin: 60px 0;
+}
+
+.li {
+  letter-spacing: 2px;
+  font: 600 17px '';
+  padding: 25px 52px;
+  transition: .3s;
+}
+
+.li::after {
+  content: '';
+  position: absolute;
+  left: 20px;
+  margin-top: -22px;
+  display: block;
+  width: 20px;
+  height: 20px;
+  background-color: ghostwhite;
+  border-radius: 30%;
+}
+
+.li ul {
+  width: 0;
+  height: 530px;
+  padding: 60px 0;
+  position: fixed;
+  top: 80px;
+  left: 50px;
+  right: 0;
+  overflow: hidden;
+  background-color: ivory;
+  transition: .3s;
+  border-radius: 10%;
+}
+
+.li ul li {
+  padding: 20px 24px;
+  transition: .3s;
+}
+
+.li ul li router-link {
+  padding: 16px 24px;
+  transition: .3s;
+}
+
+.li:hover ul {
+  width: 228px;
+}
+
+.li ul li:hover {
+  background-color: #eeeeee;
+>>>>>>> c8f3c78b97d6136f829d73f1ecb293cb454d6ffd
 }
 </style>
 
