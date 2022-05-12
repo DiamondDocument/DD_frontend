@@ -1,7 +1,7 @@
 <template >
   <el-container>
     <el-header class="Header" style="height: 50px">
-      <img src="../assets/logo.png" style="width: 50px; height: 50px;">
+      <img src="../assets/diamond.png" style="width: 50px; height: 50px;">
 
       <div>
         <a href="#" style="padding: 0 10px 0 0">头像</a>
@@ -21,7 +21,7 @@
           </el-menu-item>
           <el-menu-item index="2">
             <el-icon><house /></el-icon>
-            <span slot="title">我的空间</span>
+            <span slot="title"> <router-link to="/table/space">我的空间</router-link></span>
           </el-menu-item>
           <el-menu-item index="3">
             <el-icon><opportunity /></el-icon>
@@ -50,7 +50,7 @@
           </el-menu-item>
         </el-menu>
       </el-aside>
-      <el-main class="Main" width="100%">Main</el-main>
+      <el-main class="Main" width="100%"><router-view></router-view></el-main>
     </el-container>
   </el-container>
 

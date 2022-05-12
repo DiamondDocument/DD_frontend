@@ -26,6 +26,11 @@ const routes = [
     component:() =>import('../views/Table.vue'),
     children:[
       {
+        path: 'space/:type?',
+        name: 'space',
+        component:() =>import('../views/Space.vue'),
+      },
+      {
         path: 'team/:teamId(\\d+)?',
         name: 'team',
         component:() =>import('../views/Team/Team.vue'),
