@@ -1,82 +1,240 @@
 <template>
-  <el-menu default-active="'/' +this.$route.path.split('/')[1]"></el-menu>
-  <div class="container">
-    <div class="globalOperate">
-      <div class="elem">| 文件名</div>
-      <div class="elem">| 创建者</div>
-      <div class="elem">| 修改日期</div>
-      <div class="elem">| 大小</div>
-    </div>
-    <div class="fileSystem">
-<!--      当前列表为成品示例，实际应根据GET请求 + for获取列表-->
-      <div class="fileList">
-        <div class="file">
-          <div class="elem">金刚石需求文档</div>
-          <div class="elem">赵老板</div>
-          <div class="elemAlt">2022-05-01 by 赵老板</div>
-          <div class="elemSize">21K</div>
-        </div>
-          <el-image class="line" :src="require('@/assets/line.png')"></el-image>
-        <div class="file">
-          <div class="elem">金刚石产品计划书</div>
-          <div class="elem">赵老板</div>
-          <div class="elemAlt">2022-05-02 by 赵老板</div>
-          <div class="elemSize">29K</div>
-        </div>
-          <el-image class="line" :src="require('@/assets/line.png')"></el-image>
-      </div>
-    </div>
-  </div>
+  <el-menu default-active="'/' +this.$route.path.split('/')[1]">
+    <el-input v-model="input" placeholder="空间内搜索文件"></el-input>
+  </el-menu>
+  <el-table :data="tableData" height="1000" style="width:100%">
+    <el-table-column prop="name" label="文件名" width="500"></el-table-column>
+    <el-table-column prop="author" label="创建者" width="300"></el-table-column>
+    <el-table-column prop="altDate" label="修改日期" width="500"></el-table-column>
+    <el-table-column prop="altUser" label="修改人" width="300"></el-table-column>
+    <el-table-column prop="size" label="大小" width="300"></el-table-column>
+  </el-table>
 </template>
 
 <script>
 import Template from "@/views/Template/Template";
+import {ref} from "vue";
+
 export default {
   name: "Space",
-  components: {Template}
+  components: {Template},
+  data() {
+    return {
+      tableData: [
+        {
+          name: '金刚石需求文档',
+          author: '赵老板',
+          altDate: '1919-08-10',
+          altUser: 'lyh',
+          size: '20K'
+        },
+        {
+          name: '金刚石产品计划书',
+          author: '赵老板',
+          altDate: '1919-08-10',
+          altUser: 'lyh',
+          size: '98K'
+        },
+        {
+          name: '金刚石产品计划书',
+          author: '赵老板',
+          altDate: '1919-08-10',
+          altUser: 'lyh',
+          size: '98K'
+        },
+        {
+          name: '金刚石产品计划书',
+          author: '赵老板',
+          altDate: '1919-08-10',
+          altUser: 'lyh',
+          size: '98K'
+        },
+        {
+          name: '金刚石产品计划书',
+          author: '赵老板',
+          altDate: '1919-08-10',
+          altUser: 'lyh',
+          size: '98K'
+        },
+        {
+          name: '金刚石产品计划书',
+          author: '赵老板',
+          altDate: '1919-08-10',
+          altUser: 'lyh',
+          size: '98K'
+        },
+        {
+          name: '金刚石产品计划书',
+          author: '赵老板',
+          altDate: '1919-08-10',
+          altUser: 'lyh',
+          size: '98K'
+        },
+        {
+          name: '金刚石产品计划书',
+          author: '赵老板',
+          altDate: '1919-08-10',
+          altUser: 'lyh',
+          size: '98K'
+        },
+        {
+          name: '金刚石产品计划书',
+          author: '赵老板',
+          altDate: '1919-08-10',
+          altUser: 'lyh',
+          size: '98K'
+        },
+        {
+          name: '金刚石产品计划书',
+          author: '赵老板',
+          altDate: '1919-08-10',
+          altUser: 'lyh',
+          size: '98K'
+        },
+        {
+          name: '金刚石产品计划书',
+          author: '赵老板',
+          altDate: '1919-08-10',
+          altUser: 'lyh',
+          size: '98K'
+        },
+        {
+          name: '金刚石产品计划书',
+          author: '赵老板',
+          altDate: '1919-08-10',
+          altUser: 'lyh',
+          size: '98K'
+        },
+        {
+          name: '金刚石产品计划书',
+          author: '赵老板',
+          altDate: '1919-08-10',
+          altUser: 'lyh',
+          size: '98K'
+        },
+        {
+          name: '金刚石产品计划书',
+          author: '赵老板',
+          altDate: '1919-08-10',
+          altUser: 'lyh',
+          size: '98K'
+        },
+        {
+          name: '金刚石产品计划书',
+          author: '赵老板',
+          altDate: '1919-08-10',
+          altUser: 'lyh',
+          size: '98K'
+        },
+        {
+          name: '金刚石产品计划书',
+          author: '赵老板',
+          altDate: '1919-08-10',
+          altUser: 'lyh',
+          size: '98K'
+        },
+        {
+          name: '金刚石产品计划书',
+          author: '赵老板',
+          altDate: '1919-08-10',
+          altUser: 'lyh',
+          size: '98K'
+        },
+        {
+          name: '金刚石产品计划书',
+          author: '赵老板',
+          altDate: '1919-08-10',
+          altUser: 'lyh',
+          size: '98K'
+        },
+        {
+          name: '金刚石产品计划书',
+          author: '赵老板',
+          altDate: '1919-08-10',
+          altUser: 'lyh',
+          size: '98K'
+        },
+        {
+          name: '金刚石产品计划书',
+          author: '赵老板',
+          altDate: '1919-08-10',
+          altUser: 'lyh',
+          size: '98K'
+        },
+        {
+          name: '金刚石产品计划书',
+          author: '赵老板',
+          altDate: '1919-08-10',
+          altUser: 'lyh',
+          size: '98K'
+        },
+        {
+          name: '金刚石产品计划书',
+          author: '赵老板',
+          altDate: '1919-08-10',
+          altUser: 'lyh',
+          size: '98K'
+        },
+        {
+          name: '金刚石产品计划书',
+          author: '赵老板',
+          altDate: '1919-08-10',
+          altUser: 'lyh',
+          size: '98K'
+        },
+        {
+          name: '金刚石产品计划书',
+          author: '赵老板',
+          altDate: '1919-08-10',
+          altUser: 'lyh',
+          size: '98K'
+        },
+        {
+          name: '金刚石产品计划书',
+          author: '赵老板',
+          altDate: '1919-08-10',
+          altUser: 'lyh',
+          size: '98K'
+        },
+        {
+          name: '金刚石产品计划书',
+          author: '赵老板',
+          altDate: '1919-08-10',
+          altUser: 'lyh',
+          size: '98K'
+        },
+        {
+          name: '金刚石产品计划书',
+          author: '赵老板',
+          altDate: '1919-08-10',
+          altUser: 'lyh',
+          size: '98K'
+        },
+        {
+          name: '金刚石产品计划书',
+          author: '赵老板',
+          altDate: '1919-08-10',
+          altUser: 'lyh',
+          size: '98K'
+        },
+        {
+          name: '金刚石产品计划书',
+          author: '赵老板',
+          altDate: '1919-08-10',
+          altUser: 'lyh',
+          size: '98K'
+        },
+      ]
+    }
+  },
+  setup() {
+    return {
+      input :ref(''),
+    }
+  }
 }
 </script>
 
 <style scoped>
-  .globalOperate {
-    margin-left:20%;
-    background-color:whitesmoke;
-    height:50px;
-  }
-  .elem {
-    margin-left: 2%;
-    margin-right: 13%;
-    line-height: 50px;
-    float: left;
-    width: 10%;
-    height: 50px;
-    display: flex;
-    cursor: pointer;
-  }
-  .elemAlt {
-    margin-left: 2%;
-    line-height: 50px;
-    float: left;
-    width: 23%;
-    height: 50px;
-    display: flex;
-    cursor: pointer;
-  }
-  .elemSize {
-    margin-left: 2%;
-    line-height: 50px;
-    float: left;
-    width: 4%;
-    height: 50px;
-    display: flex;
-  }
-  .fileSystem {
-    margin-left:20%;
-  }
-  .line {
-    height:1px;
-    width: 95%;
-    margin-bottom: 4px;
-  }
 
 </style>

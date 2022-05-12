@@ -5,7 +5,7 @@
 
       <div>
         <a href="#" style="padding: 0 10px 0 0">头像</a>
-        <a href="#">消息</a>
+        <a href="#" @click="toMessage">消息</a>
       </div>
     </el-header>
     <el-container>
@@ -19,7 +19,7 @@
             <el-icon><clock /></el-icon>
             <span slot="title"><router-link to="/about">最近浏览</router-link></span>
           </el-menu-item>
-          <el-menu-item index="2">
+          <el-menu-item index="2" @click="toMySpace">
             <el-icon><house /></el-icon>
             <span slot="title">我的空间</span>
           </el-menu-item>
@@ -50,7 +50,12 @@
           </el-menu-item>
         </el-menu>
       </el-aside>
-      <el-main class="Main" width="100%">Main</el-main>
+      <el-main class="Main" width="100%" v-if="type==='space'">
+        <space></space>
+      </el-main>
+      <el-main class="Main" width="100%" v-else-if="type==='message'">
+        <message></message>
+      </el-main>
     </el-container>
   </el-container>
 
@@ -80,7 +85,7 @@ a {
   text-decoration: none;
 }
 .Main {
-  background-color: aqua;
+  background-color: azure;
 
 }
 </style>
