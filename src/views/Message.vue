@@ -1,5 +1,7 @@
 <template>
-我是消息界面，暂定像空间一样内嵌
+  <el-menu default-active="'/' +this.$route.path.split('/')[1]">
+
+  </el-menu>
 </template>
 
 <script>
