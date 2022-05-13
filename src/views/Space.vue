@@ -17,7 +17,7 @@
       </el-option>
     </el-select>
   </el-menu>
-  <el-table :data="tableData" height="900" style="width:100%">
+  <el-table :data="tableData" stripe height="900" style="width:100%;cursor: pointer">
     <el-table-column prop="name" label="文件名" width="450"></el-table-column>
     <el-table-column prop="author" label="创建者" width="300"></el-table-column>
     <el-table-column prop="altDate" label="修改日期" width="400"></el-table-column>

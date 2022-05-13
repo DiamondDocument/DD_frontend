@@ -50,7 +50,7 @@
           </el-menu-item>
         </el-menu>
       </el-aside>
-      <el-main class="Main" width="100%" v-if="type==='space'">
+      <el-main class="Main" width="100%" v-if="type==='mySpace'">
         <space></space>
       </el-main>
       <el-main class="Main" width="100%" v-else-if="type==='message'">
@@ -110,7 +110,7 @@ export default {
   name: 'Table',
   data() {
     return {
-      type: 'space',
+      type: 'mySpace',
       isCollapse: true
     }
   },
@@ -123,7 +123,7 @@ export default {
       this.type = 'message';
     },
     toMySpace() {
-      this.type='space';
+      this.type='mySpace';
     },
     handleOpen(key, keyPath) {
       console.log(key, keyPath);
