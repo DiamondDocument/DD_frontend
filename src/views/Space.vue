@@ -8,34 +8,29 @@
       <span style="vertical-align: middle;">搜索</span>
     </el-button>
     <el-select v-model="value" placeholder="排序方式" style="float: right; margin-right: 20px">
-      <el-option
-        v-for="item in options"
-        :key="item.value"
-        :label="item.label"
-        :value="item.value"
-        >
-      </el-option>
+      <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
     </el-select>
   </el-menu>
-  <el-table :data="tableData" stripe height="900" style="width:100%;cursor: pointer" @row-contextmenu="fileMenu">
+  <el-table :data="tableData" stripe height="900" style="width:100%;cursor: pointer;margin-top: 5px" @row-contextmenu="rowContextmenu">
     <el-table-column prop="name" label="文件名" width="450"></el-table-column>
     <el-table-column prop="author" label="创建者" width="300"></el-table-column>
     <el-table-column prop="altDate" label="修改日期" width="400"></el-table-column>
     <el-table-column prop="altUser" label="修改人" width="300"></el-table-column>
     <el-table-column prop="size" label="大小" width="300"></el-table-column>
   </el-table>
-  <context-button v-if="menuVisible" @foo="foo" ref="filemenu"></context-button>
+  <index v-if="menuVisible" @foo="foo" ref="contextButton"
+                  @handleOne="handleOne" @handleTwo="handleTwo" @handleThree="handleThree"
+                  @handleFour="handleFour" @handleFive="handleFive" data-popper-placement="top"></index>
 </template>
 
 <script>
 import Template from "@/views/Template/Template";
 import {ref} from "vue";
 import {Search} from "@element-plus/icons-vue";
-import FileMenu from "@/views/User/FileMenu";
-
+import index from "@/views/contextButton/index.vue"
 export default {
   name: "Space",
-  components: {FileMenu, Search, Template},
+  components: {Search, Template, index},
   data() {
     return {
       menuVisible: false,
@@ -271,18 +266,36 @@ export default {
     }
   },
   methods: {
-    fileMenu(row, column, event) {
-      this.menuVisible=false;
-      this.menuVisible=true;
+    rowContextmenu (row, column, event) {
+      this.menuVisible = false
+      this.menuVisible = true
+      // 阻止右键默认行为
       event.preventDefault()
-      this.$nextTick(()=>{
-        this.$refs.filemenu.init(row, column, event)
+      this.$nextTick(() => {
+        this.$refs.contextButton.init(row,column,event)
       })
+
     },
-    foo() {
-      this.menuVisible=false;
+    foo() { // 取消鼠标监听事件 菜单栏
+      this.menuVisible = false;
       document.removeEventListener('click', this.foo);
+    },
+    handleOne() {
+
+    },
+    handleTwo () {
+
+    },
+    handleThree () {
+
+    },
+    handleFour (){
+
+    },
+    handleFive (row){
+
     }
+
   }
 }
 </script>
