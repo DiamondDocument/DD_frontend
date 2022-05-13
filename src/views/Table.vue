@@ -1,7 +1,7 @@
 <template >
   <el-container>
     <el-header class="Header" style="height: 50px">
-      <img src="../assets/diamond.png" style="width: 50px; height: 50px;">
+      <img src="../assets/logo.png" style="width: 50px; height: 50px;">
 
       <div>
         <a href="#" style="padding: 0 10px 0 0">头像</a>
@@ -50,7 +50,12 @@
           </el-menu-item>
         </el-menu>
       </el-aside>
-      <el-main class="Main" width="100%">Main</el-main>
+      <el-main class="Main" width="100%" v-if="type==='space'">
+        <space></space>
+      </el-main>
+      <el-main class="Main" width="100%" v-else-if="type==='message'">
+        <message></message>
+      </el-main>
     </el-container>
   </el-container>
 
@@ -80,7 +85,7 @@ a {
   text-decoration: none;
 }
 .Main {
-  background-color: aqua;
+  background-color: azure;
 
 }
 </style>
