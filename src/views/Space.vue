@@ -17,25 +17,28 @@
       </el-option>
     </el-select>
   </el-menu>
-  <el-table :data="tableData" stripe height="900" style="width:100%;cursor: pointer">
+  <el-table :data="tableData" stripe height="900" style="width:100%;cursor: pointer" @row-contextmenu="fileMenu">
     <el-table-column prop="name" label="文件名" width="450"></el-table-column>
     <el-table-column prop="author" label="创建者" width="300"></el-table-column>
     <el-table-column prop="altDate" label="修改日期" width="400"></el-table-column>
     <el-table-column prop="altUser" label="修改人" width="300"></el-table-column>
     <el-table-column prop="size" label="大小" width="300"></el-table-column>
   </el-table>
+  <context-button v-if="menuVisible" @foo="foo" ref="filemenu"></context-button>
 </template>
 
 <script>
 import Template from "@/views/Template/Template";
 import {ref} from "vue";
 import {Search} from "@element-plus/icons-vue";
+import FileMenu from "@/views/User/FileMenu";
 
 export default {
   name: "Space",
-  components: {Search, Template},
+  components: {FileMenu, Search, Template},
   data() {
     return {
+      menuVisible: false,
       tableData: [
         {
           name: '金刚石需求文档',
@@ -265,6 +268,20 @@ export default {
   setup() {
     return {
       input :ref(''),
+    }
+  },
+  methods: {
+    fileMenu(row, column, event) {
+      this.menuVisible=false;
+      this.menuVisible=true;
+      event.preventDefault()
+      this.$nextTick(()=>{
+        this.$refs.filemenu.init(row, column, event)
+      })
+    },
+    foo() {
+      this.menuVisible=false;
+      document.removeEventListener('click', this.foo);
     }
   }
 }
