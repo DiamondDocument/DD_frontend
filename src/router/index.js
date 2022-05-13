@@ -58,6 +58,29 @@ const routes = [
       },
     ],
   },
+
+//---------------------- for THR test ------------------
+  {
+    path: '/team/create',
+    name: 'teamCreate',
+    component:() =>import('../views/Team/Create.vue'),
+  },
+  {
+    path: '/team/:teamId(\\d+)?',
+    name: 'team',
+    component:() =>import('../views/Team/Team.vue'),
+  },
+  {
+    path: '/user/information',
+    name: 'userInformation',
+    component:() =>import('../views/User/Information'),
+  },
+  {
+    path: '/team/list/:search',
+    name: 'teamList',
+    component:() =>import('../views/Team/List.vue'),
+  },
+//------------------------------------------------------
 ]
 
 const router = createRouter({
