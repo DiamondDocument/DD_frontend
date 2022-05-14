@@ -23,7 +23,7 @@
             <el-icon><house /></el-icon>
             <span slot="title">我的空间</span>
           </el-menu-item>
-          <el-menu-item index="3">
+          <el-menu-item index="3" @click="toMyCollection">
             <el-icon><opportunity /></el-icon>
             <span slot="title">我的收藏</span>
           </el-menu-item>
@@ -44,14 +44,20 @@
           </el-menu-item-group>
         </el-sub-menu>
 
-          <el-menu-item index="6">
+          <el-menu-item index="6" @click="toBin">
             <el-icon><delete /></el-icon>
             <span slot="title">回收站</span>
           </el-menu-item>
         </el-menu>
       </el-aside>
       <el-main class="Main" width="100%" v-if="type==='mySpace'">
-        <space></space>
+        <space :spaceType="1"></space>
+      </el-main>
+      <el-main class="Main" width="100%" v-else-if="type==='collection'">
+        <space :spaceType="2"></space>
+      </el-main>
+      <el-main class="Main" width="100%" v-else-if="type==='bin'">
+        <space :spaceType="3"></space>
       </el-main>
       <el-main class="Main" width="100%" v-else-if="type==='message'">
         <message></message>
@@ -110,7 +116,7 @@ export default {
   name: 'Table',
   data() {
     return {
-      type: 'mySpace',
+      type: '',
       isCollapse: true
     }
   },
@@ -124,6 +130,12 @@ export default {
     },
     toMySpace() {
       this.type='mySpace';
+    },
+    toMyCollection() {
+      this.type='collection'
+    },
+    toBin() {
+      this.type='bin'
     },
     handleOpen(key, keyPath) {
       console.log(key, keyPath);

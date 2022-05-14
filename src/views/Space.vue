@@ -23,19 +23,26 @@
     <el-table-column prop="altUser" label="修改人" width="300"></el-table-column>
     <el-table-column prop="size" label="大小" width="300"></el-table-column>
   </el-table>
-  <index v-if="menuVisible" @foo="foo" ref="contextButton"
-                  @handleOne="handleOne" @handleTwo="handleTwo" @handleThree="handleThree"
-                  @handleFour="handleFour" @handleFive="handleFive" data-popper-placement="top"></index>
+  <index v-if="menuVisible" @foo="foo" ref="contextButton" :spaceType="spaceType"
+                  @collect="collect" @move="move" @remove="remove" @_export="_export"
+                  @share="share" @edit="edit" @disCollect="disCollect" @recover="recover"
+                  @del="del"
+         data-popper-placement="top"></index>
 </template>
 
 <script>
 import Template from "@/views/Template/Template";
-import {ref} from "vue";
 import {Search} from "@element-plus/icons-vue";
 import index from "@/views/contextButton/index.vue"
+import {ref} from "vue";
 export default {
   name: "Space",
   components: {Search, Template, index},
+  props:{
+    spaceType: {
+      type: Number,
+    },
+  },
   data() {
     return {
       menuVisible: false,
@@ -285,22 +292,33 @@ export default {
       this.menuVisible = false;
       document.removeEventListener('click', this.foo);
     },
-    handleOne() {
-
+    edit () {
+      window.alert("进入编辑")
     },
-    handleTwo () {
-
+    collect () {
+      window.alert("收藏成功/已经被收藏")
     },
-    handleThree () {
-
+    move (){
+      window.alert("请选择移动到：")
     },
-    handleFour (){
-
+    remove (){
+      window.alert("删除成功")
     },
-    handleFive (row){
-
+    _export (){
+      window.alert("请选择保存位置")
+    },
+    share (){
+      window.alert("生成分享链接")
+    },
+    disCollect() {
+      window.alert("已取消收藏")
+    },
+    recover() {
+      window.alert("成功恢复")
+    },
+    del() {
+      window.alert("已彻底删除")
     }
-
   }
 }
 </script>
