@@ -11,7 +11,12 @@
       <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
     </el-select>
   </el-menu>
-  <el-table :data="tableData" stripe height="900" style="width:100%;cursor: pointer;margin-top: 5px" @row-contextmenu="rowContextmenu">
+  <el-table :data="tableData" stripe
+            height="800"
+            style="width:100%;margin-top: 5px"
+            :row-style="{height: '0'}"
+            :cell-style="{padding: '20px'}"
+            @row-contextmenu="rowContextmenu">
     <el-table-column prop="name" label="文件名" width="450"></el-table-column>
     <el-table-column prop="author" label="创建者" width="300"></el-table-column>
     <el-table-column prop="altDate" label="修改日期" width="400"></el-table-column>

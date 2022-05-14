@@ -52,28 +52,29 @@ export default {
 <style scoped>
 .contextmenu__item {
   display: block;
-  line-height: 34px;
+  line-height: 50px;
   text-align: center;
 }
 .contextmenu__item:not(:last-child) {
-  border-bottom: 1px solid rgba(64,158,255,.2);
+  border-bottom: 1px solid rgba(171, 171, 171, 0.2);
 }
 .contextmenu {
   position: absolute;
-  background-color: #ecf5ff;
-  width: 100px;  font-size: 12px;
-  color: #409EFF;
-  border-radius: 4px;
+  background-color: #ffffff;
+  width: 170px;  font-size: 17px;
+  color: #4d4d4d;
+  border-radius: 10px;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
-  border: 1px solid rgba(64,158,255,.2);
+  border: 1px solid rgba(44, 44, 44, 0.2);
   white-space: nowrap;
   z-index: 1000;
 }
 .contextmenu__item:hover {
   cursor: pointer;
-  background: #66b1ff;
-  border-color: #66b1ff;
+  border-radius: 10px;
+  background: #c2c2c2;
+  border-color: #bdbdbd;
   color: #fff;
 }
 
