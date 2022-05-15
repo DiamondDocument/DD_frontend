@@ -21,6 +21,11 @@ const routes = [
     component: () => import('../views/User/Register.vue')
   },
   {
+    path: '/template',
+    name: 'template',
+    component: () => import('../views/User/Template.vue')
+  },
+  {
     //path: '/table/:teamId(\\d+)?',
     path: '/table',
     name: 'table',
@@ -46,12 +51,12 @@ const routes = [
       //   name: 'userInformation',
       //   component:() =>import('../views/User/Information.vue'),
       // },
-      {
-        path: 'template/:type',
-        //type为recommend、my、collection和message
-        name: 'template',
-        component:() =>import('../views/Template/Template.vue'),
-      },
+      // {
+      //   path: 'template/:type',
+      //   //type为recommend、my、collection和message
+      //   name: 'template',
+      //   component:() =>import('../views/Template/Template.vue'),
+      // },
     ],
   },
 

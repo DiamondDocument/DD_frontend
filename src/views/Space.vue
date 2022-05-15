@@ -1,4 +1,5 @@
 <template>
+
   <el-menu default-active="'/' +this.$route.path.split('/')[1]">
     <el-input v-model="input" placeholder="空间内搜索文件" style="width: 20%"></el-input>
     <el-button type="primary" style="margin-left: 10px">
