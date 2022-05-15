@@ -14,7 +14,7 @@
   </el-menu>
   <el-table :data="tableData" stripe
             height="800"
-            style="width:100%;margin-top: 5px"
+            style="width:100%;margin-top: 0px"
             :row-style="{height: '0'}"
             :cell-style="{padding: '20px'}"
             @row-contextmenu="rowContextmenu">
