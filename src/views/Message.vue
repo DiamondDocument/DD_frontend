@@ -49,8 +49,10 @@ export default {
     },
     allRead() {
       this.messageNotRead=0;
-      for (let i in this.messageNum){
-        this.messages[i-1].read=true;
+      let i = 0;
+      while (i < this.messageNum){
+        this.messages[i].read=true;
+        i++;
       }
     }
   }

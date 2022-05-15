@@ -16,7 +16,7 @@
             <el-icon v-if="!isCollapse" @click="isCollapse=!isCollapse" style="float: right; "><DArrowLeft /></el-icon>
             <el-icon v-else @click="isCollapse=!isCollapse" style="float: right;"><DArrowRight /></el-icon>
           </el-menu-item>
-          <el-menu-item index="2">
+          <el-menu-item index="2" @click="toRecent">
             <el-icon><clock /></el-icon>
             <span slot="title"><router-link to="/table">最近浏览</router-link></span>
           </el-menu-item>
@@ -53,7 +53,9 @@
           </el-menu-item>
         </el-menu>
       </el-aside>
-
+      <el-main class="Main" width="100%" v-if="type==='recent'" style="padding: 0; height: 100%">
+        <space :spaceType="0"></space>
+      </el-main>
       <el-main class="Main" width="100%" v-if="type==='mySpace'" style="padding: 0; height: 100%">
         <space :spaceType="1"></space>
       </el-main>
@@ -62,7 +64,6 @@
       </el-main>
       <el-main class="Main" width="100%" v-else-if="type==='bin'" style="padding: 0; height: 100%">
         <space :spaceType="3"></space>
-
       </el-main>
       <el-main class="Main" width="100%" v-else-if="type==='message'" style="padding: 0; height: 100%">
         <message></message>
@@ -126,7 +127,7 @@ export default {
   name: 'Table',
   data() {
     return {
-      type: 'mySpace',
+      type: 'recent',
       isCollapse: false,
     }
   },
@@ -146,6 +147,9 @@ export default {
     },
     toBin() {
       this.type='bin'
+    },
+    toRecent() {
+      this.type='recent'
     },
     handleOpen(key, keyPath) {
       console.log(key, keyPath);

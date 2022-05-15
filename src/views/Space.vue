@@ -1,5 +1,4 @@
 <template>
-
   <el-menu default-active="'/' +this.$route.path.split('/')[1]">
     <el-input v-model="input" placeholder="空间内搜索文件" style="width: 20%"></el-input>
     <el-button type="primary" style="margin-left: 10px">
@@ -14,7 +13,7 @@
   </el-menu>
   <el-table :data="tableData" stripe
             height="800"
-            style="width:100%;margin-top: 0px"
+            style="width:100%;margin-top: 0"
             :row-style="{height: '0'}"
             :cell-style="{padding: '20px'}"
             @row-contextmenu="rowContextmenu">
