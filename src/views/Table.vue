@@ -33,7 +33,11 @@
             <el-icon><house /></el-icon>
             <span slot="title">我的空间</span>
           </el-menu-item>
+<<<<<<< HEAD
           <el-menu-item index="4">
+=======
+          <el-menu-item index="3" @click="toMyCollection">
+>>>>>>> 88771980e51271b2c59f97a1407a3c7eba7d5d55
             <el-icon><opportunity /></el-icon>
             <span slot="title">我的收藏</span>
           </el-menu-item>
@@ -54,14 +58,29 @@
           </el-menu-item-group>
         </el-sub-menu>
 
+<<<<<<< HEAD
           <el-menu-item index="7">
+=======
+          <el-menu-item index="6" @click="toBin">
+>>>>>>> 88771980e51271b2c59f97a1407a3c7eba7d5d55
             <el-icon><delete /></el-icon>
             <span slot="title">回收站</span>
           </el-menu-item>
         </el-menu>
       </el-aside>
+<<<<<<< HEAD
       <el-main class="Main" width="100%" v-if="type==='mySpace'" style="padding: 0; height: 100%">
         <space></space>
+=======
+      <el-main class="Main" width="100%" v-if="type==='mySpace'">
+        <space :spaceType="1"></space>
+      </el-main>
+      <el-main class="Main" width="100%" v-else-if="type==='collection'">
+        <space :spaceType="2"></space>
+      </el-main>
+      <el-main class="Main" width="100%" v-else-if="type==='bin'">
+        <space :spaceType="3"></space>
+>>>>>>> 88771980e51271b2c59f97a1407a3c7eba7d5d55
       </el-main>
       <el-main class="Main" width="100%" v-else-if="type==='message'">
         <message></message>
@@ -125,8 +144,13 @@ export default {
   name: 'Table',
   data() {
     return {
+<<<<<<< HEAD
       type: 'mySpace',
       isCollapse: false
+=======
+      type: '',
+      isCollapse: true
+>>>>>>> 88771980e51271b2c59f97a1407a3c7eba7d5d55
     }
   },
   components: {
@@ -139,6 +163,12 @@ export default {
     },
     toMySpace() {
       this.type='mySpace';
+    },
+    toMyCollection() {
+      this.type='collection'
+    },
+    toBin() {
+      this.type='bin'
     },
     handleOpen(key, keyPath) {
       console.log(key, keyPath);
