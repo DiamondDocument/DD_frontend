@@ -65,7 +65,7 @@
       <el-main class="Main" width="100%" v-else-if="type==='bin'" style="padding: 0; height: 100%">
         <space :spaceType="3"></space>
       </el-main>
-      <el-main class="Main" width="100%" v-else-if="type==='message'" style="padding: 0; height: 100%">
+      <el-main class="Main" width="100%" v-else-if="type==='message'" style="padding: 0; height: 900px">
         <message></message>
       </el-main>
     </el-container>
