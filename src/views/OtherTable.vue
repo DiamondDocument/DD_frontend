@@ -11,45 +11,35 @@
     </el-header>
     <el-container>
       <el-aside class="Aside" style="width: auto">
-     <el-menu default-active="1-4-1" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
+        <el-menu default-active="1-4-1" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
           <el-menu-item index="1">
             <el-icon v-if="!isCollapse" @click="isCollapse=!isCollapse" style="float: right; "><DArrowLeft /></el-icon>
             <el-icon v-else @click="isCollapse=!isCollapse" style="float: right;"><DArrowRight /></el-icon>
           </el-menu-item>
-          <el-menu-item index="2" @click="toRecent">
-            <el-icon><clock /></el-icon>
-            <span slot="title"><router-link to="/table">最近浏览</router-link></span>
+
+          <el-menu-item index="2" @click="toMySpace">
+            <el-icon><HomeFilled /></el-icon>
+            <span slot="title">返回我的空间</span>
+
           </el-menu-item>
-          <el-menu-item index="3" @click="toMySpace">
+
+          <el-menu-item index="3">
+            <el-divider content-position="center"><p v-if="!isCollapse">Ta的名称</p></el-divider>
+          </el-menu-item>
+
+          <el-menu-item index="4" >
             <el-icon><house /></el-icon>
-            <span slot="title">我的空间</span>
+            <span slot="title">Ta的空间</span>
           </el-menu-item>
 
-          <el-menu-item index="4" @click="toMyCollection">
-
+          <el-menu-item index="5" >
             <el-icon><opportunity /></el-icon>
-            <span slot="title">我的收藏</span>
+            <span slot="title">Ta的收藏</span>
           </el-menu-item>
-          <el-menu-item index="5">
+
+          <el-menu-item index="6" >
             <el-icon><user-filled /></el-icon>
-            <span slot="title">我的团队</span>
-          </el-menu-item>
-
-          <el-sub-menu index="6">
-          <template #title>
-            <el-icon><tickets /></el-icon>
-            <span>模板</span>
-          </template>
-          <el-menu-item-group>
-            <el-menu-item index="1-1">推荐模板</el-menu-item>
-            <el-menu-item index="1-2">我的模板</el-menu-item>
-            <el-menu-item index="1-3">收藏模板</el-menu-item>
-          </el-menu-item-group>
-        </el-sub-menu>
-
-          <el-menu-item index="7" @click="toBin">
-            <el-icon><delete /></el-icon>
-            <span slot="title">回收站</span>
+            <span slot="title">Ta的团队</span>
           </el-menu-item>
 
         </el-menu>
@@ -109,10 +99,10 @@ a {
 </style>
 
 <style>
-  .el-menu-vertical-demo:not(.el-menu--collapse) {
-    width: auto;
-    min-height: 400px;
-  }
+.el-menu-vertical-demo:not(.el-menu--collapse) {
+  width: auto;
+  min-height: 400px;
+}
 .el-menu-vertical-demo {
   height: 100vh;
   align-items: center;
@@ -125,7 +115,7 @@ import Space from "@/views/Space";
 import Message from "@/views/Message";
 
 export default {
-  name: 'Table',
+  name: 'OtherTable',
   data() {
     return {
       type: 'recent',
@@ -163,5 +153,3 @@ export default {
 
 
 </script>
-
-

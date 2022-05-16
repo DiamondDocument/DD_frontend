@@ -10,6 +10,9 @@
     <el-select v-model="value" placeholder="排序方式" style="float: right; margin-right: 20px">
       <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
     </el-select>
+    <el-button type="primary" style="float: right; margin-right: 20px">
+      <span style="vertical-align: middle">新建文件</span>
+    </el-button>
   </el-menu>
   <el-table :data="tableData" stripe
             height="800"
