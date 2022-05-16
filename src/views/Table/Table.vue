@@ -5,7 +5,7 @@
 
       <div>
         <a href="#" style="padding: 0 10px 0 0">头像</a>
-        <el-icon @click="this.$router.push('/message')"><MessageBox /></el-icon>
+        <el-icon @click="this.$router.push({name:'message'})"><MessageBox /></el-icon>
       </div>
     </el-header>
     <el-container>
@@ -52,7 +52,7 @@
         </el-menu>
       </el-aside>
       <el-main>
-        <p>{{$route.params.tableId}}giao</p>
+        <p>{{$route.params.info}}giao</p>
         <router-view></router-view>
       </el-main>
     </el-container>

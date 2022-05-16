@@ -85,18 +85,8 @@ const teamRecycle = {
 
 //消息通知路由
 const message = {
-  path: '/message',
+  path: 'message',
   name: 'message',
-  component:() =>import('../views/Message/Message.vue'),
-};
-const otherMessage = {
-  path: 'message',
-  name: 'otherMessage',
-  component:() =>import('../views/Message/Message.vue'),
-};
-const teamMessage = {
-  path: 'message',
-  name: 'teamMessage',
   component:() =>import('../views/Message/Message.vue'),
 };
 
@@ -117,10 +107,9 @@ const collectionTemplate = {
   component:() =>import('../views/Template/Collection.vue'),
 };
 
-
 //工作台路由
 const table = {
-  path: '/table',
+  path: '/table/:info',
   name: 'table',
   component:() =>import('../views/Table/Table.vue'),
   children: [
@@ -134,53 +123,57 @@ const table = {
     teamList,
     teamCreate,
     teamInformation,
+    otherTeamList,
     //空间
     recent,
     space,
     collection,
     recycle,
+    teamSpace,
+    teamRecycle,
+    otherCollection,
+    otherSpace,
     //模板
     recommendTemplate,
     myTemplate,
     collectionTemplate,
   ],
 };
-const teamTable = {
-  path: '/team-table/:tableId',
-  name: 'teamTable',
-  component:() =>import('../views/Table/TeamTable.vue'),
-  children: [
-    //消息
-    message,
-    //用户
-    userInvite,
-    userInformation,
-    userApply,
-    //团队
-    teamInformation,
-    //空间
-    teamSpace,
-    teamRecycle,
-  ],
-}
-const otherTable = {
-  path: '/other-table/:tableId',
-  name: 'otherTable',
-  component:() =>import('../views/Table/OtherTable.vue'),
-  children: [
-    //消息
-    otherMessage,
-    //用户
-    userInformation,
-    //团队
-    otherTeamList,
-    teamInformation,
-    //空间
-    otherCollection,
-    otherSpace,
-  ],
-}
-
+// const teamTable = {
+//   path: '/team-table/:tableId',
+//   name: 'teamTable',
+//   component:() =>import('../views/Table/TeamTable.vue'),
+//   children: [
+//     //消息
+//     teamMessage,
+//     //用户
+//     userInvite,
+//     userInformation,
+//     userApply,
+//     //团队
+//     teamInformation,
+//     //空间
+//     teamSpace,
+//     teamRecycle,
+//   ],
+// }
+// const otherTable = {
+//   path: '/other-table/:tableId',
+//   name: 'otherTable',
+//   component:() =>import('../views/Table/OtherTable.vue'),
+//   children: [
+//     //消息
+//     otherMessage,
+//     //用户
+//     userInformation,
+//     //团队
+//     otherTeamList,
+//     teamInformation,
+//     //空间
+//     otherCollection,
+//     otherSpace,
+//   ],
+// }
 
 const routes = [
   {
@@ -203,37 +196,6 @@ const routes = [
     component: () => import('../views/User/Register.vue')
   },
   table,
-  otherTable,
-  teamTable,
-
-  // {
-  //   path: '/table/:tableId',
-  //   name: 'table',
-  //   component:() =>import('../views/Table/Table.vue'),
-  //   children:[
-  //     {
-  //       path: 'space',
-  //       name: 'space',
-  //       component:() =>import('../views/Space/Space.vue'),
-  //     },
-  //     {
-  //       path: 'team/:teamId(\\d+)?',
-  //       name: 'team',
-  //       component:() =>import('../views/Team/Team.vue'),
-  //     },
-  //     {
-  //       path: '/template',
-  //       name: 'template',
-  //       component: () => import('../views/Template.vue')
-  //     },
-  //     {
-  //       path: '/template',
-  //       name: 'template',
-  //       component: () => import('../views/Template.vue')
-  //     }
-  //   ],
-  // },
-
 
 ]
 

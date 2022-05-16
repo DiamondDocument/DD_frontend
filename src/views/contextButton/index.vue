@@ -1,3 +1,11 @@
+<!--请把这个放在components文件夹中-->
+<!--请把这个放在components文件夹中-->
+<!--请把这个放在components文件夹中-->
+<!--请把这个放在components文件夹中-->
+<!--请把这个放在components文件夹中-->
+
+
+
 <template>
   <div id="contextmenu" class="contextmenu">
     <div v-if="spaceType===1 || spaceType===2 || spaceType===0" class="contextmenu__item" @click="edit()">编辑</div>

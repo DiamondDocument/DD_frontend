@@ -1,4 +1,5 @@
 <template>
+  <p>{{$route.params.tableId}}giao</p>
   <el-menu default-active="'/' +this.$route.path.split('/')[1]">
     <el-button type="primary" style="margin-left: 20px" @click="allRead">全部已读</el-button>
     <span style="margin-left: 20px">未读数量：{{messageNotRead}}</span>

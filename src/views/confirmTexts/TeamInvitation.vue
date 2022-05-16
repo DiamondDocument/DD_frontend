@@ -1,3 +1,10 @@
+<!--请把这个放在components文件夹中-->
+<!--请把这个放在components文件夹中-->
+<!--请把这个放在components文件夹中-->
+<!--请把这个放在components文件夹中-->
+<!--请把这个放在components文件夹中-->
+
+
 <template>
   <teleport to="body">
     <transition name="confirm-fade">
