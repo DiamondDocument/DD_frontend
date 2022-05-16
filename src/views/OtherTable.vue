@@ -24,22 +24,22 @@
           </el-menu-item>
 
           <el-menu-item index="3">
-            <el-divider content-position="center"><p v-if="!isCollapse">团队名称</p></el-divider>
+            <el-divider content-position="center"><p v-if="!isCollapse">Ta的名称</p></el-divider>
           </el-menu-item>
 
           <el-menu-item index="4" >
             <el-icon><house /></el-icon>
-            <span slot="title">团队空间</span>
+            <span slot="title">Ta的空间</span>
           </el-menu-item>
 
           <el-menu-item index="5" >
             <el-icon><opportunity /></el-icon>
-            <span slot="title">团队详情</span>
+            <span slot="title">Ta的收藏</span>
           </el-menu-item>
 
           <el-menu-item index="6" >
-            <el-icon><delete /></el-icon>
-            <span slot="title">回收站</span>
+            <el-icon><user-filled /></el-icon>
+            <span slot="title">Ta的团队</span>
           </el-menu-item>
 
         </el-menu>
@@ -115,7 +115,7 @@ import Space from "@/views/Space";
 import Message from "@/views/Message";
 
 export default {
-  name: 'TeamTable',
+  name: 'OtherTable',
   data() {
     return {
       type: 'recent',

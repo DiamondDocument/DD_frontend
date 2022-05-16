@@ -31,6 +31,11 @@ const routes = [
     component: () => import('../views/TeamTable.vue')
   },
   {
+    path: '/OtherTable',
+    name: 'OtherTable',
+    component: () => import('../views/OtherTable.vue')
+  },
+  {
     //path: '/table/:teamId(\\d+)?',
     path: '/table',
     name: 'table',

@@ -5,6 +5,7 @@
     <el-button><router-link to="/login">登录</router-link></el-button> |
     <el-button><router-link to="/register">注册</router-link></el-button>|
     <el-button><router-link to="/TeamTable">团队工作台（测试用）</router-link></el-button>|
+    <el-button><router-link to="/OtherTable">他人工作台（测试用）</router-link></el-button>|
   </nav>
 <!--  <router-link to="/template">gg</router-link>-->
 </template>
