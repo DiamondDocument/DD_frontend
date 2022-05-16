@@ -1,22 +1,33 @@
 <template>
   <div id="contextmenu" class="contextmenu">
-    <div class="contextmenu__item" @click="handleTwo()">编辑</div>
-    <div class="contextmenu__item" @click="handleThree()">收藏</div>
-    <div class="contextmenu__item" @click="handleFour()">移动</div>
-    <div class="contextmenu__item" @click="handleFive()">删除</div>
-    <div class="contextmenu__item" @click="handleFive()">等等……</div>
+    <div v-if="spaceType===1 || spaceType===2 || spaceType===0" class="contextmenu__item" @click="edit()">编辑</div>
+    <div v-if="spaceType===1 || spaceType===0" class="contextmenu__item" @click="collect()">收藏</div>
+    <div v-if="spaceType===1" class="contextmenu__item" @click="move()">移动</div>
+    <div v-if="spaceType===1" class="contextmenu__item" @click="remove()">删除</div>
+    <div v-if="spaceType===1 || spaceType===2 || spaceType===0" class="contextmenu__item" @click="_export()">导出</div>
+    <div v-if="spaceType===1 || spaceType===2 || spaceType===0" class="contextmenu__item" @click="share()">分享</div>
+    <div v-if="spaceType===2" class="contextmenu__item" @click="disCollect()">取消收藏</div>
+    <div v-if="spaceType===3" class="contextmenu__item" @click="recover()">恢复文件</div>
+    <div v-if="spaceType===3" class="contextmenu__item" @click="del()">彻底删除</div>
   </div>
 </template>
 
 
 <script>
+
 export default {
   name: "index",
+  props: {
+    spaceType: {
+      type: Number
+    }
+  },
   data () {
     return {
       collapse: false,
     }
-  },  methods: {
+  },
+  methods: {
     init (row, column,event) {
       let menu = document.querySelector('#contextmenu')
       let cha = document.body.clientHeight - event.clientY
@@ -32,18 +43,33 @@ export default {
     foo () {
       this.$emit('foo')
     },
-    handleTwo () {
-      this.$emit('handleTwo')
+    edit () {
+      this.$emit('edit')
     },
-    handleThree () {
-      this.$emit('handleThree')
+    collect (){
+      this.$emit('collect')
     },
-    handleFour (){
-      this.$emit('handleFour')
+    move (){
+      this.$emit('move')
     },
-    handleFive (){
-      this.$emit('handleFive')
-    }
+    remove (){
+      this.$emit('remove')
+    },
+    _export (){
+      this.$emit('_export')
+    },
+    share (){
+      this.$emit('share')
+    },
+    disCollect (){
+      this.$emit('disCollect')
+    },
+    recover() {
+      this.$emit('recover')
+    },
+    del() {
+      this.$emit('del')
+    },
   }
 }
 
@@ -52,28 +78,29 @@ export default {
 <style scoped>
 .contextmenu__item {
   display: block;
-  line-height: 34px;
+  line-height: 50px;
   text-align: center;
 }
 .contextmenu__item:not(:last-child) {
-  border-bottom: 1px solid rgba(64,158,255,.2);
+  border-bottom: 1px solid rgba(171, 171, 171, 0.2);
 }
 .contextmenu {
   position: absolute;
-  background-color: #ecf5ff;
-  width: 100px;  font-size: 12px;
-  color: #409EFF;
-  border-radius: 4px;
+  background-color: #ffffff;
+  width: 170px;  font-size: 17px;
+  color: #4d4d4d;
+  border-radius: 10px;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
-  border: 1px solid rgba(64,158,255,.2);
+  border: 1px solid rgba(44, 44, 44, 0.2);
   white-space: nowrap;
   z-index: 1000;
 }
 .contextmenu__item:hover {
   cursor: pointer;
-  background: #66b1ff;
-  border-color: #66b1ff;
+  border-radius: 10px;
+  background: #c2c2c2;
+  border-color: #bdbdbd;
   color: #fff;
 }
 

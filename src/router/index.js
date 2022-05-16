@@ -21,41 +21,42 @@ const routes = [
     component: () => import('../views/User/Register.vue')
   },
   {
-    path: '/table/:teamId(\\d+)?',
+    path: '/template',
+    name: 'template',
+    component: () => import('../views/User/Template.vue')
+  },
+  {
+    //path: '/table/:teamId(\\d+)?',
+    path: '/table',
     name: 'table',
     component:() =>import('../views/Table.vue'),
     children:[
-      {
-        path: 'space/:type?',
-        name: 'space',
-        component:() =>import('../views/Space.vue'),
-      },
-      {
-        path: 'team/:teamId(\\d+)?',
-        name: 'team',
-        component:() =>import('../views/Team/Team.vue'),
-      },
-      {
-        path: 'team/list/:search',
-        name: 'teamList',
-        component:() =>import('../views/Team/List.vue'),
-      },
-      {
-        path: 'team/create',
-        name: 'teamCreate',
-        component:() =>import('../views/Team/Create.vue'),
-      },
-      {
-        path: 'user/information/:userId?',
-        name: 'userInformation',
-        component:() =>import('../views/User/Information.vue'),
-      },
-      {
-        path: 'template/:type',
-        //type为recommend、my、collection和message
-        name: 'template',
-        component:() =>import('../views/Template/Template.vue'),
-      },
+      // {
+      //   path: 'team/:teamId(\\d+)?',
+      //   name: 'team',
+      //   component:() =>import('../views/Team/Team.vue'),
+      // },
+      // {
+      //   path: 'team/list/:search',
+      //   name: 'teamList',
+      //   component:() =>import('../views/Team/List.vue'),
+      // },
+      // {
+      //   path: 'team/create',
+      //   name: 'teamCreate',
+      //   component:() =>import('../views/Team/Create.vue'),
+      // },
+      // {
+      //   path: 'user/information/:userId?',
+      //   name: 'userInformation',
+      //   component:() =>import('../views/User/Information.vue'),
+      // },
+      // {
+      //   path: 'template/:type',
+      //   //type为recommend、my、collection和message
+      //   name: 'template',
+      //   component:() =>import('../views/Template/Template.vue'),
+      // },
     ],
   },
 
