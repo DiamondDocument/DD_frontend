@@ -1,4 +1,6 @@
 <template>
+  <p>{{$route.params.tableId}}giao</p>
+
   <el-menu default-active="'/' +this.$route.path.split('/')[1]">
     <el-input v-model="input" placeholder="空间内搜索文件" style="width: 20%"></el-input>
     <el-button type="primary" style="margin-left: 10px">
@@ -36,7 +38,7 @@
 <script>
 import Template from "@/views/Template/Template";
 import {Search} from "@element-plus/icons-vue";
-import index from "@/views/contextButton/index.vue"
+import index from "@/views/contextButton"
 import {ref} from "vue";
 export default {
   name: "Space",

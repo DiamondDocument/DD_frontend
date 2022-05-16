@@ -4,8 +4,8 @@
     <el-button><router-link to="/table">工作台</router-link> </el-button> |
     <el-button><router-link to="/login">登录</router-link></el-button> |
     <el-button><router-link to="/register">注册</router-link></el-button>|
-    <el-button><router-link to="/TeamTable">团队工作台（测试用）</router-link></el-button>|
-    <el-button><router-link to="/OtherTable">他人工作台（测试用）</router-link></el-button>|
+    <el-button @click="toTeamTable">团队工作台（测试用）</el-button>|
+    <el-button @click="toOtherTable">>他人工作台（测试用）</el-button>|
   </nav>
 <!--  <router-link to="/template">gg</router-link>-->
 </template>
@@ -17,6 +17,14 @@ export default {
   name: 'HomeView',
   components: {
     HelloWorld
+  },
+  methods:{
+    toTeamTable(){
+      this.$router.push({name:"teamTable",params:{tableId:123}});
+    },
+    toOtherTable(){
+      this.$router.push({name:"otherTable",params:{tableId:123}});
+    },
   },
 }
 </script>

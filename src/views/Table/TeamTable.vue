@@ -1,11 +1,11 @@
 <template >
   <el-container>
     <el-header class="Header" style="height: 50px">
-      <img src="../assets/logo.png" style="width: 50px; height: 50px;">
+      <img src="../../assets/logo.png" style="width: 50px; height: 50px;">
 
       <div>
         <a href="#" style="padding: 0 10px 0 0">头像</a>
-        <el-icon @click="toMessage"><MessageBox /></el-icon>
+        <el-icon @click="this.$router.push('/message')"><MessageBox /></el-icon>
 
       </div>
     </el-header>
@@ -44,21 +44,10 @@
 
         </el-menu>
       </el-aside>
-      <el-main class="Main" width="100%" v-if="type==='recent'" style="padding: 0; height: 100%">
-        <space :spaceType="0"></space>
-      </el-main>
-      <el-main class="Main" width="100%" v-if="type==='mySpace'" style="padding: 0; height: 100%">
-        <space :spaceType="1"></space>
-      </el-main>
-      <el-main class="Main" width="100%" v-else-if="type==='collection'" style="padding: 0; height: 100%">
-        <space :spaceType="2"></space>
-      </el-main>
-      <el-main class="Main" width="100%" v-else-if="type==='bin'" style="padding: 0; height: 100%">
-        <space :spaceType="3"></space>
-      </el-main>
-      <el-main class="Main" width="100%" v-else-if="type==='message'" style="padding: 0; height: 900px">
-        <message></message>
-      </el-main>
+        <el-main>
+          <p>{{$route.params.tableId}}giao</p>
+          <router-view></router-view>
+        </el-main>
     </el-container>
   </el-container>
 
@@ -111,8 +100,8 @@ a {
 
 
 <script>
-import Space from "@/views/Space";
-import Message from "@/views/Message";
+import Space from "@/views/Space/Space";
+import Message from "@/views/Message/Message";
 
 export default {
   name: 'TeamTable',
