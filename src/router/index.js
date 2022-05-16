@@ -106,6 +106,17 @@ const collectionTemplate = {
   name: 'collectionTemplate',
   component:() =>import('../views/Template/Collection.vue'),
 };
+const templateDetail = {
+  path: 'template/detail/:templateId',
+  name: 'templateDetail',
+  component:() =>import('../views/Template/Detail.vue'),
+};
+//文档路由
+const documentEdit = {
+  path: 'document/edit/:documentId',
+  name: 'documentEdit',
+  component:() =>import('../views/Document/Edit.vue'),
+}
 
 //工作台路由
 const table = {
@@ -137,6 +148,9 @@ const table = {
     recommendTemplate,
     myTemplate,
     collectionTemplate,
+    templateDetail,
+    //文档
+    documentEdit,
   ],
 };
 // const teamTable = {
