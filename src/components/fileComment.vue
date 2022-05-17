@@ -1,18 +1,13 @@
-<!--请把这个放在components文件夹中-->
-<!--请把这个放在components文件夹中-->
-<!--请把这个放在components文件夹中-->
-<!--请把这个放在components文件夹中-->
-<!--请把这个放在components文件夹中-->
-<!--reply: 暂时没办法我还不会………………-->
+
 <template>
   <teleport to="body">
     <transition name="confirm-fade">
       <div class="confirm" v-show="visible">
         <div class="confirm-wrapper">
           <div class="confirm-content">
-            <p class="text">{{ text }}</p>
-            <el-button type="primary" style="bottom: 10px; position: absolute" @click="confirm"><span>确定</span></el-button>
-            <el-button type="primary" style="bottom: 10px;position: absolute" @click="cancel"><span>关闭</span></el-button>
+            <p class="text">{{ detail }}</p>
+            <el-button type="primary" style="bottom: 10px; left: 80px; position: absolute" @click="confirm"><span>查看文档</span></el-button>
+            <el-button type="primary" style="bottom: 10px; right: 80px; position: absolute" @click="cancel"><span>关闭</span></el-button>
           </div>
         </div>
       </div>
@@ -21,16 +16,18 @@
 </template>
 
 <script>
+
 export default {
   name: "TeamInvitation",
-  props: {
-    text: {
-      type: String,
-      default: ''
-    },
-  },
+  // props: {
+  //   detail: {
+  //     type: String,
+  //     default: ''
+  //   },
+  // },
   data() {
     return {
+      detail: '',
       visible: false,
     }
   },
@@ -49,7 +46,8 @@ export default {
     hide () {
       this.visible = false
     },
-    show () {
+    show (s) {
+      this.detail = s
       this.visible = true
     }
   },
