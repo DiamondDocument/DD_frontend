@@ -23,7 +23,7 @@
             <el-icon><house /></el-icon>
             <span slot="title">我的空间</span>
           </el-menu-item>
-          <el-menu-item index="4" @click="this.$router.push({name: 'Collection'})">
+          <el-menu-item index="4" @click="this.$router.push({name: 'collection'})">
             <el-icon><opportunity /></el-icon>
             <span slot="title">我的收藏</span>
           </el-menu-item>
@@ -50,16 +50,16 @@
           </el-menu-item>
         </el-menu>
       </el-aside>
-<!--      <el-main>-->
-<!--        <p>{{$route.params.info}}giao</p>-->
-<!--        <router-view></router-view>-->
-<!--      </el-main>-->
+      <el-main>
+        <p>{{$route.params.info}}giao</p>
+        <router-view></router-view>
+      </el-main>
 <!--      <el-main>-->
 <!--        <space></space>-->
 <!--      </el-main>-->
-      <el-main>
-        <RecommendTemplate></RecommendTemplate>
-      </el-main>
+<!--      <el-main>-->
+<!--        <RecommendTemplate></RecommendTemplate>-->
+<!--      </el-main>-->
     </el-container>
   </el-container>
 

@@ -15,36 +15,69 @@
     </template>
     <div class="text item">{{messages[i-1].abstract}}</div>
   </el-card>
-  <file-comment ref="confirmTexts" @confirm="confirm"></file-comment>
+  <file-comment ref="fileComment" @toFile="toFile"></file-comment>
+  <join-request ref="joinRequest" @agree="agree" @refuse="refuse"></join-request>
+  <request-result ref="requestResult"></request-result>
 </template>
 
 <script>
 import {ref} from "vue"
 import fileComment from "@/components/fileComment";
-import joinRequest from "@/components/joinRequest";
 import requestResult from "@/components/requestResult";
-import JoinRequest from "@/components/joinRequest";
+import joinRequest from "@/components/joinRequest";
 export default {
   name: "Message",
   components: {
-    JoinRequest,
+    joinRequest,
     fileComment,
+    requestResult,
   },
   setup () {
     // 拿到confirm的dom
-    const confirmTexts = ref()
+    const fileComment = ref()
+    const joinRequest = ref()
+    const requestResult = ref()
     // 唤起confirm
     function showConfirm (type, s) {
-      confirmTexts.value.show(s)
+      switch (type) {
+        case 0:
+          fileComment.value.show(s)
+          break;
+        case 1:
+          confirm('跳转到团队详情页')
+          break;
+        case 2:
+          joinRequest.value.show(s)
+          break;
+        case 3:
+          requestResult.value.show(s)
+          break;
+        default:
+          window.alert('未知邮件类型！！！！')
+          break
+      }
     }
-    // 点击确认按钮后的事件处理
-    function confirm () {
-      confirmTexts.value.hide()
+    // 事件处理
+    function toFile () {
+      window.alert('跳转到该文档')
+      fileComment.value.hide()
+    }
+    function agree() {
+      confirm('你居然同意了')
+      joinRequest.value.hide()
+    }
+    function refuse() {
+      confirm('那必须拒绝')
+      joinRequest.value.hide()
     }
     return {
-      confirmTexts: confirmTexts,
+      fileComment: fileComment,
+      joinRequest: joinRequest,
+      requestResult: requestResult,
       showConfirm,
-      confirm
+      toFile,
+      agree,
+      refuse,
     }
   },
   data() {
@@ -77,7 +110,7 @@ export default {
           type: 3,
           title: '申请得到批复',
           abstract: '您的申请 加入A-SOUL 遭到拒绝',
-          detail: '您的申请 加入A-SOUL 遭到拒绝',
+          detail: '这里不欢迎你',
           read: false
         },
       ]

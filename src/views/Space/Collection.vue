@@ -48,19 +48,20 @@ export default {
   data() {
     return {
       menuVisible: false,
+      spaceType: 2,
       tableData: [
         {
-          name: '金刚石需求文档',
+          name: 'GABA穴',
           author: '赵老板',
           altDate: '1919-08-10',
           altUser: 'lyh',
           size: '20K'
         },
         {
-          name: '金刚石产品计划书',
-          author: '赵老板',
+          name: '王爷本篇',
+          author: '王爷',
           altDate: '1919-08-10',
-          altUser: 'lyh',
+          altUser: '赵老板',
           size: '98K'
         },
       ],

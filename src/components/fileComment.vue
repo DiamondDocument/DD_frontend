@@ -6,7 +6,7 @@
         <div class="confirm-wrapper">
           <div class="confirm-content">
             <p class="text">{{ detail }}</p>
-            <el-button type="primary" style="bottom: 10px; left: 80px; position: absolute" @click="confirm"><span>查看文档</span></el-button>
+            <el-button type="primary" style="bottom: 10px; left: 80px; position: absolute" @click="toFile"><span>查看文档</span></el-button>
             <el-button type="primary" style="bottom: 10px; right: 80px; position: absolute" @click="cancel"><span>关闭</span></el-button>
           </div>
         </div>
@@ -19,24 +19,18 @@
 
 export default {
   name: "TeamInvitation",
-  // props: {
-  //   detail: {
-  //     type: String,
-  //     default: ''
-  //   },
-  // },
   data() {
     return {
       detail: '',
       visible: false,
     }
   },
-  emits: ['confirm', 'cancel'],
+  emits: ['toFile', 'cancel'],
   methods: {
     // 确认
-    confirm () {
+    toFile () {
       this.hide()
-      this.$emit('confirm')
+      this.$emit('toFile')
     },
     // 取消
     cancel () {
@@ -89,7 +83,7 @@ export default {
     position: relative;
     background: #ffffff;
     .text {
-      padding: 19px 15px;
+      padding: 25px 20px;
       line-height: 22px;
       text-align: center;
       font-size: 15px;
