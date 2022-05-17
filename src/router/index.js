@@ -59,7 +59,7 @@ const teamSpace = {
 const recent = {
   path: 'space/recent',
   name: 'recent',
-  component:() =>import('../views/Space/Space.vue'),
+  component:() =>import('../views/Space/Recent.vue'),
 };
 const collection = {
   path: 'space/collection',

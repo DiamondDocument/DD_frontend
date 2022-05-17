@@ -3,7 +3,7 @@
 <!--请把这个放在components文件夹中-->
 <!--请把这个放在components文件夹中-->
 <!--请把这个放在components文件夹中-->
-<!--reply: 暂时没办法我还不会………………-->
+
 
 
 <template>

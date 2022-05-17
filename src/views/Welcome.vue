@@ -1,8 +1,11 @@
 <template>
   <p>欢迎页</p>
+<<<<<<< HEAD
 <!--  <p>{{this.$router.getRoutes()}}</p>-->
+=======
+>>>>>>> 8fc92456ee8fbf6f58bb5c7c58b37db93f65d497
   <nav>
-    <el-button><router-link to="/table">工作台</router-link> </el-button> |
+    <el-button><router-link to="/table/:info">工作台</router-link> </el-button> |
     <el-button><router-link to="/login">登录</router-link></el-button> |
     <el-button><router-link to="/register">注册</router-link></el-button>|
     <el-button @click="toTeamTable">团队工作台（测试用）</el-button>|

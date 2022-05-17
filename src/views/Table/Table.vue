@@ -23,7 +23,7 @@
             <el-icon><house /></el-icon>
             <span slot="title">我的空间</span>
           </el-menu-item>
-          <el-menu-item index="4" @click="this.$router.push({name: 'collection'})">
+          <el-menu-item index="4" @click="this.$router.push({name: 'Collection'})">
             <el-icon><opportunity /></el-icon>
             <span slot="title">我的收藏</span>
           </el-menu-item>

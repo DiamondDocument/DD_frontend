@@ -1,9 +1,3 @@
-<!--请把这个放在components文件夹中-->
-<!--请把这个放在components文件夹中-->
-<!--请把这个放在components文件夹中-->
-<!--请把这个放在components文件夹中-->
-<!--请把这个放在components文件夹中-->
-
 
 <template>
   <teleport to="body">
@@ -11,15 +5,9 @@
       <div class="confirm" v-show="visible">
         <div class="confirm-wrapper">
           <div class="confirm-content">
-            <p class="text">{{ text }}</p>
-            <div class="operate">
-              <div class="operate-btn left" @click="confirm">
-                {{ confirmBtnText }}
-              </div>
-              <div class="operate-btn" @click="cancel">
-                {{ cancelBtnText }}
-              </div>
-            </div>
+            <p class="text">{{ detail }}</p>
+            <el-button type="primary" style="bottom: 10px; left: 80px; position: absolute" @click="confirm"><span>查看文档</span></el-button>
+            <el-button type="primary" style="bottom: 10px; right: 80px; position: absolute" @click="cancel"><span>关闭</span></el-button>
           </div>
         </div>
       </div>
@@ -28,24 +16,18 @@
 </template>
 
 <script>
+
 export default {
   name: "TeamInvitation",
-  props: {
-    text: {
-      type: String,
-      default: ''
-    },
-    confirmBtnText: {
-      type: String,
-      default: '确定'
-    },
-    cancelBtnText: {
-      type: String,
-      default: '取消'
-    }
-  },
+  // props: {
+  //   detail: {
+  //     type: String,
+  //     default: ''
+  //   },
+  // },
   data() {
     return {
+      detail: '',
       visible: false,
     }
   },
@@ -64,7 +46,8 @@ export default {
     hide () {
       this.visible = false
     },
-    show () {
+    show (s) {
+      this.detail = s
       this.visible = true
     }
   },
@@ -100,32 +83,17 @@ export default {
   transform: translate(-50%, -50%);
   z-index: 997;
   .confirm-content {
-    width: 270px;
+    width: 400px;
+    height: 400px;
     border-radius: 13px;
-    background: gray;
+    position: relative;
+    background: #ffffff;
     .text {
       padding: 19px 15px;
       line-height: 22px;
       text-align: center;
-      font-size: 10px;
+      font-size: 15px;
       color: dimgrey;
-    }
-    .operate {
-      display: flex;
-      align-items: center;
-      text-align: center;
-      font-size: 10px;
-      .operate-btn {
-        flex: 1;
-        line-height: 22px;
-        padding: 10px 0;
-        border-top: 1px solid cornflowerblue;
-        color: powderblue;
-        &.left {
-          border-right: 1px solid cornflowerblue;
-          color: powderblue;
-        }
-      }
     }
   }
 }
@@ -161,9 +129,7 @@ export default {
     transform: scale(1);
   }
   100% {
-    100% {
       transform: scale(0);
-    }
   }
 }
 </style>
