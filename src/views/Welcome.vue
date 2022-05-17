@@ -1,6 +1,6 @@
 <template>
   <p>欢迎页</p>
-  <p>{{this.$router.getRoutes()}}</p>
+<!--  <p>{{this.$router.getRoutes()}}</p>-->
   <nav>
     <el-button><router-link to="/table">工作台</router-link> </el-button> |
     <el-button><router-link to="/login">登录</router-link></el-button> |
@@ -8,7 +8,7 @@
     <el-button @click="toTeamTable">团队工作台（测试用）</el-button>|
     <el-button @click="toOtherTable">>他人工作台（测试用）</el-button>|
   </nav>
-<!--  <router-link to="/template">gg</router-link>-->
+  <router-link to="/template/my">gg</router-link>
 </template>
 <script>
 // @ is an alias to /src
