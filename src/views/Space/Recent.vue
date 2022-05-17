@@ -34,7 +34,7 @@
 <script>
 import Template from "@/views/Template/Template";
 import {Search} from "@element-plus/icons-vue";
-import index from "@/views/contextButton"
+import index from "@/components/index"
 import {ref} from "vue";
 export default {
   name: "Recent",

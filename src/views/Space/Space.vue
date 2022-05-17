@@ -31,18 +31,20 @@
   <index v-if="menuVisible" @foo="foo" ref="contextButton" :spaceType="spaceType"
                   @collect="collect" @move="move" @remove="remove" @_export="_export"
                   @share="share" @edit="edit" @disCollect="disCollect" @recover="recover"
-                  @del="del"
+                  @del="del" @authority = "showAuthority('默认文件名')"
          data-popper-placement="top"></index>
+  <authority ref="authority" @all="authorityAll" @onlyMe="authorityOnlyMe"></authority>
 </template>
 
 <script>
 import Template from "@/views/Template/Template";
 import {Search} from "@element-plus/icons-vue";
-import index from "@/views/contextButton"
+import index from "@/components/index"
+import authority from "@/components/authority";
 import {ref} from "vue";
 export default {
   name: "Space",
-  components: {Search, Template, index},
+  components: {Search, Template, index, authority},
   props:{
     spaceType: {
       type: Number,
@@ -90,8 +92,15 @@ export default {
     }
   },
   setup() {
+    const authority = ref()
+    function showAuthority(fileName) {
+      confirm('in')
+      authority.value.show(fileName)
+    }
     return {
       input :ref(''),
+      showAuthority,
+      authority
     }
   },
   methods: {
@@ -135,6 +144,13 @@ export default {
     },
     del() {
       window.alert("已彻底删除")
+
+      },
+    authorityAll() {
+      confirm('所有人可编辑')
+    },
+    authorityOnlyMe() {
+      confirm('只有自己可编辑')
     }
   }
 }

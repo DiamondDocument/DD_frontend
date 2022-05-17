@@ -1,16 +1,9 @@
-<!--请把这个放在components文件夹中-->
-<!--请把这个放在components文件夹中-->
-<!--请把这个放在components文件夹中-->
-<!--请把这个放在components文件夹中-->
-<!--请把这个放在components文件夹中-->
-
-
-
 <template>
   <div id="contextmenu" class="contextmenu">
     <div v-if="spaceType===1 || spaceType===2 || spaceType===0" class="contextmenu__item" @click="edit()">编辑</div>
     <div v-if="spaceType===1 || spaceType===0" class="contextmenu__item" @click="collect()">收藏</div>
     <div v-if="spaceType===1" class="contextmenu__item" @click="move()">移动</div>
+    <div v-if="spaceType===1" class="contextmenu__item" @click="authority()">设置权限</div>
     <div v-if="spaceType===1" class="contextmenu__item" @click="remove()">删除</div>
     <div v-if="spaceType===1 || spaceType===2 || spaceType===0" class="contextmenu__item" @click="_export()">导出</div>
     <div v-if="spaceType===1 || spaceType===2 || spaceType===0" class="contextmenu__item" @click="share()">分享</div>
@@ -77,6 +70,9 @@ export default {
     del() {
       this.$emit('del')
     },
+    authority() {
+      this.$emit('authority')
+    }
   }
 }
 
