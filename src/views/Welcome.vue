@@ -8,7 +8,6 @@
     <el-button @click="toTeamTable">团队工作台（测试用）</el-button>|
     <el-button @click="toOtherTable">>他人工作台（测试用）</el-button>|
   </nav>
-  <router-link to="/template/my">gg</router-link>
 </template>
 <script>
 // @ is an alias to /src

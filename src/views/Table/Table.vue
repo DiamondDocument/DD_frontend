@@ -54,8 +54,11 @@
 <!--        <p>{{$route.params.info}}giao</p>-->
 <!--        <router-view></router-view>-->
 <!--      </el-main>-->
+<!--      <el-main>-->
+<!--        <space></space>-->
+<!--      </el-main>-->
       <el-main>
-        <space></space>
+        <RecommendTemplate></RecommendTemplate>
       </el-main>
     </el-container>
   </el-container>
@@ -111,6 +114,7 @@ a {
 <script>
 import Space from "@/views/Space/Space";
 import Message from "@/views/Message/Message";
+import RecommendTemplate from "@/views/Template/Recommend"
 
 export default {
   name: 'Table',
@@ -121,6 +125,7 @@ export default {
     }
   },
   components: {
+    RecommendTemplate,
     Space,
     Message
   },

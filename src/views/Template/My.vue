@@ -1,85 +1,92 @@
 <template>
-  <p>saaa</p>
-  <el-card v-for="i in messageNum" class="box-card">
-    <template>
-      <div class="card-header">
-        <span>{{messages[i-1].title}}</span>
-        <el-button type="text" v-if="messages[i-1].read===false" @click="read(i-1)">标记已读</el-button>
-        <el-tag type="success" v-else style="width: 100px; height: 30px">已读</el-tag>
-      </div>
-    </template>
-    <div class="text item">{{messages[i-1].abstract}}</div>
-  </el-card>
-
+  <el-row>
+    <el-col
+        v-for="(o, index) in templateNum"
+        :key="o"
+        :span="6"
+        :offset="index > 0 ? 0.5 : 0"
+    >
+      <el-card class="box-card">
+        <img
+            src="../../assets/logo.png"
+            class="image"
+            style="position: center"
+        />
+        <div style="padding: 14px; margin: 0;">
+          <p>{{templates[index].title}}</p>
+          <div class="bottom">
+            <p>作者：{{templates[index].author}}</p>
+            <el-button text class="button">立即使用</el-button>
+          </div>
+        </div>
+      </el-card>
+    </el-col>
+  </el-row>
 </template>
 
 <script>
-
 export default {
-  name: "My.vue",
-  components: {
-  },
+  name: "MyTemplate.vue",
+
   data() {
     return {
-      messageNum: 4,
-      messageNotRead: 4,
-      messages: [
+      templateNum: 5,
+      templates: [
         {
-          title: '团队邀请',
-          abstract: '赵老板 邀请您加入 DiamondDocument',
-          read: false
+          title: '金刚石模板1',
+          author: '我',
+          img: "./assets/logo.png"
         },
         {
-          title: '文档被评论',
-          abstract: '赵老板 评论了您的文档 真夏の夜の淫梦',
-          read: false
+          title: '金刚石模板2',
+          author: '我',
+          img: "./assets/logo.png"
         },
         {
-          title: '收到加入团队的申请',
-          abstract: '赵老板 申请加入您的团队 Lords Of The LockerRoom',
-          read: false
+          title: '金刚石模板3',
+          author: '我',
+          img: "./assets/logo.png"
         },
         {
-          title: '申请得到批复',
-          abstract: '您的申请 加入A-SOUL 遭到拒绝',
-          read: false
+          title: '金刚石模板4',
+          author: '我',
+          img: "./assets/logo.png"
+        },
+        {
+          title: '金刚石模板5',
+          author: '我',
+          img: "./assets/logo.png"
         },
       ]
-    }
-  },
-  methods: {
-    read(i) {
-      this.messages[i].read=true;
-      this.messageNotRead--;
-    },
-    allRead() {
-      this.messageNotRead=0;
-      let i = 0;
-      while (i < this.messageNum){
-        this.messages[i].read=true;
-        i++;
-      }
     }
   }
 }
 </script>
 
-<style scoped>
-.card-header {
+<style>
+
+.bottom {
+  margin-top: 13px;
+  line-height: 12px;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
-.text {
-  font-size: 15px;
+
+.button {
+  padding: 0;
+  min-height: auto;
 }
-.item {
-  margin-bottom: 18px;
+
+.image {
+  width: 100px;
+  display: block;
 }
+
 .box-card {
-  margin-left: 20px;
+  margin-left: 0;
   margin-top: 20px;
-  width: 480px;
+  width: 400px;
   float: left;
 }
 </style>
