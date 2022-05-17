@@ -1,9 +1,6 @@
 <template>
   <p>欢迎页</p>
-<<<<<<< HEAD
 <!--  <p>{{this.$router.getRoutes()}}</p>-->
-=======
->>>>>>> 8fc92456ee8fbf6f58bb5c7c58b37db93f65d497
   <nav>
     <el-button><router-link to="/table/:info">工作台</router-link> </el-button> |
     <el-button><router-link to="/login">登录</router-link></el-button> |
@@ -69,38 +66,6 @@ nav a.router-link-exact-active {
     justify-content: space-evenly;
     height: 100vh;
     align-items: center;
-  }
-
-  .shell {
-    /*float: left;*/
-    width: 320px;
-    height: 640px;
-    background-color: ghostwhite;
-    position: absolute;
-    top: 0;
-  }
-
-  .buttons {
-    margin: 60px 0;
-  }
-
-  .li {
-    letter-spacing: 2px;
-    font: 600 17px '';
-    padding: 25px 52px;
-    transition: .3s;
-  }
-
-  .li::after {
-    content: '';
-    position: absolute;
-    left: 20px;
-    margin-top: -22px;
-    display: block;
-    width: 20px;
-    height: 20px;
-    background-color: ghostwhite;
-    border-radius: 30%;
   }
 
   .li ul {

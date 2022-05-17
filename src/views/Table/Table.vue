@@ -48,12 +48,14 @@
             <el-icon><delete /></el-icon>
             <span slot="title">回收站</span>
           </el-menu-item>
-
         </el-menu>
       </el-aside>
+<!--      <el-main>-->
+<!--        <p>{{$route.params.info}}giao</p>-->
+<!--        <router-view></router-view>-->
+<!--      </el-main>-->
       <el-main>
-        <p>{{$route.params.info}}giao</p>
-        <router-view></router-view>
+        <space></space>
       </el-main>
     </el-container>
   </el-container>
