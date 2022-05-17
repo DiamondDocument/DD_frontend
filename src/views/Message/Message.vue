@@ -25,6 +25,7 @@ import {ref} from "vue"
 import fileComment from "@/components/fileComment";
 import requestResult from "@/components/requestResult";
 import joinRequest from "@/components/joinRequest";
+import {ElMessage} from "element-plus";
 export default {
   name: "Message",
   components: {
@@ -53,13 +54,13 @@ export default {
           requestResult.value.show(s)
           break;
         default:
-          window.alert('未知邮件类型！！！！')
+          ElMessage('未知邮件类型！！！！')
           break
       }
     }
     // 事件处理
     function toFile () {
-      window.alert('跳转到该文档')
+      ElMessage('跳转到该文档')
       fileComment.value.hide()
     }
     function agree() {

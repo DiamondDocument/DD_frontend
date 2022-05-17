@@ -100,31 +100,31 @@ export default {
       document.removeEventListener('click', this.foo);
     },
     edit () {
-      window.alert("进入编辑")
+      ElMessage("进入编辑")
     },
     collect () {
-      window.alert("收藏成功/已经被收藏")
+      ElMessage("收藏成功/已经被收藏")
     },
     move (){
-      window.alert("请选择移动到：")
+      ElMessage("请选择移动到：")
     },
     remove (){
-      window.alert("删除成功")
+      ElMessage("删除成功")
     },
     _export (){
-      window.alert("请选择保存位置")
+      ElMessage("请选择保存位置")
     },
     share (){
-      window.alert("生成分享链接")
+      ElMessage("生成分享链接")
     },
     disCollect() {
-      window.alert("已取消收藏")
+      ElMessage("已取消收藏")
     },
     recover() {
-      window.alert("成功恢复")
+      ElMessage("成功恢复")
     },
     del() {
-      window.alert("已彻底删除")
+      ElMessage("已彻底删除")
     }
   }
 }
