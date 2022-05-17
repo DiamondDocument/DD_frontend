@@ -8,6 +8,8 @@
   },
   "dependencies": {
     "@element-plus/icons-vue": "^1.1.4",
+    "@wangeditor/editor": "^5.0.1",
+    "@wangeditor/editor-for-react": "^1.0.3",
     "@wangeditor/editor-for-vue": "^5.1.11",
     "axios": "^0.26.1",
     "core-js": "^3.8.3",
