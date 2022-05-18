@@ -6,32 +6,58 @@
     </div>
     <br>
     <div class="Wireframe">
+      <el-tabs :model-value="activeName" class="demo-tabs" stretch="true" @tab-click="handleClick">
+        <el-tab-pane label="用户名登录" name="first">
 
-      <el-form
-        label-position= "top"
-        label-width="100px"
-        style="max-width: 460px"
-        >
+          <el-form
+              label-position= "top"
+              label-width="100px"
+              style="max-width: 460px"
+          >
 
-        <el-form-item label="用户名">
-          <el-input v-model="userId" />
-        </el-form-item>
+            <el-form-item label="用户名">
+              <el-input v-model="userId" />
+            </el-form-item>
 
-        <el-form-item label="密码">
-          <el-input v-model="pwd" type="password" class="password" @keyup.enter="login" />
-        </el-form-item>
+            <el-form-item label="密码">
+              <el-input v-model="pwd" type="password" class="password" @keyup.enter="loginByName" />
+            </el-form-item>
 
-      </el-form>
+          </el-form>
+          <!--      <button type="submit" @click="login">登录</button>-->
+          <el-button type="success" @click="loginByName">登录</el-button>
 
-<!--      <button type="submit" @click="login">登录</button>-->
-      <el-button type="success" @click="login">登录</el-button>
+        </el-tab-pane>
+        <el-tab-pane label="邮箱登录" name="second">
+
+          <el-form
+              label-position= "top"
+              label-width="100px"
+              style="max-width: 460px"
+          >
+
+            <el-form-item label="邮箱">
+              <el-input v-model="email" />
+            </el-form-item>
+
+            <el-form-item label="密码">
+              <el-input v-model="pwd" type="password" class="password" @keyup.enter="loginByEmail" />
+            </el-form-item>
+
+          </el-form>
+
+          <!--      <button type="submit" @click="login">登录</button>-->
+          <el-button type="success" @click="loginByEmail">登录</el-button>
+
+        </el-tab-pane>
+      </el-tabs>
     </div>
   </div>
 
   <br>
   <div class="Wireframe">
     <router-link to="">忘记密码？</router-link>
-    &nbsp;
+    &nbsp
     <router-link to="/register">没有账号？点击注册</router-link>
   </div>
 
@@ -46,29 +72,35 @@ export default {
   data() {
     return {
       userId: '',
-      pwd: ''
+      email: '',
+      pwd: '',
+      activeName: 'first'
     }
   },
   methods: {
-    login: function () {
+    handleClick: function (){
+      this.userId = '';
+      this.pwd = '';
+      this.email = '';
+    },
+    // 需要具体分密码错误 or 用户名不存在？
 
-      this.$axios({
-        method: 'post',
-        url: '/api/login',
-        data: qs.stringify({      /* 将 json 数据序列化发送后端 */
-          userId: this.userId,
-          pwd: this.pwd
-        })
-      })
-          .then(res => {              /* 获取后端response */
-            switch (res.data.status_code) {
+    loginByName: function () {
+        this.$axios({
+          method: 'post',
+          url: '/api/user/login',
+          data: qs.stringify({      /* 将 json 数据序列化发送后端 */
+            userId: this.userId,
+            pwd: this.pwd
+          })
+        }).then(res => {              /* 获取后端response */
+            switch (res.data.code) {
               case 0:
                 this.$message.success("登录成功！");
                 /* 将后端返回的 user 信息存储起来 */
                 this.$store.dispatch('saveUserInfo', {
                   user: {
                     'userId': this.userId,
-                    'pwd': this.pwd,
                     'nickName': res.data.nickName,
                     'online':true
                   }
@@ -86,8 +118,46 @@ export default {
                 this.$message.error("其他错误！");
                 break;
             }
-
           })
+          .catch(err => {
+            console.log(err);         /* 若出现异常则在终端输出相关信息 */
+          })
+    },
+
+    loginByEmail: function () {
+      this.$axios({
+        method: 'post',
+        url: '/api/user/login',
+        data: qs.stringify({      /* 将 json 数据序列化发送后端 */
+          email: this.email,
+          pwd: this.pwd
+        })
+      }).then(res => {              /* 获取后端response */
+        switch (res.data.code) {
+          case 0:
+            this.$message.success("登录成功！");
+            /* 将后端返回的 user 信息存储起来 */
+            this.$store.dispatch('saveUserInfo', {
+              user: {
+                'userId': this.userId,
+                'nickName': res.data.nickName,
+                'online':true
+              }
+            });
+            const internalInstance = getCurrentInstance();
+            internalInstance.appContext.config.globalProperties.$userId = res.data.username;//用户ID
+            break;
+          case 1:
+            this.$message.error("邮箱不存在！");
+            break;
+          case 2:
+            this.$message.error("密码错误！");
+            break;
+          default:
+            this.$message.error("其他错误！");
+            break;
+        }
+      })
           .catch(err => {
             console.log(err);         /* 若出现异常则在终端输出相关信息 */
           })
