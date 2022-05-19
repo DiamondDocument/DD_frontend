@@ -52,7 +52,13 @@
           </el-form-item>
 
           <el-form-item label = "邮箱">
-            <el-input v-model="email" type="text" @blur="checkEmail"/>
+            <el-input v-model="email" type="text" @blur="checkEmail">
+              <template #append>
+                <el-button type="primary"
+                           @click="sendCode"
+                           :disabled="!(emailCheckRes === 0)">发送验证码</el-button>
+              </template>
+            </el-input>
           </el-form-item>
           <p v-if="emailCheckRes === 1" style="
                font-size: 12px;
@@ -63,7 +69,6 @@
 
           <el-form-item label="验证码">
               <el-input v-model="code" type="text" style="width:70%"/>
-              <el-button type="primary" @click="sendCode">发送验证码</el-button>
           </el-form-item>
 
         </el-form>
@@ -104,7 +109,7 @@ export default {
       pwdCheckRes: -1,
       identifyingCode: '',
       nameJudge: /^[A-Za-z\d]+$/,
-      pwdJudge: /^\w+$/, //用户名的正则表达式
+      pwdJudge: /^\w+$/,
       emailJudge: /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/,
     }
   },
