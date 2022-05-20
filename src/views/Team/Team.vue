@@ -2,7 +2,7 @@
   <div>
 
     <div class="information"
-         style="height:200px;
+         style="height:180px;
                 background: #ebebeb;
                 position: relative"
     >
@@ -16,30 +16,68 @@
           {{ team_introduction }}
         </p>
       </div>
-      <el-button type="success" style="float: right; margin: 50px 100px 20px 20px;">
-        加入团队
-      </el-button>
 
-      <div style="
-        position: absolute;
-        bottom: 20px;
-        left: 20px"
-      >
-          <el-breadcrumb separator="/">
-            <el-breadcrumb-item>part1</el-breadcrumb-item>
-            <el-breadcrumb-item>part2</el-breadcrumb-item>
-            <el-breadcrumb-item>part3</el-breadcrumb-item>
-            <el-breadcrumb-item>part4</el-breadcrumb-item>
-          </el-breadcrumb>
+      <div style="float: right; margin: 50px 100px 20px 20px;">
+
+        <div>
+          <el-button v-if="userType === 0" type="danger">
+            解散团队
+          </el-button>
+
+          <el-button v-else-if="userType === 1" type="danger">
+            离开团队
+          </el-button>
+
+          <el-button v-else-if="userType === 2" type="info" disabled="true">
+            待审核
+          </el-button>
+
+          <el-button v-else-if="userType === 3" type="success">
+            同意邀请
+          </el-button>
+
+          <el-button v-else-if="userType === 4" type="success">
+            申请加入
+          </el-button>
+
+          <el-button v-else type="info" disabled="true">
+            你究竟是谁？？
+          </el-button>
+        </div>
+
+        <el-button v-if="userType === 0"
+                   @click="invite"
+                   type="primary"
+                   style="margin-top: 10px">
+          邀请新成员
+        </el-button>
       </div>
+
+
     </div>
 
-    <div style="margin-top: 10px; padding: 20px">
+    <div style="margin-top: 10px;
+                position: relative;
+                padding: 20px ">
       <el-row v-for="mem in memList" :key="mem.id" class="block">
-        <el-avatar src="circleUrl" style="margin: 10px"/>
-        <span style="margin: auto 0">
+
+          <el-avatar src="circleUrl" style="margin: 10px"/>
+          <span style="margin: auto 0">
               {{mem.nickName}}
           </span>
+
+        <div v-if="userType === 1"
+             style="
+              position: absolute;
+              right: 15px;
+              float: right;">
+          <el-button  type="danger" style="margin: 5px">
+            移除成员
+          </el-button>
+          <el-button style="margin: 5px">
+            转让权限
+          </el-button>
+        </div>
 
       </el-row>
     </div>
@@ -48,9 +86,12 @@
 </template>
 
 <script>
+import {ElMessage} from "element-plus";
+
 export default {
   data(){
     return {
+      userType: 0,
       team_img:"../../assets/logo.png",
       team_name: "软工",
       team_introduction: "for test",
@@ -64,6 +105,17 @@ export default {
           nickName: "小李"
         }
       ]
+    }
+  },
+
+  methods: {
+    invite: function (){
+      this.$router.push({name: 'userInvite', params: {userId: ' '}});
+    },
+
+    //欠缺接口
+    checkSeer: function (){
+
     }
   }
 
@@ -83,7 +135,9 @@ export default {
   width: 100px;
 }
 .block {
+  margin:0 auto;
   padding: 10px;
+  width: 950px;
   border-style: solid;
   border-width: 1px;
   border-color: lightgray;

@@ -56,7 +56,9 @@
               <template #append>
                 <el-button type="primary"
                            @click="sendCode"
-                           :disabled="!(emailCheckRes === 0)">发送验证码</el-button>
+                           :disabled="!(emailCheckRes === 0)">
+                  发送验证码
+                </el-button>
               </template>
             </el-input>
           </el-form-item>

@@ -13,12 +13,12 @@ const teamInformation = {
   component:() =>import('../views/Team/Team.vue'),
 };
 const teamList = {
-  path: '/team/list/key?',
+  path: 'team/list/:key?',
   name: 'teamList',
   component:() =>import('../views/Team/List.vue'),
 };
 const otherTeamList = {
-  path: '/team/list',
+  path: '/team/otherlist',
   name: 'otherTeamList',
   component:() =>import('../views/Team/OtherList.vue'),
 };
@@ -30,7 +30,7 @@ const userInformation = {
   component:() =>import('../views/User/Information.vue'),
 };
 const userInvite = {
-  path: '/user/invite/:userId',
+  path: '/user/invite/:userId?',
   name: 'userInvite',
   component:() =>import('../views/User/Invite.vue'),
 };
