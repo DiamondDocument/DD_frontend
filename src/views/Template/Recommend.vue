@@ -8,7 +8,7 @@
     >
       <el-card class="box-card">
         <img
-            src="../../assets/logo.png"
+            src={{templates[index].img}}
             class="image"
             style="position: center"
         />
@@ -35,7 +35,7 @@ export default {
         {
           title: '金刚石模板1',
           author: '金刚石文档官方',
-          img: "./assets/logo.png"
+          img: './assets/logo.png'
         },
         {
           title: '金刚石模板2',

@@ -25,7 +25,7 @@ export default {
     }
   },
   methods: {
-    Craete: function () {
+    Create: function () {
       this.$axios({
         method: 'post',
         url: '/api/team/create',
