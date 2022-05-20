@@ -13,7 +13,7 @@ const teamInformation = {
   component:() =>import('../views/Team/Team.vue'),
 };
 const teamList = {
-  path: '/team/list/key?',
+  path: 'team/list/key?',
   name: 'teamList',
   component:() =>import('../views/Team/List.vue'),
 };

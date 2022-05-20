@@ -32,12 +32,12 @@
             <span slot="title">我的团队</span>
           </el-menu-item>
 
-          <el-sub-menu index="6">
+          <el-sub-menu index="6" popper-offset="1">
           <template #title>
             <el-icon><tickets /></el-icon>
             <span>模板</span>
           </template>
-          <el-menu-item-group>
+          <el-menu-item-group style="width: 100px">
             <el-menu-item index="1-1" @click="this.$router.push({name: 'recommendTemplate'})">推荐模板</el-menu-item>
             <el-menu-item index="1-2" @click="this.$router.push({name: 'myTemplate'})">我的模板</el-menu-item>
             <el-menu-item index="1-3" @click="this.$router.push({name: 'collectionTemplate'})">收藏模板</el-menu-item>
@@ -50,7 +50,7 @@
           </el-menu-item>
         </el-menu>
       </el-aside>
-      <el-main>
+      <el-main style="padding: 0px">
         <p>{{$route.params.info}}giao</p>
         <router-view></router-view>
       </el-main>
