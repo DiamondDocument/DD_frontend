@@ -5,15 +5,17 @@
       <div class="confirm" v-show="visible">
         <div class="confirm-wrapper">
           <div class="confirm-content">
-            <p class="text">为'{{ fileName }}'设置权限: </p>
-            <el-radio-group v-model="radio" @change="changeAuthority" style="display: flex">
-              <el-radio label="1" border style="margin-left: 90px">所有人</el-radio>
-              <el-radio label="2" border style="">仅自己</el-radio>
+            <p class="text">谁可以查看/编辑文档: </p>
+            <el-radio-group v-model="radio" @change="changeAuthority" style="display:table-cell">
+              <el-radio label="2" border style="margin-left: 35px">所有人可查看</el-radio>
+              <el-radio label="3" border style="margin-left: 35px">所有人可评论</el-radio>
+              <el-radio label="4" border style="margin-left: 35px">所有人可编辑</el-radio>
             </el-radio-group>
             <p class="text">已生成该文档的链接：</p>
-            <el-link herf=link target="_blank">{{ link }}</el-link>
-            <el-button type="primary" style="bottom: 10px; left: 80px; position: absolute" @click="commit"><span>确定</span></el-button>
-            <el-button type="primary" style="bottom: 10px; right: 80px; position: absolute"><span>取消</span></el-button>
+            <el-link id='lk' herf=link target="_blank" style="left: 30px">{{ link }}</el-link>
+            <input id="input" value="这是幕后黑手" style="opacity:0;position:absolute" />
+            <el-button type="primary" style="bottom: 10px; left: 80px; position: absolute" @click="copy"><span>复制链接</span></el-button>
+            <el-button type="primary" style="bottom: 10px; right: 80px; position: absolute" @click="commit"><span>确定</span></el-button>
           </div>
         </div>
       </div>
@@ -23,21 +25,34 @@
 
 <script>
 
+import {ElMessage} from "element-plus";
+
 export default {
   name: "share",
   data() {
     return {
-      radio: 1,
+      radio: 2,
       fileName: '',
       visible: false,
-      result: '',
+      result: 1,
       link:'www.baidu.com',
     }
   },
   methods: {
-    changeAuthority: function(val){
-      let that = this
-      that.result=(val==='1')?'all':'onlyMe';
+    changeAuthority: function(){
+      this.result=this.radio;
+    },
+    copied(){
+      ElMessage('复制成功')
+    },
+    copy() {
+      let input = document.createElement("input"); // 创建input对象
+      input.value = this.link; // 设置复制内容
+      document.body.appendChild(input); // 添加临时实例
+      input.select(); // 选择实例内容
+      document.execCommand("Copy"); // 执行复制
+      document.body.removeChild(input); // 删除临时实例
+      ElMessage('成功复制')
     },
     commit () {
       this.hide()

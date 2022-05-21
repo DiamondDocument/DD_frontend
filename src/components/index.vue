@@ -92,7 +92,7 @@ export default {
   background-color: #ffffff;
   width: 170px;  font-size: 17px;
   color: #4d4d4d;
-  border-radius: 10px;
+  /*border-radius: 10px;*/
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
   border: 1px solid rgba(44, 44, 44, 0.2);

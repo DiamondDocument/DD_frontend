@@ -6,9 +6,11 @@
         <div class="confirm-wrapper">
           <div class="confirm-content">
             <p class="text">为'{{ fileName }}'设置权限: </p>
-            <el-radio-group v-model="radio" @change="change" style="display: flex">
-              <el-radio label="1" border style="margin-left: 90px">所有人</el-radio>
-              <el-radio label="2" border style="">仅自己</el-radio>
+            <el-radio-group v-model="radio" @change="change" style="display:table-cell">
+              <el-radio label="1" border style="margin-left: 35px">仅自己可查看</el-radio>
+              <el-radio label="2" border style="margin-left: 35px">所有人可查看</el-radio>
+              <el-radio label="3" border style="margin-left: 35px">所有人可评论</el-radio>
+              <el-radio label="4" border style="margin-left: 35px">所有人可编辑</el-radio>
             </el-radio-group>
             <el-button type="primary" style="bottom: 10px; left: 80px; position: absolute" @click="commit"><span>确定</span></el-button>
             <el-button type="primary" style="bottom: 10px; right: 80px; position: absolute"><span>取消</span></el-button>
