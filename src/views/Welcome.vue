@@ -8,7 +8,11 @@
     <el-button @click="$router.push({name:'table',params:{info: 'team:团队id'}})">团队工作台（测试用）</el-button>|
     <el-button @click="$router.push({name:'table',params:{info: 'other:他人id'}})">>他人工作台（测试用）</el-button>|
     <el-button @click="hello">hello?</el-button>|
-
+    <el-button @click="post">post?</el-button>|
+    <el-button @click="file">uploadfile?</el-button>|
+    <input type="file" id="keyfile" multiple="multiple" @change="select($event)" >
+    <p>{{str}}</p>
+    <p>{{code}}</p>
   </nav>
 </template>
 <script>
@@ -20,6 +24,12 @@ export default {
   components: {
     HelloWorld
   },
+  data(){
+    return {
+      str: "",
+      code: -1,
+    };
+  },
   methods:{
     toTeamTable(){
       this.$router.push({name:"teamTable",params:{tableId:123}});
@@ -28,10 +38,50 @@ export default {
       this.$router.push({name:"otherTable",params:{tableId:123}});
     },
     hello(){
-      this.$axios.get("/hello").then((response)=>{
-        console.log(response);
+      this.$axios.get("/hello",{
+        params:{
+          userId: "12345",
+        }
+      }).then((response)=>{
+        console.log(response.data);
+        this.str = response.data.message;
+        this.code = response.data.code;
       });
-    }
+    },
+    post(){
+      this.$axios.post("/post",
+          {
+            "content" : "字符串"
+          }
+      ).then((response)=>{
+        console.log(response.data);
+        this.str = response.data;
+      });
+    },
+    file(){
+      let files = document.getElementById('keyfile').value;
+      console.log(files);
+
+    },
+    select(e){
+      let getFile =document.getElementById("files");
+      // getFile.onchange=function(e){
+        //获取到文件以后就会返回一个对象，通过这个对象即可获取文件
+        console.log(e.currentTarget.files);//所有文件，返回的是一个数组
+        console.log(e.currentTarget.files[0].name)//文件名
+        let form = new FormData();
+        form.append("file",e.currentTarget.files[0]);
+        this.axios.post("file",form).then((response)=>{
+          if(response.status === 200){
+            console.log(response.data);
+          }else{
+            //http没有返回200
+          }
+        }).catch((err)=>{
+          //报错
+        })
+      // }
+    },
   },
 }
 </script>
