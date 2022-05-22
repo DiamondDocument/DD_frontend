@@ -23,7 +23,10 @@
             style="width:100%;margin-top: 0"
             :row-style="{height: '0'}"
             :cell-style="{padding: '20px'}"
-            @row-contextmenu="rowContextmenu">
+            @row-contextmenu="rowContextmenu"
+            highlight-current-row
+            @row-dblclick="edit"
+            @cell-mouse-enter="recordId">
     <el-table-column prop="name" label="文件名" width="450">
 <!--      <template slot-scope="scope">-->
 <!--        <div @click="edit()">{{ scope.row.name }}</div>-->
@@ -34,9 +37,9 @@
     <el-table-column prop="altUser" label="修改人" width="300"></el-table-column>
     <el-table-column prop="size" label="大小" width="300"></el-table-column>
   </el-table>
-  <index v-if="menuVisible" @foo="foo" ref="contextButton" :spaceType="spaceType" :result="1"
+  <index v-if="menuVisible" @foo="foo" ref="index" :spaceType="spaceType" :result="1"
                   @collect="collect" @move="move" @remove="remove" @_export="_export"
-                  @share="showShare('默认文件名')" @edit="edit" @disCollect="disCollect" @recover="recover"
+                  @share="showShare('默认文件名')" @disCollect="disCollect" @recover="recover"
                   @del="del" @authority = "showAuthority('默认文件名')"
          data-popper-placement="top"></index>
   <authority ref="authority" @all="authorityAll" @onlyMe="authorityOnlyMe"></authority>
@@ -61,12 +64,14 @@ export default {
   },
   data() {
     return {
-      spaceType: 1,
-      menuVisible: false,
-      loading: false,
-      link:'',
+      spaceType: 1,             //空间类型用于区分右键菜单显示内容等
+      menuVisible: false,       //右键菜单不显示
+      loading: false,           //暂时不用
+      link:'',                  //暂时不用
+      curFileId: Number,          //选中文件时记录他的id
       tableData: [
         {
+          id:0,
           name: '金刚石需求文档',
           author: '赵老板',
           altDate: '1919-08-10',
@@ -74,6 +79,7 @@ export default {
           size: '20K'
         },
         {
+          id:1,
           name: '金刚石产品计划书',
           author: '赵老板',
           altDate: '1919-08-10',
@@ -126,18 +132,26 @@ export default {
       // 阻止右键默认行为
       event.preventDefault()
       this.$nextTick(() => {
-        this.$refs.contextButton.init(row,column,event)
+        this.$refs.index.init(row,column,event)
       })
-
     },
     foo() { // 取消鼠标监听事件 菜单栏
       this.menuVisible = false;
       document.removeEventListener('click', this.foo);
     },
-    edit () {
-      ElMessage("进入编辑")
+    recordId(row) {
+      this.curFileId=row.id;
+    },
+    edit (row) {
+      this.$router.push({
+        name: "documentEdit",
+        params: {documentId: row.id}
+      })
     },
     collect () {
+      this.$axios.post("/space", {
+        "documentId": this.curFileId
+      })
       ElMessage("收藏成功/已经被收藏")
     },
     move (){

@@ -1,6 +1,5 @@
 <template>
   <div id="contextmenu" class="contextmenu">
-    <div v-if="spaceType===1 || spaceType===2 || spaceType===0" class="contextmenu__item" @click="edit()">编辑</div>
     <div v-if="spaceType===1 || spaceType===0" class="contextmenu__item" @click="collect()">收藏</div>
     <div v-if="spaceType===1" class="contextmenu__item" @click="move()">移动</div>
     <div v-if="spaceType===1" class="contextmenu__item" @click="authority()">设置权限</div>
@@ -42,9 +41,6 @@ export default {
     },
     foo () {
       this.$emit('foo')
-    },
-    edit () {
-      this.$emit('edit')
     },
     collect (){
       this.$emit('collect')
