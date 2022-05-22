@@ -31,7 +31,7 @@ export default {
     const editorRef = shallowRef()
 
     // 内容 HTML,创建一个ref
-    const valueHtml = ref('<p>hello</p>')
+    const valueHtml = ref('<h1>123</h1>')
 
     // 模拟 ajax 异步获取内容
     onMounted(() => {

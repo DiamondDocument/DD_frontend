@@ -2,13 +2,14 @@
   <p>欢迎页</p>
 <!--  <p>{{this.$router.getRoutes()}}</p>-->
   <nav>
-    <el-button><router-link to="/table/my">工作台</router-link> </el-button> |
-    <el-button><router-link to="/login">登录</router-link></el-button> |
-    <el-button><router-link to="/register">注册</router-link></el-button>|
-    <el-button @click="toTeamTable">团队工作台（测试用）</el-button>|
-    <el-button @click="toOtherTable">>他人工作台（测试用）</el-button>|
-  </nav>
+    <el-button @click="$router.push({name:'table',params:{info: 'my'}})">工作台</el-button> |
+    <el-button>登录</el-button> |
+    <el-button>注册</el-button>|
+    <el-button @click="$router.push({name:'table',params:{info: 'team:团队id'}})">团队工作台（测试用）</el-button>|
+    <el-button @click="$router.push({name:'table',params:{info: 'other:他人id'}})">>他人工作台（测试用）</el-button>|
+    <el-button @click="hello">hello?</el-button>|
 
+  </nav>
 </template>
 <script>
 // @ is an alias to /src
@@ -26,9 +27,12 @@ export default {
     toOtherTable(){
       this.$router.push({name:"otherTable",params:{tableId:123}});
     },
-
+    hello(){
+      this.$axios.get("/hello").then((response)=>{
+        console.log(response);
+      });
+    }
   },
-
 }
 </script>
 <style scoped>
