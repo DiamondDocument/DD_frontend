@@ -7,6 +7,7 @@
     <el-button>注册</el-button>|
     <el-button @click="$router.push({name:'table',params:{info: 'team:团队id'}})">团队工作台（测试用）</el-button>|
     <el-button @click="$router.push({name:'table',params:{info: 'other:他人id'}})">>他人工作台（测试用）</el-button>|
+    <el-button @click="$router.push({name:'documentEdit',params:{documentId: '1223'}})">>编辑文档</el-button>|
     <el-button @click="hello">hello?</el-button>|
     <el-button @click="post">post?</el-button>|
     <el-button @click="file">uploadfile?</el-button>|
@@ -34,12 +35,6 @@ export default {
     };
   },
   methods:{
-    toTeamTable(){
-      this.$router.push({name:"teamTable",params:{tableId:123}});
-    },
-    toOtherTable(){
-      this.$router.push({name:"otherTable",params:{tableId:123}});
-    },
     hello(){
       this.$axios.get("/hello",{
         params:{
