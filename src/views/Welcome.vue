@@ -13,6 +13,9 @@
     <input type="file" id="keyfile" multiple="multiple" @change="select($event)" >
     <p>{{str}}</p>
     <p>{{code}}</p>
+    <el-button @click="this.$store.commit({type: 'login', userId: 123, nickname: 'giao'})">全局状态登录</el-button>|
+    <el-button @click="this.$store.commit('logout')">全局状态登出</el-button>|
+    <p>isLogin? {{this.$store.state.isLogin}}, user = {{this.$store.state.loginUser}}</p>
   </nav>
 </template>
 <script>
