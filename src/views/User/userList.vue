@@ -1,29 +1,5 @@
 <template>
-  <div style="width: 1000px; margin: 0 auto;">
-
-
-    <div style="
-         width: 600px;
-         text-align: center;
-         margin: 40px auto;">
-      <el-icon size="30px"><Aim /></el-icon>
-      <h2>邀请成员到你的团队{{teamName}}中</h2>
-    </div>
-    <el-input placeholder="请输入内容"
-              @keyup.enter="search"
-              v-model="keyword"
-              style="
-              margin-bottom: 20px">
-      <template #prepend>
-        <el-icon><Avatar /></el-icon>
-      </template>
-      <template #append>
-        <el-button type="primary" @click="search">
-          搜索
-        </el-button>
-      </template>
-    </el-input>
-
+  <div>
     <el-row v-for="(user, index) in userList" :key="user.userId"
             class="block">
       <el-avatar src="circleUrl" style="margin: 10px; float: left" />
@@ -37,22 +13,13 @@
           {{user.userIntroduction}}
         </p>
       </div>
-
-      <el-button type="success"
-                 @click.stop="inviteUser(user.userId)"
-                 style="
-                 margin: auto 20px;">
-        邀请
-      </el-button>
-
     </el-row>
   </div>
-
 </template>
 
 <script>
 export default {
-  name: "Invite.vue",
+  name: "userList.vue",
 
   data(){
     return {
@@ -82,17 +49,13 @@ export default {
     }
   },
   methods: {
-    inviteUser: function (){
-
-    },
 
     goUser: function (userId){
       this.$router.push({name: 'userInformation', params:{userId: userId}});
     },
-    search: function (){
-      this.$router.push({name: 'userInvite', params: {userId: this.keyword}});
-    },
+
   },
+  // 请求数据
   created() {
     this.keyword = this.$route.params.userId;
     if (this.keyword.length === 0){

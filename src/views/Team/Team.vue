@@ -3,12 +3,13 @@
 
     <div class="information"
          style="height:180px;
+                width: 1200px;
                 background: #ebebeb;
-                position: relative"
+                position: absolute"
     >
       <el-image class="teamImg" :src="team_img" fit="fill" >
       </el-image>
-      <div style="float: left; padding: 10px">
+      <div style="float: left; padding: 10px" v-if="changing === 0">
         <h2 class="teamName">
           {{ team_name }}
         </h2>
@@ -16,6 +17,13 @@
           {{ team_introduction }}
         </p>
       </div>
+
+      <div style="float: left; padding: 10px" v-if="changing === 1">
+        <el-input type="text" v-model="c_teamName"/>
+        <el-input type="textarea" v-model="c_teamIntroduction" style="margin-top: 10px"/>
+      </div>
+
+
 
       <div style="float: right; margin: 50px 100px 20px 20px;">
 
@@ -53,11 +61,32 @@
         </el-button>
       </div>
 
+      <div>
+        <el-button v-if="userType === 0 && changing === 0"
+                   @click="change"
+                   style="
+                 position: relative;
+                 top: 130px;
+                 left: 0px;
+                 ">
+          修改
+        </el-button>
+        <el-button v-if="userType === 0 && changing === 1"
+                   @click="endChange"
+                   style="
+                 position: relative;
+                 top: 130px;
+                 left: 0px;">
+          完成
+        </el-button>
+      </div>
+
 
     </div>
 
     <div style="margin-top: 10px;
                 position: relative;
+                top:180px;
                 padding: 20px ">
       <el-row v-for="mem in memList" :key="mem.id" class="block">
 
@@ -91,10 +120,13 @@ import {ElMessage} from "element-plus";
 export default {
   data(){
     return {
+      changing : 0,
       userType: 0,
       team_img:"../../assets/logo.png",
       team_name: "软工",
       team_introduction: "for test",
+      c_teamName: '',
+      c_teamIntroduction: '',
       memList: [
         {
           id: "1",
@@ -109,6 +141,15 @@ export default {
   },
 
   methods: {
+    change: function (){
+      this.changing = 1;
+    },
+
+    endChange: function (){
+      this.changing = 0;
+
+    },
+
     invite: function (){
       this.$router.push({name: 'userInvite', params: {userId: ' '}});
     },

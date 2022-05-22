@@ -163,7 +163,7 @@ export default {
   name: "Information",
   data(){
     return {
-      isOwner: false,
+      isOwner: true,
       userId: '',
       nickName: '',
       email: '',

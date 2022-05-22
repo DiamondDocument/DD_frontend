@@ -43,12 +43,12 @@ export default {
         {
           teamId: "1",
           name: "CTS",
-          introduction: "CTS 很简单的啦 java助教说话又好听 软工是不可能软工的"
+          introduction: "CTS 很简单的啦 java助教说话又好听"
         },
         {
           teamId: "2",
           name: "软工",
-          introduction: "软工密麻麻石蜡！！！"
+          introduction: "金刚石文档"
         }
       ]
     }
