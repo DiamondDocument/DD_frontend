@@ -27,23 +27,19 @@
             highlight-current-row
             @row-dblclick="edit"
             @cell-mouse-enter="recordId">
-    <el-table-column prop="name" label="文件名" width="450">
-<!--      <template slot-scope="scope">-->
-<!--        <div @click="edit()">{{ scope.row.name }}</div>-->
-<!--      </template>-->
-    </el-table-column>
+    <el-table-column prop="name" label="文件名" width="450"></el-table-column>
     <el-table-column prop="author" label="创建者" width="300"></el-table-column>
     <el-table-column prop="altDate" label="修改日期" width="400"></el-table-column>
     <el-table-column prop="altUser" label="修改人" width="300"></el-table-column>
     <el-table-column prop="size" label="大小" width="300"></el-table-column>
   </el-table>
-  <index v-if="menuVisible" @foo="foo" ref="index" :spaceType="spaceType" :result="1"
+  <index v-if="menuVisible" @foo="foo" ref="index" :spaceType="spaceType" :authority=this.curFileAth
                   @collect="collect" @move="move" @remove="remove" @_export="_export"
-                  @share="showShare('默认文件名')" @disCollect="disCollect" @recover="recover"
-                  @del="del" @authority = "showAuthority('默认文件名')"
+                  @share="showShare()" @disCollect="disCollect" @recover="recover"
+                  @del="del" @authority = "showAuthority()"
          data-popper-placement="top"></index>
-  <authority ref="authority" @all="authorityAll" @onlyMe="authorityOnlyMe"></authority>
-  <share ref="share" @all="authorityAll" @onlyMe="authorityOnlyMe"></share>
+  <authority ref="authority" @altAuthority="altAuthority"></authority>
+  <share ref="share" :curFileId="curFileId" @altAuthority="altAuthority"></share>
 </template>
 
 <script>
@@ -67,8 +63,10 @@ export default {
       spaceType: 1,             //空间类型用于区分右键菜单显示内容等
       menuVisible: false,       //右键菜单不显示
       loading: false,           //暂时不用
-      link:'',                  //暂时不用
-      curFileId: Number,          //选中文件时记录他的id
+      link:'',                  //分享用的链接
+      // curFile: this.tableData.,          //当前鼠标选中的文件
+      curFileId:Number,
+      curFileAth: Number,
       tableData: [
         {
           id:0,
@@ -76,6 +74,7 @@ export default {
           author: '赵老板',
           altDate: '1919-08-10',
           altUser: 'lyh',
+          authority: '1',
           size: '20K'
         },
         {
@@ -84,6 +83,7 @@ export default {
           author: '赵老板',
           altDate: '1919-08-10',
           altUser: 'lyh',
+          authority: '2',
           size: '98K'
         },
       ],
@@ -111,11 +111,11 @@ export default {
   setup() {
     const authority = ref()
     const share=ref()
-    function showAuthority(fileName) {
-      authority.value.show(fileName)
+    function showAuthority() {
+      authority.value.show()
     }
-    function showShare(fileName) {
-      share.value.show(fileName)
+    function showShare() {
+      share.value.show()
     }
     return {
       input :ref(''),
@@ -140,7 +140,10 @@ export default {
       document.removeEventListener('click', this.foo);
     },
     recordId(row) {
-      this.curFileId=row.id;
+      // this.curFile=row;
+      // ElMessage(this.curFile.name)
+      this.curFileId=row.id
+      this.curFileAth=row.authority
     },
     edit (row) {
       this.$router.push({
@@ -150,9 +153,36 @@ export default {
     },
     collect () {
       this.$axios.post("/space", {
+        "type": 2,
+        // "documentId": this.curFile.id
         "documentId": this.curFileId
+      }).then((response) => {
+        if (response.status===1) {
+          ElMessage("收藏成功/已经被收藏")
+        }
+        else {
+          ElMessage('收藏夹已经存在该文件')
+        }
+      }).catch((err)=>{
+        ElMessage(err)
       })
-      ElMessage("收藏成功/已经被收藏")
+    },
+    altAuthority(ath){
+      ElMessage(ath)
+      this.$axios.post("/space",{
+        "type": 3,
+        "authority": ath,
+        "documentId": this.curFileId
+      }).then((response)=>{
+        if (response.status===1){
+          ElMessage('修改成功')
+        }
+        else{
+          ElMessage('修改失败')
+        }
+      }).catch((err)=>{
+        ElMessage(err)
+      })
     },
     move (){
       ElMessage("请选择移动到：")
@@ -175,12 +205,6 @@ export default {
     del() {
       ElMessage("已彻底删除")
       },
-    authorityAll() {
-      confirm('所有人可编辑')
-    },
-    authorityOnlyMe() {
-      confirm('只有自己可编辑')
-    }
   }
 }
 </script>

@@ -31,19 +31,16 @@ export default {
   name: "share",
   data() {
     return {
-      radio: 2,
-      fileName: '',
+      radio: Number,
       visible: false,
-      result: 1,
+      authority: Number,
       link:'www.baidu.com',
+      curFileId:Number
     }
   },
   methods: {
     changeAuthority: function(){
-      this.result=this.radio;
-    },
-    copied(){
-      ElMessage('复制成功')
+      this.authority=this.radio;
     },
     copy() {
       let input = document.createElement("input"); // 创建input对象
@@ -56,13 +53,21 @@ export default {
     },
     commit () {
       this.hide()
-      this.$emit(this.result)
+      this.$emit('altAuthority', this.authority)
     },
     hide () {
       this.visible = false
     },
-    show (fileName) {
-      this.fileName = fileName
+    show () {
+      this.$axios.get("/share", {
+        params:{
+          curFileId: this.curFileId
+        }
+      }).then((response)=> {
+        this.link = response.data.link
+      }).catch((err)=>{
+        ElMessage(err)
+      })
       this.visible = true
     }
   },
