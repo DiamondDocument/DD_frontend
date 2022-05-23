@@ -17,7 +17,9 @@
             style="width:100%;margin-top: 0"
             :row-style="{height: '0'}"
             :cell-style="{padding: '20px'}"
-            @row-contextmenu="rowContextmenu">
+            @row-contextmenu="rowContextmenu"
+            highlight-current-row
+            @row-dblclick="edit">
     <el-table-column prop="name" label="文件名" width="450"></el-table-column>
     <el-table-column prop="author" label="创建者" width="300"></el-table-column>
     <el-table-column prop="altDate" label="修改日期" width="400"></el-table-column>
@@ -107,8 +109,11 @@ export default {
       this.menuVisible = false;
       document.removeEventListener('click', this.foo);
     },
-    edit () {
-      ElMessage("进入编辑")
+    edit (row) {
+      this.$router.push({
+        name: "documentEdit",
+        params: {documentId: row.id}
+      })
     },
     collect () {
       ElMessage("收藏成功/已经被收藏")

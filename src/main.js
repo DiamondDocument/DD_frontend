@@ -10,9 +10,10 @@ import ElementPlus from 'element-plus';
 import * as ElementPlusIconsVue from '@element-plus/icons-vue';
 import 'element-plus/dist/index.css';
 
-const app = createApp(App)
 
-axios.defaults.baseURL = 'http://43.138.71.108';
+const app = createApp(App)
+// axios.defaults.baseURL = 'http://43.138.71.108/api';
+axios.defaults.baseURL = '/api/';
 
 app.use(store)
     .use(router)

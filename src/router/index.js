@@ -3,58 +3,54 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 //团队相关路由
 const teamCreate =  {
-  path: '/team/create',
+  path: 'team/create',
   name: 'teamCreate',
   component:() =>import('../views/Team/Create.vue'),
 };
 const teamInformation = {
-  path: '/team/information/:teamId',
+  path: 'team/information/:teamId',
   name: 'team',
   component:() =>import('../views/Team/Team.vue'),
 };
+// const teamInvite = {
+//   path: 'team/invite/:key'
+//   name: 'team',
+//   component:() =>import()
+// };
+//这个路由包括了团队列表和他人团队列表（通过全局状态区分）
 const teamList = {
   path: 'team/list/:key?',
   name: 'teamList',
   component:() =>import('../views/Team/List.vue'),
 };
+/*
 const otherTeamList = {
-  path: '/team/otherlist',
+  path: 'team/list',
   name: 'otherTeamList',
   component:() =>import('../views/Team/OtherList.vue'),
 };
-
+*/
 //用户相关路由
 const userInformation = {
-  path: '/user/information/:userId?',
+  path: 'user/information/:userId?',
   name: 'userInformation',
   component:() =>import('../views/User/Information.vue'),
 };
 const userInvite = {
-  path: '/user/invite/:userId?',
+  path: 'user/invite/:userId',
   name: 'userInvite',
   component:() =>import('../views/User/Invite.vue'),
 };
 const userApply = {
-  path: '/user/apply/:userId',
+  path: 'user/apply/:userId',
   name: 'userApply',
   component:() =>import('../views/User/Apply.vue'),
 };
-
 //空间相关路由
 const space = {
   path: 'space',
   name: 'space',
   component:() =>import('../views/Space/Space.vue'),
-};
-const otherSpace = {
-  path: 'space',
-  name: 'otherSpace',
-  component:() =>import('../views/Space/OtherSpace.vue'),
-};
-const teamSpace = {
-  path: 'space',
-  name: 'teamSpace',
-  component:() =>import('../views/Space/TeamSpace.vue'),
 };
 const recent = {
   path: 'space/recent',
@@ -66,23 +62,34 @@ const collection = {
   name: 'collection',
   component:() =>import('../views/Space/Collection.vue'),
 };
-const otherCollection = {
-  path: 'space/collection',
-  name: 'otherCollection',
-  component:() =>import('../views/Space/OtherCollection.vue'),
-};
 const recycle = {
   path: 'space/recycle',
   name: 'recycle',
   component:() =>import('../views/Space/Recycle.vue'),
+};
+
+/*
+const otherSpace = {
+  path: 'space',
+  name: 'otherSpace',
+  component:() =>import('../views/Space/OtherSpace.vue'),
+};
+const teamSpace = {
+  path: 'space',
+  name: 'teamSpace',
+  component:() =>import('../views/Space/TeamSpace.vue'),
+};
+const otherCollection = {
+  path: 'space/collection',
+  name: 'otherCollection',
+  component:() =>import('../views/Space/OtherCollection.vue'),
 };
 const teamRecycle = {
   path: 'space/recycle',
   name: 'teamRecycle',
   component:() =>import('../views/Space/TeamRecycle.vue'),
 };
-
-
+ */
 //消息通知路由
 const message = {
   path: 'message',
@@ -111,9 +118,10 @@ const templateDetail = {
   name: 'templateDetail',
   component:() =>import('../views/Template/Detail.vue'),
 };
+
 //文档路由
 const documentEdit = {
-  path: 'document/edit/:documentId',
+  path: '/document/edit/:documentId',
   name: 'documentEdit',
   component:() =>import('../views/Document/Edit.vue'),
 }
@@ -134,23 +142,17 @@ const table = {
     teamList,
     teamCreate,
     teamInformation,
-    otherTeamList,
     //空间
     recent,
     space,
     collection,
     recycle,
-    teamSpace,
-    teamRecycle,
-    otherCollection,
-    otherSpace,
     //模板
     recommendTemplate,
     myTemplate,
     collectionTemplate,
     templateDetail,
     //文档
-    documentEdit,
   ],
 };
 // const teamTable = {
@@ -209,6 +211,7 @@ const routes = [
     name: 'register',
     component: () => import('../views/User/Register.vue')
   },
+  documentEdit,
   table,
 
 ]

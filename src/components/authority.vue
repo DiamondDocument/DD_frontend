@@ -5,7 +5,7 @@
       <div class="confirm" v-show="visible">
         <div class="confirm-wrapper">
           <div class="confirm-content">
-            <p class="text">为'{{ fileName }}'设置权限: </p>
+            <p class="text">谁可以查看/编辑文档: </p>
             <el-radio-group v-model="radio" @change="change" style="display:table-cell">
               <el-radio label="1" border style="margin-left: 35px">仅自己可查看</el-radio>
               <el-radio label="2" border style="margin-left: 35px">所有人可查看</el-radio>
@@ -13,7 +13,7 @@
               <el-radio label="4" border style="margin-left: 35px">所有人可编辑</el-radio>
             </el-radio-group>
             <el-button type="primary" style="bottom: 10px; left: 80px; position: absolute" @click="commit"><span>确定</span></el-button>
-            <el-button type="primary" style="bottom: 10px; right: 80px; position: absolute"><span>取消</span></el-button>
+            <el-button type="primary" style="bottom: 10px; right: 80px; position: absolute" @click="hide"><span>取消</span></el-button>
           </div>
         </div>
       </div>
@@ -28,25 +28,22 @@ export default {
   data() {
     return {
       radio: 1,
-      fileName: '',
       visible: false,
-      result: '',
+      authority: Number,
     }
   },
   methods: {
     change: function(val){
-      let that = this
-      that.result=(val==='1')?'all':'onlyMe';
+      this.authority=val
     },
     commit () {
       this.hide()
-      this.$emit(this.result)
+      this.$emit('altAuthority', this.authority)
     },
     hide () {
       this.visible = false
     },
-    show (fileName) {
-      this.fileName = fileName
+    show () {
       this.visible = true
     }
   },

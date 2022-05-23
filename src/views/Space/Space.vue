@@ -23,24 +23,23 @@
             style="width:100%;margin-top: 0"
             :row-style="{height: '0'}"
             :cell-style="{padding: '20px'}"
-            @row-contextmenu="rowContextmenu">
-    <el-table-column prop="name" label="文件名" width="450">
-<!--      <template slot-scope="scope">-->
-<!--        <div @click="edit()">{{ scope.row.name }}</div>-->
-<!--      </template>-->
-    </el-table-column>
+            @row-contextmenu="rowContextmenu"
+            highlight-current-row
+            @row-dblclick="edit"
+            @cell-mouse-enter="recordId">
+    <el-table-column prop="name" label="文件名" width="450"></el-table-column>
     <el-table-column prop="author" label="创建者" width="300"></el-table-column>
     <el-table-column prop="altDate" label="修改日期" width="400"></el-table-column>
     <el-table-column prop="altUser" label="修改人" width="300"></el-table-column>
     <el-table-column prop="size" label="大小" width="300"></el-table-column>
   </el-table>
-  <index v-if="menuVisible" @foo="foo" ref="contextButton" :spaceType="spaceType" :result="1"
+  <index v-if="menuVisible" @foo="foo" ref="index" :spaceType="spaceType" :authority=this.curFileAth
                   @collect="collect" @move="move" @remove="remove" @_export="_export"
-                  @share="showShare('默认文件名')" @edit="edit" @disCollect="disCollect" @recover="recover"
-                  @del="del" @authority = "showAuthority('默认文件名')"
+                  @share="showShare()" @disCollect="disCollect" @recover="recover"
+                  @del="del" @authority = "showAuthority()"
          data-popper-placement="top"></index>
-  <authority ref="authority" @all="authorityAll" @onlyMe="authorityOnlyMe"></authority>
-  <share ref="share" @all="authorityAll" @onlyMe="authorityOnlyMe"></share>
+  <authority ref="authority" @altAuthority="altAuthority"></authority>
+  <share ref="share" :curFileId="curFileId" @altAuthority="altAuthority"></share>
 </template>
 
 <script>
@@ -61,23 +60,30 @@ export default {
   },
   data() {
     return {
-      spaceType: 1,
-      menuVisible: false,
-      loading: false,
-      link:'',
+      spaceType: 1,             //空间类型用于区分右键菜单显示内容等
+      menuVisible: false,       //右键菜单不显示
+      loading: false,           //暂时不用
+      link:'',                  //分享用的链接
+      // curFile: this.tableData.,          //当前鼠标选中的文件
+      curFileId:Number,
+      curFileAth: Number,
       tableData: [
         {
+          id:0,
           name: '金刚石需求文档',
           author: '赵老板',
           altDate: '1919-08-10',
           altUser: 'lyh',
+          authority: '1',
           size: '20K'
         },
         {
+          id:1,
           name: '金刚石产品计划书',
           author: '赵老板',
           altDate: '1919-08-10',
           altUser: 'lyh',
+          authority: '2',
           size: '98K'
         },
       ],
@@ -105,11 +111,11 @@ export default {
   setup() {
     const authority = ref()
     const share=ref()
-    function showAuthority(fileName) {
-      authority.value.show(fileName)
+    function showAuthority() {
+      authority.value.show()
     }
-    function showShare(fileName) {
-      share.value.show(fileName)
+    function showShare() {
+      share.value.show()
     }
     return {
       input :ref(''),
@@ -126,19 +132,57 @@ export default {
       // 阻止右键默认行为
       event.preventDefault()
       this.$nextTick(() => {
-        this.$refs.contextButton.init(row,column,event)
+        this.$refs.index.init(row,column,event)
       })
-
     },
     foo() { // 取消鼠标监听事件 菜单栏
       this.menuVisible = false;
       document.removeEventListener('click', this.foo);
     },
-    edit () {
-      ElMessage("进入编辑")
+    recordId(row) {
+      // this.curFile=row;
+      // ElMessage(this.curFile.name)
+      this.curFileId=row.id
+      this.curFileAth=row.authority
+    },
+    edit (row) {
+      this.$router.push({
+        name: "documentEdit",
+        params: {documentId: row.id}
+      })
     },
     collect () {
-      ElMessage("收藏成功/已经被收藏")
+      this.$axios.post("/space", {
+        "type": 2,
+        // "documentId": this.curFile.id
+        "documentId": this.curFileId
+      }).then((response) => {
+        if (response.status===1) {
+          ElMessage("收藏成功/已经被收藏")
+        }
+        else {
+          ElMessage('收藏夹已经存在该文件')
+        }
+      }).catch((err)=>{
+        ElMessage(err)
+      })
+    },
+    altAuthority(ath){
+      ElMessage(ath)
+      this.$axios.post("/space",{
+        "type": 3,
+        "authority": ath,
+        "documentId": this.curFileId
+      }).then((response)=>{
+        if (response.status===1){
+          ElMessage('修改成功')
+        }
+        else{
+          ElMessage('修改失败')
+        }
+      }).catch((err)=>{
+        ElMessage(err)
+      })
     },
     move (){
       ElMessage("请选择移动到：")
@@ -161,12 +205,6 @@ export default {
     del() {
       ElMessage("已彻底删除")
       },
-    authorityAll() {
-      confirm('所有人可编辑')
-    },
-    authorityOnlyMe() {
-      confirm('只有自己可编辑')
-    }
   }
 }
 </script>

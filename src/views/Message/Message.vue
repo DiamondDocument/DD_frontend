@@ -96,21 +96,21 @@ export default {
         {
           type: 0,
           title: '文档被评论',
-          abstract: '赵老板 评论了您的文档 真夏の夜の淫梦',
+          abstract: '赵老板 评论了您的文档 产品计划说明书',
           detail: '赵老板在“真夏の夜の淫梦”里评论：嘤哼哼啊啊啊啊',
           read: false
         },
         {
           type: 2,
           title: '收到加入团队的申请',
-          abstract: '赵老板 申请加入您的团队 Lords Of The LockerRoom',
+          abstract: '赵老板 申请加入您的团队 金刚石团队',
           detail: '赵老板 申请加入您的团队 Lords Of The LockerRoom',
           read: false
         },
         {
           type: 3,
           title: '申请得到批复',
-          abstract: '您的申请 加入A-SOUL 遭到拒绝',
+          abstract: '您的申请 加入石墨文档 遭到拒绝',
           detail: '这里不欢迎你',
           read: false
         },
