@@ -13,6 +13,7 @@ export default new createStore({
       },
       tableType: "",
       tableId: "",
+      tableInfo: "",
     };
   },
   mutations: {
@@ -25,17 +26,23 @@ export default new createStore({
       state.isLogin = false;
     },
     changeTable(state, info){
-      state.tableId = info.tableId;
-      state.tableType = info.tableType;
+      state.tableInfo = info;
+      state.tableId = info.split(":")[1];
+      state.tableType = info.split(":")[0];
+      // if(info.tableId === "my"){
+      //   state.tableInfo = "my";
+      // }else{
+      //   state.tableInfo = info.tableId + ":" + info.tableType;
+      // }
     }
   },
   actions: {
-    /* 清空 localStorage 方法 */
-    clear({ commit }) {
-      commit("$_removeStorage");
-    }
+    // /* 清空 localStorage 方法 */
+    // clear({ commit }) {
+    //   commit("$_removeStorage");
+    // }
   },
   modules: {
-    user
+    // user
   }
 })

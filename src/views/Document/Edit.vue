@@ -1,11 +1,14 @@
 <template>
 <div id="top-container">
-  <p>zzy's edit</p>
-  <p>
-    <a href="./index.html">&lt;&lt; 回到工作台</a>
-  </p>
-  <div v-html="valueHtml"></div>
-  <div>{{valueHtml}}</div>
+  <div class = "top-ele" style="margin-left: 20px;margin-right: 20px">
+    <el-button  icon="House"  @click = "$router.push({name:'table',params:{info: $store.state.tableInfo}})" />
+  </div>
+  <div class = "top-ele" style="text-align: center;min-width: 100px;margin-right: auto  ">{{ title }}</div>
+<!--  <div class = "top-ele" style="margin-right: 20px;"><el-avatar size="small" shape="square"></el-avatar></div>-->
+  <div class = "top-ele"><el-button @click = "$router.push({name:'table',params:{info: $store.state.tableInfo}})"> 分享 </el-button></div>
+<!--  <p>{{this.$store.state.tableInfo}}</p>-->
+<!--  <div v-html="valueHtml"></div>-->
+<!--  <div>{{valueHtml}}</div>-->
 </div>
 <div style="border-bottom: 1px solid #e8e8e8;">
   <Toolbar
@@ -44,7 +47,7 @@ export default {
   data(){
     return {
       valueHtml : "<p>开始编辑文件</p>",
-      title : "空文件",
+      title : "空文件空文件空文件",
     };
   },
   setup() {
@@ -70,6 +73,45 @@ export default {
     }
     const editorConfig = {
       scroll: false, // 禁止编辑器滚动
+      MENU_CONF: {
+        uploadImage: {
+          // server: 'http://localhost/api/document/img',
+          async customUpload(file, insertFn) {
+            let form = new FormData();
+            form.append("file",file);
+            axios.post("document/img", form).then((response)=>{
+              if(response.status === 200 && response.data.code === 0 ){
+                console.log(response.data);
+                console.log(insertFn);
+                insertFn(response.data.url);
+              }
+                //http没有返回200
+
+            }).catch((err)=>{
+              //报错
+            });
+            // file 即选中的文件
+            // 自己实现上传，并得到图片 url alt href
+            // 最后插入图片
+
+          },
+          fieldName: 'custom-fileName',
+          onProgress(progress) {
+            console.log('onProgress', progress)
+          },
+          onSuccess(file, res) {
+            console.log('onSuccess', file, res)
+          },
+          onFailed(file, res) {
+            alert(res.message)
+            console.log('onFailed', file, res)
+          },
+          onError(file, err, res) {
+            alert(err.message)
+            console.error('onError', file, err, res)
+          },
+        }
+      }
     }
     const handleCreated = (editor) => {
       editorRef.value = editor // 记录 editor 实例，重要！
@@ -136,8 +178,10 @@ body {
 }
 
 #top-container {
+  display: flex;
   border-bottom: 1px solid #e8e8e8;
-  padding-left: 30px;
+  padding-left: 0px;
+  height: 40px;
 }
 
 #editor-toolbar {
@@ -179,4 +223,9 @@ body {
   min-height: 900px;
   margin-top: 20px;
 }
+.top-ele{
+  margin-bottom: auto;
+  margin-top: auto;
+}
+
 </style>

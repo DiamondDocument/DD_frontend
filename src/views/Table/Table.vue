@@ -51,7 +51,7 @@
         </el-menu>
       </el-aside>
       <el-main style="padding: 0px">
-        <p>{{$route.params.info}}giao</p>
+        <p>{{$store.state.tableInfo}}giao</p>
         <router-view></router-view>
       </el-main>
 <!--      <el-main>-->
@@ -124,10 +124,13 @@ export default {
       isCollapse: false,
     }
   },
-  components: {
-    RecommendTemplate,
-    Space,
-    Message
+  // components: {
+  //   RecommendTemplate,
+  //   Space,
+  //   Message
+  // },
+  mounted() {
+    this.$store.commit("changeTable", this.$route.params.info);
   },
   methods: {
     toMessage() {
