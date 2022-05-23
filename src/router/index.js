@@ -12,11 +12,12 @@ const teamInformation = {
   name: 'team',
   component:() =>import('../views/Team/Team.vue'),
 };
-// const teamInvite = {
-//   path: 'team/invite/:key'
-//   name: 'team',
-//   component:() =>import()
-// };
+const teamInvite = {
+  path: 'team/invite/:key?',
+  name: 'teamInvite',
+  component:() =>import('../views/Team/TeamInvite.vue'),
+};
+
 //这个路由包括了团队列表和他人团队列表（通过全局状态区分）
 const teamList = {
   path: 'team/list/:key?',
@@ -140,6 +141,7 @@ const table = {
     userApply,
     //团队
     teamList,
+    teamInvite,
     teamCreate,
     teamInformation,
     //空间

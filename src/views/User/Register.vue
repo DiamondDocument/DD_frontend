@@ -94,7 +94,6 @@
 </template>
 
 <script>
-import qs from "qs";
 import {ElMessage} from "element-plus";
 
 export default {
@@ -125,14 +124,12 @@ export default {
         this.nameCheckRes = 2;
         return;
       }
-      this.$axios({
-        method: 'GET',
-        url: '/api/user/register/check-id',
-        data: qs.stringify({      /* 将 json 数据序列化发送后端 */
+
+      this.$axios.get("/api/user/register/check-id", {
+        params:{
           userId: this.userId,
-        })
-      })
-          .then(res => {
+        }
+      }).then(res => {
             this.nameCheckRes = res.data.code;
             if (this.nameCheckRes === -1){
               console.log('error in checkName');
@@ -167,14 +164,11 @@ export default {
     },
 
     sendCode: function (){
-      this.$axios({
-        method: 'get',
-        url: '/api/user/send-identifying',
-        data: qs.stringify({      /* 将 json 数据序列化发送后端 */
+      this.$axios.get("/api/user/send-identifying", {
+        params:{
           email: this.email
-        })
-      })
-          .then(res => {              /* 获取后端response */
+        }
+      }).then(res => {
             switch (res.data.code) {
               case 0:
                 this.identifyingCode = res.data.identifyingCode;
@@ -186,7 +180,7 @@ export default {
             }
           })
           .catch(err => {
-            console.log(err);         /* 若出现异常则在终端输出相关信息 */
+            console.log(err);
           })
     },
 
@@ -207,28 +201,25 @@ export default {
         ElMessage('请检查用户名,邮箱和密码是否合法')
         return;
       }
-      this.$axios({
-        method: 'post',
-        url: 'api/user/register',
-        data: qs.stringify({      /* 将 json 数据序列化发送后端 */
-          userId: this.userId,
-          pwd: this.pwd,
-          email: this.email,
-        })
+
+      this.$axios.post("api/user/register",{
+        "userId": this.userId,
+        "pwd": this.pwd,
+        "email": this.email,
+      }).then(res => {
+        if (res.status === 200){
+          switch (res.data.code) {
+            case 0:
+              ElMessage("注册成功！");
+              break;
+            default:
+              ElMessage("服务器出现其他错误！");
+              break;
+          }
+        }else console.log("请求返回status不为200")
+      }).catch(err => {
+            console.log(err);
       })
-          .then(res => {              /* 获取后端response */
-            switch (res.data.code) {
-              case 0:
-                ElMessage("注册成功！");
-                break;
-              default:
-                ElMessage("服务器出现其他错误！");
-                break;
-            }
-          })
-          .catch(err => {
-            console.log(err);         /* 若出现异常则在终端输出相关信息 */
-          })
     }
   }
 }

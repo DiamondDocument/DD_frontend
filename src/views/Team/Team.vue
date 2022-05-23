@@ -151,15 +151,17 @@ export default {
     },
 
     invite: function (){
-      this.$router.push({name: 'userInvite', params: {userId: ' '}});
+      this.$router.push({name: 'teamInvite', params: {key: ' '}});
     },
 
     //欠缺接口
     checkSeer: function (){
 
     }
-  }
+  },
+  created() {
 
+  }
 }
 
 </script>

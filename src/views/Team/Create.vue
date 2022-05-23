@@ -12,12 +12,14 @@
         <el-form model="form" label-width="120px" label-position="top">
 
           <el-form-item label="团队名称">
-            <el-input type="text"/>
+            <el-input type="text" v-model="teamName">
+
+            </el-input>
           </el-form-item>
 
           <el-form-item label="团队简介">
             <el-input
-                v-model="introduction"
+                v-model="teamIntroduction"
                 :autosize="{ minRows: 2, maxRows: 4 }"
                 type="textarea"
                 placeholder="Please input"
@@ -25,12 +27,12 @@
           </el-form-item>
 
           <el-form-item>
-            <el-radio-group v-model="isPublic">
-              <el-radio :label="3">
+            <el-radio-group v-model="isPublic" >
+              <el-radio :label="1">
                 <el-icon><CopyDocument /></el-icon>
                 Public
               </el-radio>
-              <el-radio :label="6">
+              <el-radio :label="0">
                 <el-icon><Lock /></el-icon>
                 Private
               </el-radio>
@@ -50,13 +52,33 @@
 
       </el-main>
     </el-container>
+
   </div>
+
 </template>
 
 <script>
 
 export default {
+  name: 'teamCreate',
 
+  data(){
+    return {
+      userId: '',
+      teamName: '',
+      teamIntroduction: '',
+      isPublic: 1,
+    }
+  },
+  methods: {
+    createTeam: function (){
+
+    }
+  },
+
+  created() {
+
+  }
 }
 </script>
 

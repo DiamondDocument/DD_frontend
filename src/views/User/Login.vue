@@ -64,8 +64,7 @@
 </template>
 
 <script>
-import qs from "qs";
-import { getCurrentInstance } from 'vue'
+import {ElMessage} from "element-plus";
 
 export default {
   name: "Login",
@@ -86,81 +85,61 @@ export default {
     // 需要具体分密码错误 or 用户名不存在？
 
     loginByName: function () {
-        this.$axios({
-          method: 'post',
-          url: '/api/user/login',
-          data: qs.stringify({      /* 将 json 数据序列化发送后端 */
-            userId: this.userId,
-            pwd: this.pwd
-          })
-        }).then(res => {              /* 获取后端response */
-            switch (res.data.code) {
-              case 0:
-                this.$message.success("登录成功！");
-                /* 将后端返回的 user 信息存储起来 */
-                this.$store.dispatch('saveUserInfo', {
-                  user: {
-                    'userId': this.userId,
-                    'nickName': res.data.nickName,
-                    'online':true
-                  }
-                });
-                const internalInstance = getCurrentInstance();
-                internalInstance.appContext.config.globalProperties.$userId = res.data.username;//用户ID
-                break;
-              case 1:
-                this.$message.error("用户名不存在！");
-                break;
-              case 2:
-                this.$message.error("密码错误！");
-                break;
-              default:
-                this.$message.error("其他错误！");
-                break;
-            }
-          })
-          .catch(err => {
-            console.log(err);         /* 若出现异常则在终端输出相关信息 */
-          })
+      this.$axios.get("/api/user/login", {
+        params:{
+          userId: this.userId,
+          pwd: this.pwd,
+        }
+      }).then((response)=>{
+        if (response.status === 200){
+          switch (response.data.code) {
+            case 0:
+              this.$store.commit({type: 'login', userId: response.data.name, nickname: response.data.nickname})
+              ElMessage('登录成功');
+              break
+            case 1:
+              ElMessage('用户名或邮箱不存在');
+              break;
+            case 2:
+              ElMessage('密码错误');
+              break;
+            default:
+              ElMessage('其他错误');
+              break;
+          }
+        }else console.log("请求返回status不为200")
+      }).catch((err)=>{
+        console.log(err);
+      });
     },
 
     loginByEmail: function () {
-      this.$axios({
-        method: 'post',
-        url: '/api/user/login',
-        data: qs.stringify({      /* 将 json 数据序列化发送后端 */
+      this.$axios.get("/api/user/login", {
+        params:{
           email: this.email,
-          pwd: this.pwd
-        })
-      }).then(res => {              /* 获取后端response */
-        switch (res.data.code) {
-          case 0:
-            this.$message.success("登录成功！");
-            /* 将后端返回的 user 信息存储起来 */
-            this.$store.dispatch('saveUserInfo', {
-              user: {
-                'userId': this.userId,
-                'nickName': res.data.nickName,
-                'online':true
-              }
-            });
-            const internalInstance = getCurrentInstance();
-            internalInstance.appContext.config.globalProperties.$userId = res.data.username;//用户ID
-            break;
-          case 1:
-            this.$message.error("邮箱不存在！");
-            break;
-          case 2:
-            this.$message.error("密码错误！");
-            break;
-          default:
-            this.$message.error("其他错误！");
-            break;
+          pwd: this.pwd,
         }
-      })
-          .catch(err => {
-            console.log(err);         /* 若出现异常则在终端输出相关信息 */
-          })
+      }).then((response)=>{
+        if (response.status === 200){
+          switch (response.data.code) {
+            case 0:
+              this.$store.commit({type: 'login', userId: response.data.name, nickname: response.data.nickname})
+              ElMessage('登录成功');
+              break
+            case 1:
+              ElMessage('用户名或邮箱不存在');
+              break;
+            case 2:
+              ElMessage('密码错误');
+              break;
+            default:
+              ElMessage('其他错误');
+              break;
+          }
+        }else console.log("请求返回status不为200")
+      }).catch((err)=>{
+        console.log(err);
+      });
     }
   }
 }
