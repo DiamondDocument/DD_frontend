@@ -50,11 +50,14 @@
 </template>
 
 <script>
+import {ElMessage} from "element-plus";
+
 export default {
   name: "Invite.vue",
 
   data(){
     return {
+      teamId: '',
       teamName: 'DiamondPick',
       keyword: '',
       userList: [
@@ -81,24 +84,49 @@ export default {
     }
   },
   methods: {
-    inviteUser: function (){
-
+    inviteUser: function (userId){
+      this.$axios.post("/api/team/invite",
+          {
+            "teamId" : this.teamId,
+            "userId" : userId
+          }).then((res)=>{
+        if (res.status === 200){
+          if (res.data.code === 0) ElMessage("邀请发送成功！");
+          else if (res.data.code === 1) ElMessage("团队不存在！");
+          else if (res.data.code === 2) ElMessage("用户不存在！");
+          else ElMessage("系统错误！！");
+        }else console.log("return status != 200!!");
+      }).catch((err)=>{
+        console.log(err);
+      })
     },
 
     goUser: function (userId){
       this.$router.push({name: 'userInformation', params:{userId: userId}});
     },
     search: function (){
-      this.$router.push({name: 'teamInvite', params: {userId: this.keyword}});
+      this.$router.push({name: 'teamInvite', params: {keyword: this.keyword, teamId: this.teamId}});
     },
   },
   created() {
-    this.keyword = this.$route.params.key;
-    if (this.keyword.length === 0){
+    this.keyword = this.$route.params.keyword;
+    this.teamId = this.$route.params.teamId;
+    this.$axios.get(" /api/team/information", {
+      params:{
+        teamId: this.teamId
+      }
+    }).then((response)=>{
+      if (response.status === 200){
+        if (response.data.code === 0){
+          this.teamName = response.data.name;
+        }else if(response.data.code === 1) ElMessage("团队不存在！")
+        else ElMessage("系统错误！")
+      }else console.log("请求返回status不为200")
+    }).catch((err)=>{
+      console.log(err);
+    });
 
-    }else {
-
-    }
+    // 缺失接口
   }
 }
 </script>

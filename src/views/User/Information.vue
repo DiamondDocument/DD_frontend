@@ -4,6 +4,10 @@
       <el-tabs type="border-card" @tab-click="clean">
         <el-tab-pane label="个人信息">
 
+          <el-upload>
+
+          </el-upload>
+
           <el-avatar :size="200" :src="circleUrl" style="float: left; " @click="changeImg"/>
           <el-form
               label-position="Right"
@@ -125,7 +129,7 @@
     </div>
 
     <div v-if="!isOwner">
-      <el-avatar :size="200" :src="circleUrl" style="float: left; " @click="changeImg"/>
+      <el-avatar :size="200" :src="url" style="float: left; "/>
       <el-form
           label-position="Right"
           label-width="100px"
@@ -163,8 +167,9 @@ export default {
   name: "Information",
   data(){
     return {
-      isOwner: true,
+      isOwner: '',
       userId: '',
+      url: '',
       nickName: '',
       email: '',
       introduction: '',
@@ -220,57 +225,39 @@ export default {
     },
 
     changeNickname: function (){
-      this.$axios({
-        method: 'post',
-        url: '/api/user/modify/nickname',
-        data: qs.stringify({      /* 将 json 数据序列化发送后端 */
-          userId: this.userId,
-          newNick: this.c_nickName,
-        })
+      this.$axios.post("/api/user/modify/nickname",
+          {
+            "userId" : this.userId,
+            "newNick" : this.c_nickName,
+          }).then((res)=>{
+        if (res.status === 200){
+          if (res.data.code === 0) ElMessage("修改成功！");
+          else if (res.data.code === 1) ElMessage("用户不存在");
+          else ElMessage("系统错误！！");
+        }else console.log("return status != 200!!");
+      }).catch((err)=>{
+        console.log(err);
       })
-          .then(res => {              /* 获取后端response */
-            switch (res.data.code) {
-              case 0:
-                ElMessage('修改密码成功');
-                break;
-              case 1:
-                ElMessage('用户不存在');
-                break;
-              default:
-                ElMessage('其他错误!');
-                break;
-            }
-          })
-          .catch(err => {
-            console.log(err);         /* 若出现异常则在终端输出相关信息 */
-          })
+
+      location.reload();
     },
 
     changeIntroduction: function (){
-      this.$axios({
-        method: 'post',
-        url: '/api/user/modify/introduction',
-        data: qs.stringify({      /* 将 json 数据序列化发送后端 */
-          userId: this.userId,
-          newIntro: this.c_introduction,
-        })
+      this.$axios.post("/api/user/modify/introduction",
+          {
+            "userId" : this.userId,
+            "newIntro" : this.c_introduction,
+          }).then((res)=>{
+        if (res.status === 200){
+          if (res.data.code === 0) ElMessage("修改成功！");
+          else if (res.data.code === 1) ElMessage("用户不存在");
+          else ElMessage("系统错误！！");
+        }else console.log("return status != 200!!");
+      }).catch((err)=>{
+        console.log(err);
       })
-          .then(res => {              /* 获取后端response */
-            switch (res.data.code) {
-              case 0:
-                ElMessage('修改密码成功');
-                break;
-              case 1:
-                ElMessage('用户不存在');
-                break;
-              default:
-                ElMessage('其他错误!');
-                break;
-            }
-          })
-          .catch(err => {
-            console.log(err);         /* 若出现异常则在终端输出相关信息 */
-          })
+
+      location.reload();
     },
 
     changeEmail: function (){
@@ -278,57 +265,37 @@ export default {
         ElMessage('验证码错误');
         return;
       }
-      this.$axios({
-        method: 'post',
-        url: '/api/user/modify/email',
-        data: qs.stringify({      /* 将 json 数据序列化发送后端 */
-          userId: this.userId,
-          newEmail: this.c_email,
-        })
+      this.$axios.post("/api/user/modify/email",
+          {
+            "userId" : this.userId,
+            "newEmail" : this.c_email,
+          }).then((res)=>{
+        if (res.status === 200){
+          if (res.data.code === 0) ElMessage("修改成功！");
+          else if (res.data.code === 1) ElMessage("用户不存在");
+          else ElMessage("系统错误！！");
+        }else console.log("return status != 200!!");
+      }).catch((err)=>{
+        console.log(err);
       })
-          .then(res => {              /* 获取后端response */
-            switch (res.data.code) {
-              case 0:
-                ElMessage('修改密码成功');
-                break;
-              case 1:
-                ElMessage('用户不存在');
-                break;
-              default:
-                ElMessage('其他错误!');
-                break;
-            }
-          })
-          .catch(err => {
-            console.log(err);         /* 若出现异常则在终端输出相关信息 */
-          })
+      location.reload();
     },
 
     sendCode: function (){
-      this.$axios({
-        method: 'get',
-        url: '/api/user/send-identifying',
-        data: qs.stringify({      /* 将 json 数据序列化发送后端 */
-          email: this.c_email
-        })
-      })
-          .then(res => {              /* 获取后端response */
-            switch (res.data.code) {
-              case 0:
-                this.identifyingCode = res.data.identifyingCode;
-                ElMessage('发送验证码成功');
-                break;
-              case 1:
-                ElMessage('发送验证码失败,请检查邮箱是否正确');
-                break;
-              default:
-                ElMessage('其他错误!');
-                break;
-            }
-          })
-          .catch(err => {
-            console.log(err);         /* 若出现异常则在终端输出相关信息 */
-          })
+      this.$axios.get("/api/user/send-identifying", {
+        params:{
+          email: this.c_email,
+        }
+      }).then((response)=>{
+        if (response.status === 200){
+          if (response.data.code === 0){
+            ElMessage("发送成功");
+            this.identifyingCode = response.data.identifyingCode;
+          }else ElMessage("发送失败");
+        }else console.log("请求返回status不为200")
+      }).catch((err)=>{
+        console.log(err);
+      });
     },
 
     changePwd :function (){
@@ -336,66 +303,46 @@ export default {
         ElMessage('两次输入密码不同');
         return;
       }
-      this.$axios({
-        method: 'post',
-        url: '/api/user/modify/password',
-        data: qs.stringify({      /* 将 json 数据序列化发送后端 */
-          userId: this.userId,
-          newPwd: this.newPwd,
-          oldPwd: this.oldPwd,
-        })
+      this.$axios.post("/api/user/modify/password",
+          {
+            "userId" : this.userId,
+            "newPwd" : this.newPwd,
+            "oldPwd" : this.oldPwd,
+          }).then((res)=>{
+        if (res.status === 200){
+          if (res.data.code === 0) ElMessage("修改成功！");
+          else if (res.data.code === 1) ElMessage("原密码错误");
+          else ElMessage("系统错误！！");
+        }else console.log("return status != 200!!");
+      }).catch((err)=>{
+        console.log(err);
       })
-          .then(res => {              /* 获取后端response */
-            switch (res.data.code) {
-              case 0:
-                ElMessage('修改密码成功');
-                break;
-              case 1:
-                ElMessage('原密码错误');
-                break;
-              default:
-                ElMessage('其他错误!');
-                break;
-            }
-          })
-          .catch(err => {
-            console.log(err);         /* 若出现异常则在终端输出相关信息 */
-          })
+
+      location.reload();
     },
   },
 
   //  获取头像的操作未完成
   created() {
     // 判断是否是浏览他人主页
-    // this.isOwner = (this.$route.params.userId === this.$store.getUser().user.userId)
-
-    this.$axios({
-      method: 'get',
-      url: '/api/user/information',
-      data: qs.stringify({      /* 将 json 数据序列化发送后端 */
-        userId: this.$route.params.userId,
-      })
-    })
-        .then(res => {              /* 获取后端response */
-          switch (res.data.code) {
-            case 0:
-              this.userId = this.$route.params.userId;
-              this.nickName = res.data.nickName;
-              this.email = res.data.email;
-              this.introduction = res.data.introduction;
-              break;
-            case 1:
-              ElMessage("用户不存在！");
-              break;
-            default:
-              ElMessage('其他错误！')
-              break;
-          }
-        })
-        .catch(err => {
-          console.log(err);         /* 若出现异常则在终端输出相关信息 */
-        })
-
+    this.isOwner = (this.$route.params.userId === this.$store.state.loginUser)
+    this.userId = this.$route.params.userId;
+    this.$axios.get("/api/user/login", {
+      params:{
+        userId: this.userId,
+        pwd: this.pwd,
+      }
+    }).then((response)=>{
+      if (response.status === 200){
+        if (response.data.code === 0){
+          this.nickName = response.data.nickName;
+          this.email = response.data.email;
+          this.introduction = response.data.introduction;
+        }else ElMessage("用户信息获取错误");
+      }else console.log("请求返回status不为200")
+    }).catch((err)=>{
+      console.log(err);
+    });
   }
 }
 </script>

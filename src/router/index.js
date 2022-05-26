@@ -3,7 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 //团队相关路由
 const teamCreate =  {
-  path: 'team/create',
+  path: 'team/create/:userId',
   name: 'teamCreate',
   component:() =>import('../views/Team/Create.vue'),
 };
@@ -13,7 +13,7 @@ const teamInformation = {
   component:() =>import('../views/Team/Team.vue'),
 };
 const teamInvite = {
-  path: 'team/invite/:key?',
+  path: 'team/invite/:keyword?',
   name: 'teamInvite',
   component:() =>import('../views/Team/TeamInvite.vue'),
 };

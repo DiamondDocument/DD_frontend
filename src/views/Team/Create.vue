@@ -59,6 +59,8 @@
 
 <script>
 
+import {ElMessage} from "element-plus";
+
 export default {
   name: 'teamCreate',
 
@@ -72,12 +74,28 @@ export default {
   },
   methods: {
     createTeam: function (){
+      this.$axios.post("/api/team/create",
+          {
+            "teamName" : this.teamName,
+            "teamIntroductory" : this.teamIntroduction,
+            "userId": this.userId,
+          }).then((res)=>{
+            if (res.status === 200){
+              if (res.data.code === 0) ElMessage("创建成功！");
+              else if (res.data.code === 1) ElMessage("团队名称不合规范");
+              else ElMessage("系统错误！！");
+            }else console.log("return status != 200!!");
+      }).catch((err)=>{
+        console.log(err);
+      })
+
+      // 之后的行为？？？
 
     }
   },
 
   created() {
-
+    this.userId = this.$route.params.userId;
   }
 }
 </script>

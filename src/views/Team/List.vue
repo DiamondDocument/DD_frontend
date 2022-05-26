@@ -34,6 +34,7 @@
 
 <script>
 import { Search } from '@element-plus/icons-vue'
+import {ElMessage} from "element-plus";
 export default {
   name: "List",
   data(){
@@ -65,7 +66,17 @@ export default {
   created() {
     this.keyword = this.$route.params.key;
     if (this.keyword.length === 0){
-
+      this.$axios.get("/api/user/login", {
+        params:{
+          userId: this.userId,
+        }
+      }).then((response)=>{
+        if (response.status === 200){
+          this.teamList = response.data.teams;
+        }else console.log("请求返回status不为200")
+      }).catch((err)=>{
+        console.log(err);
+      });
     }else {
 
     }

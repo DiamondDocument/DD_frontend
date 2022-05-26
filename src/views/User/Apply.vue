@@ -60,10 +60,10 @@
       height: 50px;
       text-align: center;
       margin: 0 auto">
-        <el-button type="success" @click="accept">
+        <el-button type="success" @click="deal(1)">
           确定
         </el-button>
-        <el-button type="danger" @click="object">
+        <el-button type="danger" @click="deal(0)">
           取消
         </el-button>
       </div>
@@ -75,6 +75,8 @@
 
 
 <script>
+import {ElMessage} from "element-plus";
+
 export default {
   name: "Apply.vue",
   data(){
@@ -82,6 +84,7 @@ export default {
       state: 1,
       url: '',
       userId: '',
+      teamId: '',
       nickName: '',
       email: '',
       introduction: '',
@@ -89,16 +92,50 @@ export default {
   },
 
   methods: {
-    accept: function (){
-
+    deal:function (option){
+      this.$axios.post("/api/team/apply-deal",
+          {
+            "teamId" : this.teamId,
+            "userId" : this.userId,
+            "deal" : option,
+          }).then((res)=>{
+        if (res.status === 200){
+          if (res.data.code === 0) ElMessage("处理成功！");
+          else if (res.data.code === 1) ElMessage("申请记录不存在");
+          else if (res.data.code === 2) ElMessage("已经处理");
+          else ElMessage("系统错误！！");
+        }else console.log("return status != 200!!");
+      }).catch((err)=>{
+        console.log(err);
+      })
+      location.reload();
     },
-    object: function (){
+    //接口缺失
+    checkUserState: function (){
 
     }
   },
+
   created() {
     this.userId = this.$route.params.userId;
     this.teamId = this.$route.params.teamId;
+    this.$axios.get("/api/user/information", {
+      params:{
+        userId: this.userId,
+      }
+    }).then((response)=>{
+      if (response.status === 200){
+        if (response.data.code === 0){
+          this.nickName = response.data.nickName;
+          this.email = response.data.email;
+          this.introduction = response.data.introduction;
+        }else ElMessage("获取用户信息错误！");
+      }else console.log("请求返回status不为200")
+    }).catch((err)=>{
+      console.log(err);
+    });
+
+    this.checkUserState();
 
   }
 }

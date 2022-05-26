@@ -7,7 +7,10 @@
                 background: #ebebeb;
                 position: absolute"
     >
-      <el-image class="teamImg" :src="team_img" fit="fill" >
+
+      <el-image v-if="userType === 0" @click="changeImg" class="teamImg" :src="team_img" fit="fill" >
+      </el-image>
+      <el-image v-else class="teamImg" :src="team_img" fit="fill" >
       </el-image>
       <div style="float: left; padding: 10px" v-if="changing === 0">
         <h2 class="teamName">
@@ -28,11 +31,11 @@
       <div style="float: right; margin: 50px 100px 20px 20px;">
 
         <div>
-          <el-button v-if="userType === 0" type="danger">
+          <el-button v-if="userType === 0" type="danger" @click="dropTeam">
             解散团队
           </el-button>
 
-          <el-button v-else-if="userType === 1" type="danger">
+          <el-button v-else-if="userType === 1" type="danger" @click="leaveTeam">
             离开团队
           </el-button>
 
@@ -40,11 +43,11 @@
             待审核
           </el-button>
 
-          <el-button v-else-if="userType === 3" type="success">
+          <el-button v-else-if="userType === 3" type="success" @click="accept">
             同意邀请
           </el-button>
 
-          <el-button v-else-if="userType === 4" type="success">
+          <el-button v-else-if="userType === 4" type="success" @click="apply">
             申请加入
           </el-button>
 
@@ -67,7 +70,7 @@
                    style="
                  position: relative;
                  top: 130px;
-                 left: 0px;
+                 left: 0;
                  ">
           修改
         </el-button>
@@ -76,7 +79,7 @@
                    style="
                  position: relative;
                  top: 130px;
-                 left: 0px;">
+                 left: 0;">
           完成
         </el-button>
       </div>
@@ -89,21 +92,24 @@
                 top:180px;
                 padding: 20px ">
       <el-row v-for="mem in memList" :key="mem.id" class="block">
-
+        <div @click="goUser"
+             style="
+             float: right;
+             width: 800px">
           <el-avatar src="circleUrl" style="margin: 10px"/>
           <span style="margin: auto 0">
-              {{mem.nickName}}
+            {{mem.nickName}}
           </span>
-
-        <div v-if="userType === 1"
+        </div>
+        <div v-if="userType === 0"
              style="
               position: absolute;
               right: 15px;
               float: right;">
-          <el-button  type="danger" style="margin: 5px">
+          <el-button  type="danger" style="margin: 5px" @click="removeMem">
             移除成员
           </el-button>
-          <el-button style="margin: 5px">
+          <el-button style="margin: 5px" @click="transPri">
             转让权限
           </el-button>
         </div>
@@ -122,6 +128,7 @@ export default {
     return {
       changing : 0,
       userType: 0,
+      teamId: '',
       team_img:"../../assets/logo.png",
       team_name: "软工",
       team_introduction: "for test",
@@ -147,6 +154,36 @@ export default {
 
     endChange: function (){
       this.changing = 0;
+      this.$axios.post("/api/team/modify/name",
+          {
+            "teamId" : this.teamId,
+            "newName": this.c_teamName
+          }).then((res)=>{
+        if (res.status === 200){
+          if (res.data.code === 0) ElMessage("修改团队名称成功！");
+          else if (res.data.code === 1) ElMessage("团队不存在");
+          else ElMessage("系统错误！！");
+        }else console.log("return status != 200!!");
+      }).catch((err)=>{
+        console.log(err);
+      })
+
+      this.$axios.post("/api/team/modify/name",
+          {
+            "teamId" : this.teamId,
+            "newIntro": this.c_teamIntroduction
+          }).then((res)=>{
+        if (res.status === 200){
+          if (res.data.code === 0) ElMessage("修改团队简介成功！");
+          else if (res.data.code === 1) ElMessage("团队不存在");
+          else ElMessage("系统错误！！");
+        }else console.log("return status != 200!!");
+      }).catch((err)=>{
+        console.log(err);
+      })
+    },
+
+    changeImg: function (){
 
     },
 
@@ -154,8 +191,35 @@ export default {
       this.$router.push({name: 'teamInvite', params: {key: ' '}});
     },
 
-    //欠缺接口
-    checkSeer: function (){
+    dropTeam: function (){
+
+    },
+
+    leaveTeam: function (){
+
+    },
+
+    accept: function (){
+
+    },
+
+    apply: function (){
+
+    },
+
+    goUser: function (){
+
+    },
+
+    removeMem: function (){
+
+    },
+
+    transPri: function (){
+
+    },
+
+    checkUserType: function (){
 
     }
   },
