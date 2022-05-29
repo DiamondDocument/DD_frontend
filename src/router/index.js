@@ -131,7 +131,7 @@ const documentEdit = {
 const table = {
   path: '/table/:info',
   name: 'table',
-  component:() =>import('../views/Table/Table.vue'),
+  component:() =>import('../views/Table/TableJudge.vue'),
   children: [
     //消息
     message,

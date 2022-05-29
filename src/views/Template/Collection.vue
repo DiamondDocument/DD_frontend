@@ -16,7 +16,7 @@
           <p>{{templates[index].title}}</p>
           <div class="bottom">
             <p>作者：{{templates[index].author}}</p>
-            <el-button text class="button">立即使用</el-button>
+            <el-button text class="button" >立即使用</el-button>
           </div>
         </div>
       </el-card>

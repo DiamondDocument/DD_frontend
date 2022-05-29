@@ -4,7 +4,7 @@
       <img src="../../assets/logo.png" style="width: 50px; height: 50px;">
 
       <div>
-        <a href="#" style="padding: 0 10px 0 0">头像</a>
+        <img src="#" style="padding: 0 10px 0 0">
         <el-icon @click="this.$router.push('/message')"><MessageBox /></el-icon>
 
       </div>
@@ -24,7 +24,7 @@
           </el-menu-item>
 
           <el-menu-item index="3">
-            <el-divider content-position="center"><p v-if="!isCollapse">团队名称</p></el-divider>
+            <el-divider content-position="center"><p v-if="!isCollapse">{{TeamName}}的空间</p></el-divider>
           </el-menu-item>
 
           <el-menu-item index="4" >
@@ -102,6 +102,7 @@ a {
 <script>
 import Space from "@/views/Space/Space";
 import Message from "@/views/Message/Message";
+import {ElMessage} from "element-plus";
 
 export default {
   name: 'TeamTable',
@@ -109,6 +110,8 @@ export default {
     return {
       type: 'recent',
       isCollapse: false,
+      TeamId: '',
+      TeamName: '',
     }
   },
   components: {
@@ -120,7 +123,7 @@ export default {
       this.type = 'message';
     },
     toMySpace() {
-      this.type='mySpace';
+
     },
     toMyCollection() {
       this.type='collection'
@@ -137,6 +140,23 @@ export default {
     handleClose(key, keyPath) {
       console.log(key, keyPath);
     }
+  },
+
+  created() {
+    this.TeamId = this.$store.state.tableId;
+    this.$axios.get("/team/information", {
+      params:{
+        teamId: this.TeamId,
+      }
+    }).then((response)=>{
+      if (response.status === 200){
+        if (response.data.code === 0){
+          this.TeamName = response.data.name;
+        }else ElMessage("团队信息获取错误");
+      }else console.log("请求返回status不为200")
+    }).catch((err)=>{
+      console.log(err);
+    });
   }
 }
 

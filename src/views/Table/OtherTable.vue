@@ -113,6 +113,7 @@ a {
 <script>
 import Space from "@/views/Space/Space";
 import Message from "@/views/Message/Message";
+import {ElMessage} from "element-plus";
 
 export default {
   name: 'OtherTable',
@@ -120,6 +121,8 @@ export default {
     return {
       type: 'recent',
       isCollapse: false,
+      Id: '',
+      Name: ''
     }
   },
   components: {
@@ -148,7 +151,23 @@ export default {
     handleClose(key, keyPath) {
       console.log(key, keyPath);
     }
-  }
+  },
+  // created() {
+  //   this.Id = this.$store.state.tableId;
+  //   this.$axios.get("/user/information", {
+  //     params:{
+  //       userId: this.Id,
+  //     }
+  //   }).then((response)=>{
+  //     if (response.status === 200){
+  //       if (response.data.code === 0){
+  //         this.Name = response.data.nickName;
+  //       }else ElMessage("团队信息获取错误");
+  //     }else console.log("请求返回status不为200")
+  //   }).catch((err)=>{
+  //     console.log(err);
+  //   });
+  // }
 }
 
 
