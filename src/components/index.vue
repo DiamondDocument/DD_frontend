@@ -5,7 +5,8 @@
     <div v-if="spaceType===1" class="contextmenu__item" @click="authority()">设置权限</div>
     <div v-if="spaceType===1" class="contextmenu__item" @click="remove()">删除</div>
     <div v-if="spaceType===1 || spaceType===2 || spaceType===0" class="contextmenu__item" @click="_export()">导出</div>
-    <div v-if="spaceType===1 || spaceType===2 || spaceType===0" class="contextmenu__item" @click="share()">分享</div>
+    <div v-if="(spaceType===1 || spaceType===2 || spaceType===0) && !shared" class="contextmenu__item" @click="share()">分享</div>
+    <div v-if="(spaceType===1 || spaceType===2 || spaceType===0) && shared" class="contextmenu__item" @click="notShare()">取消分享</div>
     <div v-if="spaceType===2" class="contextmenu__item" @click="disCollect()">取消收藏</div>
     <div v-if="spaceType===3" class="contextmenu__item" @click="recover()">恢复文件</div>
     <div v-if="spaceType===3" class="contextmenu__item" @click="del()">彻底删除</div>
@@ -18,7 +19,10 @@ export default {
   name: "index",
   props: {
     spaceType: {
-      type: Number
+      type: Number,
+    },
+    shared: {
+      shared: Boolean,
     }
   },
   data () {
@@ -56,6 +60,9 @@ export default {
     },
     share (){
       this.$emit('share')
+    },
+    notShare(){
+      this.$emit('notShare')
     },
     disCollect (){
       this.$emit('disCollect')

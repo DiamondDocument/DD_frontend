@@ -13,7 +13,7 @@
       <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
     </el-select>
     <el-button type="primary" style="float: right; margin-right: 20px">
-      <span style="vertical-align: middle">新建文件</span>
+      <span style="vertical-align: middle" @click="showNewFile">新建文件</span>
     </el-button>
   </el-menu>
   <el-table :data="tableData" stripe
@@ -33,13 +33,14 @@
     <el-table-column prop="altUser" label="修改人" width="300"></el-table-column>
     <el-table-column prop="size" label="大小" width="300"></el-table-column>
   </el-table>
-  <index v-if="menuVisible" @foo="foo" ref="index" :spaceType="spaceType" :authority=this.curFileAth
+  <index v-if="menuVisible" @foo="foo" ref="index" :spaceType="spaceType" :authority=this.curFileAth :shared="this.curFileShared"
                   @collect="collect" @move="move" @remove="remove" @_export="_export"
                   @share="showShare()" @disCollect="disCollect" @recover="recover"
-                  @del="del" @authority = "showAuthority()"
+                  @del="del" @authority = "showAuthority()" @notShare="notShare"
          data-popper-placement="top"></index>
   <authority ref="authority" @altAuthority="altAuthority"></authority>
   <share ref="share" :curFileId="curFileId" @altAuthority="altAuthority"></share>
+  <new-file ref="newFile"></new-file>
 </template>
 
 <script>
@@ -50,9 +51,10 @@ import authority from "@/components/authority";
 import share from "@/components/share";
 import {ref} from "vue";
 import {ElMessage} from "element-plus";
+import newFile from "@/components/newFile";
 export default {
   name: "Space",
-  components: {Search, Template, index, authority, share},
+  components: {Search, Template, index, authority, share, newFile},
   props:{
     spaceType: {
       type: Number,
@@ -67,6 +69,7 @@ export default {
       // curFile: this.tableData.,          //当前鼠标选中的文件
       curFileId:Number,
       curFileAth: Number,
+      curFileShared:Boolean,
       tableData: [
         {
           id:0,
@@ -75,7 +78,8 @@ export default {
           altDate: '1919-08-10',
           altUser: 'lyh',
           authority: '1',
-          size: '20K'
+          size: '20K',
+          shared: false,
         },
         {
           id:1,
@@ -84,7 +88,8 @@ export default {
           altDate: '1919-08-10',
           altUser: 'lyh',
           authority: '2',
-          size: '98K'
+          size: '98K',
+          shared:true,
         },
       ],
       options: [
@@ -111,16 +116,22 @@ export default {
   setup() {
     const authority = ref()
     const share=ref()
+    const newFile=ref()
     function showAuthority() {
       authority.value.show()
     }
     function showShare() {
       share.value.show()
     }
+    function showNewFile() {
+      newFile.value.show()
+    }
     return {
       input :ref(''),
       showAuthority,
       showShare,
+      showNewFile,
+      newFile,
       authority,
       share,
     }
@@ -139,11 +150,11 @@ export default {
       this.menuVisible = false;
       document.removeEventListener('click', this.foo);
     },
+    //跟踪鼠标指向的文件信息
     recordId(row) {
-      // this.curFile=row;
-      // ElMessage(this.curFile.name)
       this.curFileId=row.id
       this.curFileAth=row.authority
+      this.curFileShared=row.shared
     },
     edit (row) {
       this.$router.push({
@@ -195,6 +206,9 @@ export default {
     },
     share (){
       ElMessage("生成分享链接")
+    },
+    notShare(){
+      ElMessage("取消分享")
     },
     disCollect() {
       ElMessage("已取消收藏")
