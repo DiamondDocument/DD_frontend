@@ -1,12 +1,13 @@
 <template>
   <div>
     <div v-if="isOwner">
-      <el-tabs type="border-card" @tab-click="clean">
-        <el-tab-pane label="个人信息">
+      <el-tabs v-model="cardSite" type="border-card" @tab-click="clean">
+        <el-tab-pane label="个人信息" name="1">
 
-          <el-upload>
-
-          </el-upload>
+          <input type="file"
+                 ref="clearFile"
+                 style="display:none"
+                 @change="upload($event)"/>
 
           <el-avatar :size="200" :src="circleUrl" style="float: left; " @click="changeImg"/>
           <el-form
@@ -38,7 +39,7 @@
         <!--      切换清空 邮箱 密码 时无法消除错误提示    -->
 
 
-        <el-tab-pane label="修改信息">
+        <el-tab-pane label="修改信息" name="2">
           <el-form
               label-position="Right"
               label-width="100px"
@@ -48,13 +49,12 @@
               <el-input type="text"
                         style="margin-bottom: 10px"
                         v-model="c_nickName"
-                        @blur="changeNickname"/>
+                        />
             </el-form-item>
 
             <el-form-item label="用户简介：">
               <el-input type="textarea" :autosize="{ minRows: 2, maxRows: 4 }"
                         style="margin-bottom: 10px"
-                        @blur="changeIntroduction"
                         v-model="c_introduction"
               />
             </el-form-item>
@@ -82,15 +82,19 @@
                         style="
                       width: 200px;
                       float: left ;"/>
-              &nbsp;
-              <el-button type="success" @click="changeEmail" style="float: right" >修改邮箱</el-button>
             </el-form-item>
 
+
           </el-form>
+          <el-button type="success"
+                     @click="commit"
+                     style="margin-left: 100px">
+            提交修改
+          </el-button>
         </el-tab-pane>
 
 
-        <el-tab-pane label="修改密码">
+        <el-tab-pane label="修改密码" name="3">
           <el-form
               label-position="Right"
               label-width="100px"
@@ -129,30 +133,36 @@
     </div>
 
     <div v-if="!isOwner">
-      <el-avatar :size="200" :src="url" style="float: left; "/>
-      <el-form
-          label-position="Right"
-          label-width="100px"
-          style="
+      <div style="float: left; margin-left: 20px;">
+        <el-avatar :size="200" :src="url" />
+      </div>
+
+      <div >
+        <el-form
+            label-position="Right"
+            label-width="100px"
+            style="
               max-width: 300px;
               margin: 20px;
         ">
-        <el-form-item label="用户名：">
-          {{ userId }}
-        </el-form-item>
+          <el-form-item label="用户名：">
+            {{ userId }}
+          </el-form-item>
 
-        <el-form-item label="用户昵称：">
-          {{ nickName }}
-        </el-form-item>
+          <el-form-item label="用户昵称：">
+            {{ nickName }}
+          </el-form-item>
 
-        <el-form-item label="邮箱：">
-          {{ email }}
-        </el-form-item>
+          <el-form-item label="邮箱：">
+            {{ email }}
+          </el-form-item>
 
-        <el-form-item label="用户简介：">
-          {{ introduction }}
-        </el-form-item>
-      </el-form>
+          <el-form-item label="用户简介：">
+            {{ introduction }}
+          </el-form-item>
+        </el-form>
+      </div>
+
     </div>
 
   </div>
@@ -167,9 +177,10 @@ export default {
   name: "Information",
   data(){
     return {
-      isOwner: '',
+      isOwner: 1,
       userId: '',
       url: '',
+      cardSite: '1',
       nickName: '',
       email: '',
       introduction: '',
@@ -219,12 +230,36 @@ export default {
       else  this.pwdCheckRes = 1;
     },
 
-    // changeImg 未完成
     changeImg: function (){
+      console.log("changeImg is called!");
+      this.$refs.clearFile.click();
+    },
 
+    upload: function(e){
+      console.log("upload is called!")
+      let getFile =document.getElementById("files");
+      // getFile.onchange=function(e){
+      //获取到文件以后就会返回一个对象，通过这个对象即可获取文件
+      console.log(e.currentTarget.files);//所有文件，返回的是一个数组
+      console.log(e.currentTarget.files[0].name)//文件名
+      let form = new FormData();
+      form.append("file",e.currentTarget.files[0]);
+      form.append("userId", this.$store.state.loginUser.userId)
+      this.axios.post("/api/user/modify/avatar",form).then((response)=>{
+        if(response.status === 200){
+          if (response.data.code === 0){
+            ElMessage("上传成功！");
+            console.log(response.data);
+          }else if (response.data.code === 1) ElMessage("上传失败")
+        }else console.log("status is not 200!");
+      }).catch((err)=>{
+        console.log(err);
+      });
+      // }
     },
 
     changeNickname: function (){
+      console.log('changeNickname is called!')
       this.$axios.post("/api/user/modify/nickname",
           {
             "userId" : this.userId,
@@ -232,17 +267,15 @@ export default {
           }).then((res)=>{
         if (res.status === 200){
           if (res.data.code === 0) ElMessage("修改成功！");
-          else if (res.data.code === 1) ElMessage("用户不存在");
           else ElMessage("系统错误！！");
         }else console.log("return status != 200!!");
       }).catch((err)=>{
         console.log(err);
       })
-
-      location.reload();
     },
 
     changeIntroduction: function (){
+      console.log('changeIntroduction is called!');
       this.$axios.post("/api/user/modify/introduction",
           {
             "userId" : this.userId,
@@ -256,29 +289,34 @@ export default {
       }).catch((err)=>{
         console.log(err);
       })
-
-      location.reload();
     },
 
     changeEmail: function (){
-      if (!(this.c_code === this.identifyingCode)){
-        ElMessage('验证码错误');
-        return;
-      }
+      console.log('changeEmail is called !');
       this.$axios.post("/api/user/modify/email",
           {
             "userId" : this.userId,
             "newEmail" : this.c_email,
+            "verificationCode": this.c_code,
           }).then((res)=>{
         if (res.status === 200){
           if (res.data.code === 0) ElMessage("修改成功！");
-          else if (res.data.code === 1) ElMessage("用户不存在");
+          else if (res.data.code === 1) ElMessage("验证码错误！");
           else ElMessage("系统错误！！");
         }else console.log("return status != 200!!");
       }).catch((err)=>{
         console.log(err);
       })
-      location.reload();
+    },
+
+    commit: function (){
+      this.changeNickname();
+      this.changeIntroduction();
+      this.changeEmail();
+
+      this.getInformation();
+      this.cardSite = '1';
+      this.clean();
     },
 
     sendCode: function (){
@@ -290,7 +328,6 @@ export default {
         if (response.status === 200){
           if (response.data.code === 0){
             ElMessage("发送成功");
-            this.identifyingCode = response.data.identifyingCode;
           }else ElMessage("发送失败");
         }else console.log("请求返回status不为200")
       }).catch((err)=>{
@@ -320,29 +357,51 @@ export default {
 
       location.reload();
     },
+
+    getInformation: function (){
+      this.$axios.get("/api/user/information", {
+        params:{
+          userId: this.userId,
+        }
+      }).then((response)=>{
+        if (response.status === 200){
+          if (response.data.code === 0){
+            this.nickName = response.data.nickName;
+            this.email = response.data.email;
+            this.introduction = response.data.introduction;
+          }else if(response.data.code === 1) console.log('用户不存在')
+          else console.log("用户信息获取错误");
+        }else console.log("请求返回status不为200")
+      }).catch((err)=>{
+        console.log(err);
+      });
+    },
+
+    getAvatar: function (){
+      this.$axios.get("/api/user/get-avatar", {
+        params:{
+          userId: this.userId,
+        }
+      }).then((response)=>{
+        if (response.status === 200){
+          if (response.data.code === 0){
+            this.url = response.data.url;
+          }else console.log("用户头像获取错误");
+        }else console.log("请求返回status不为200")
+      }).catch((err)=>{
+        console.log(err);
+      });
+    },
   },
 
-  //  获取头像的操作未完成
   created() {
-    // 判断是否是浏览他人主页
-    this.isOwner = (this.$route.params.userId === this.$store.state.loginUser)
+    this.isOwner = (this.$route.params.userId === this.$store.state.loginUser.userId);
+
+    console.log('' + this.$route.params.userId + ' - ' + this.$store.state.loginUser.userId);
     this.userId = this.$route.params.userId;
-    this.$axios.get("/api/user/login", {
-      params:{
-        userId: this.userId,
-        pwd: this.pwd,
-      }
-    }).then((response)=>{
-      if (response.status === 200){
-        if (response.data.code === 0){
-          this.nickName = response.data.nickName;
-          this.email = response.data.email;
-          this.introduction = response.data.introduction;
-        }else ElMessage("用户信息获取错误");
-      }else console.log("请求返回status不为200")
-    }).catch((err)=>{
-      console.log(err);
-    });
+
+    this.getInformation();
+    this.getAvatar();
   }
 }
 </script>

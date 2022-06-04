@@ -3,7 +3,7 @@
 
     <div class="information"
          style="height:180px;
-                width: 1200px;
+                width: 100%;
                 background: #ebebeb;
                 position: absolute"
     >
@@ -22,15 +22,23 @@
       </div>
 
       <div style="float: left; padding: 10px" v-if="changing === 1">
-        <el-input type="text" v-model="c_teamName"/>
-        <el-input type="textarea" v-model="c_teamIntroduction" style="margin-top: 10px"/>
+        <el-input type="text"
+                  v-model="c_teamName"
+                  placeholder="请输入团队名称"/>
+        <el-input type="textarea"
+                  v-model="c_teamIntroduction"
+                  placeholder="请输入团队简介"
+                  style="margin-top: 10px"/>
       </div>
 
 
 
-      <div style="float: right; margin: 50px 100px 20px 20px;">
+      <div style="
+      height: 180px;
+      float: right;
+      margin: auto 20px;">
 
-        <div>
+        <div style="margin-top: 20px">
           <el-button v-if="userType === 0" type="danger" @click="dropTeam">
             解散团队
           </el-button>
@@ -62,24 +70,35 @@
                    style="margin-top: 10px">
           邀请新成员
         </el-button>
+        <br>
+
+        <el-button @click="enterTable"
+                   type="success"
+                   style="margin-top: 10px">
+          进入团队工作台
+        </el-button>
+
+
+
       </div>
 
-      <div>
+      <div style="
+           margin-top: 120px;
+      ">
         <el-button v-if="userType === 0 && changing === 0"
-                   @click="change"
-                   style="
-                 position: relative;
-                 top: 130px;
-                 left: 0;
-                 ">
+                   @click="change">
           修改
         </el-button>
+        <input type="file"
+                  ref="clearFile"
+                  style="display:none"
+                  @change="upload($event)"/>
         <el-button v-if="userType === 0 && changing === 1"
-                   @click="endChange"
-                   style="
-                 position: relative;
-                 top: 130px;
-                 left: 0;">
+                   @click="changeImg">
+        修改头像
+        </el-button>
+        <el-button v-if="userType === 0 && changing === 1"
+                   @click="endChange">
           完成
         </el-button>
       </div>
@@ -92,23 +111,25 @@
                 top:180px;
                 padding: 20px ">
       <el-row v-for="mem in memList" :key="mem.id" class="block">
-        <div @click="goUser"
+        <div @click="goUser(mem.id)"
              style="
              float: right;
-             width: 800px">
-          <el-avatar src="circleUrl" style="margin: 10px"/>
-          <span style="margin: auto 0">
+             width: 80%">
+          <el-avatar src="circleUrl" style="float: left; margin-top: 20px"/>
+          <div style="float: left; margin-left: 25px; margin-top: 25px">
             {{mem.nickName}}
-          </span>
+          </div>
         </div>
         <div v-if="userType === 0"
              style="
+             height: 80px;
               position: absolute;
               right: 15px;
               float: right;">
           <el-button  type="danger" style="margin: 5px" @click="removeMem">
             移除成员
           </el-button>
+          <br>
           <el-button style="margin: 5px" @click="transPri">
             转让权限
           </el-button>
@@ -136,11 +157,11 @@ export default {
       c_teamIntroduction: '',
       memList: [
         {
-          id: "1",
+          id: 1,
           nickName: "小王"
         },
         {
-          id: "2",
+          id: 2,
           nickName: "小李"
         }
       ]
@@ -150,6 +171,10 @@ export default {
   methods: {
     change: function (){
       this.changing = 1;
+    },
+
+    enterTable: function (){
+      this.$router.push({name: 'table', params: {info: 'team-' + this.teamId}});
     },
 
     endChange: function (){
@@ -184,46 +209,74 @@ export default {
     },
 
     changeImg: function (){
+      console.log("changeImg is called!");
+      this.$refs.clearFile.click();
+    },
 
+    upload: function(e){
+      console.log("upload is called!")
+      let getFile =document.getElementById("files");
+      // getFile.onchange=function(e){
+      //获取到文件以后就会返回一个对象，通过这个对象即可获取文件
+      console.log(e.currentTarget.files);//所有文件，返回的是一个数组
+      console.log(e.currentTarget.files[0].name)//文件名
+      let form = new FormData();
+      form.append("file",e.currentTarget.files[0]);
+      form.append("userId", this.$store.state.loginUser.userId)
+      this.axios.post("/api/team/modify/avatar",form).then((response)=>{
+        if(response.status === 200){
+          ElMessage("上传成功！");
+          console.log(response.data);
+        }else{
+          ElMessage("上传失败!");
+          console.log("status is not 200!");
+        }
+      }).catch((err)=>{
+        console.log(err);
+      });
+      // }
     },
 
     invite: function (){
-      this.$router.push({name: 'teamInvite', params: {key: ' '}});
+      this.$router.push({name: 'teamInvite', params: {key: ''}});
     },
 
     dropTeam: function (){
-
+      console.log("dropTeam is called!")
     },
 
     leaveTeam: function (){
-
+      console.log("leaveTeam is called!")
     },
 
     accept: function (){
-
+      console.log("accept is called!")
     },
 
     apply: function (){
-
+      console.log("apply is called!")
     },
 
-    goUser: function (){
-
+    goUser: function (userId){
+      console.log("goUser is called");
+      this.$router.push({name: 'userInformation', params: {userId: userId}});
     },
 
     removeMem: function (){
-
+      console.log("removeMem is called!");
     },
 
     transPri: function (){
-
+      console.log("transPri is called!");
     },
 
     checkUserType: function (){
-
+      console.log("checkUserType is called!");
     }
   },
   created() {
+    this.teamId = this.$route.params.teamId;
+    this.checkUserType();
 
   }
 }
@@ -244,7 +297,8 @@ export default {
 .block {
   margin:0 auto;
   padding: 10px;
-  width: 950px;
+  width: 75%;
+  height: 100px;
   border-style: solid;
   border-width: 1px;
   border-color: lightgray;

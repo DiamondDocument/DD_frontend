@@ -1,34 +1,41 @@
 <template>
-  <div >
+  <div>
 
-    <el-input placeholder="请输入内容"
-              @keyup.enter="search"
-              v-model="keyword"
-              style=" margin-bottom: 20px">
-      <template #prepend>
-        <el-icon><Search /></el-icon>
-      </template>
-      <template #append>
-        <el-button type="primary" @click="search">
-          搜索
-        </el-button>
-      </template>
-    </el-input>
+    <div style="text-align: center">
+      <el-input placeholder="请输入内容"
+                @keyup.enter="search"
+                v-model="keyword"
+                style="width: 80%;
+              margin: 0 auto;">
+        <template #prepend>
+          <el-icon><Search /></el-icon>
+        </template>
+        <template #append>
+          <el-button type="primary" @click="search">
+            搜索
+          </el-button>
+        </template>
+      </el-input>
+    </div>
 
-    <el-row v-for="(team, index) in teamList" :key="team.id"
-            @click="goTeam(index)"
-            class="block">
+    <div>
+      <el-row v-for="(team, index) in teamList" :key="team.id"
+              @click="goTeam(index)"
+              class="block">
         <el-avatar src="circleUrl" style="margin: 10px; float: left" />
-        <div style="float: right; width: 800px">
+        <div style="float: right;">
           <h3 >
             {{team.name}}
           </h3>
           <p >
             {{team.introduction}}
           </p>
-      </div>
+        </div>
 
-    </el-row>
+      </el-row>
+    </div>
+
+
   </div>
 </template>
 
@@ -86,7 +93,8 @@ export default {
 
 <style scoped>
 .block {
-  margin-bottom: 10px;
+  margin: 10px auto;
+  width: 75%;
   padding: 10px;
   border-style: solid;
   border-width: 1px;

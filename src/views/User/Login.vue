@@ -20,12 +20,12 @@
             </el-form-item>
 
             <el-form-item label="密码">
-              <el-input v-model="pwd" type="password" class="password" @keyup.enter="loginByName" />
+              <el-input v-model="pwd" type="password" class="password" @keyup.enter="login" />
             </el-form-item>
 
           </el-form>
           <!--      <button type="submit" @click="login">登录</button>-->
-          <el-button type="success" @click="loginByName">登录</el-button>
+          <el-button type="success" @click="login">登录</el-button>
 
         </el-tab-pane>
         <el-tab-pane label="邮箱登录" name="second">
@@ -41,13 +41,13 @@
             </el-form-item>
 
             <el-form-item label="密码">
-              <el-input v-model="pwd" type="password" class="password" @keyup.enter="loginByEmail" />
+              <el-input v-model="pwd" type="password" class="password" @keyup.enter="login" />
             </el-form-item>
 
           </el-form>
 
           <!--      <button type="submit" @click="login">登录</button>-->
-          <el-button type="success" @click="loginByEmail">登录</el-button>
+          <el-button type="success" @click="login">登录</el-button>
 
         </el-tab-pane>
       </el-tabs>
@@ -84,10 +84,11 @@ export default {
     },
     // 需要具体分密码错误 or 用户名不存在？
 
-    loginByName: function () {
+    login: function () {
       this.$axios.get("/api/user/login", {
         params:{
           userId: this.userId,
+          email: this.email,
           pwd: this.pwd,
         }
       }).then((response)=>{
@@ -113,34 +114,6 @@ export default {
       });
     },
 
-    loginByEmail: function () {
-      this.$axios.get("/api/user/login", {
-        params:{
-          email: this.email,
-          pwd: this.pwd,
-        }
-      }).then((response)=>{
-        if (response.status === 200){
-          switch (response.data.code) {
-            case 0:
-              this.$store.commit({type: 'login', userId: response.data.name, nickname: response.data.nickname})
-              ElMessage('登录成功');
-              break
-            case 1:
-              ElMessage('用户名或邮箱不存在');
-              break;
-            case 2:
-              ElMessage('密码错误');
-              break;
-            default:
-              ElMessage('其他错误');
-              break;
-          }
-        }else console.log("请求返回status不为200")
-      }).catch((err)=>{
-        console.log(err);
-      });
-    }
   }
 }
 </script>
