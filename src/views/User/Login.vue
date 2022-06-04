@@ -1,5 +1,6 @@
-<template>
+<template >
   <div class="login">
+
     <div style="margin:20px auto; width: 80px; ">
       <img src="../../assets/logo.png" alt="logo"> <br>
       <h2 class="title" style="margin:0 auto">登录</h2>
@@ -73,8 +74,13 @@ export default {
       userId: '',
       email: '',
       pwd: '',
-      activeName: 'first'
+      activeName: 'first',
+      loginBg: 'url(' + require('../../assets/bk.jpg') + ')'
     }
+  },
+  mounted() {
+    document.body.style.backgroundSize = '100%'
+    document.body.style.backgroundImage = this.loginBg
   },
   methods: {
     handleClick: function (){

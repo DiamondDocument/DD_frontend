@@ -112,7 +112,12 @@ export default {
       nameJudge: /^[A-Za-z\d]+$/,
       pwdJudge: /^\w+$/,
       emailJudge: /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/,
+      loginBg: 'url(' + require('../../assets/bk.jpg') + ')',
     }
+  },
+  mounted() {
+    document.body.style.backgroundSize = '100%'
+    document.body.style.backgroundImage = this.loginBg
   },
   methods: {
     checkName: function (){
