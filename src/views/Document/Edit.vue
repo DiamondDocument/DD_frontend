@@ -6,10 +6,11 @@
   <div class = "top-ele" style="text-align: center;min-width: 100px;margin-right: auto  ">{{ title }}</div>
 <!--  <div class = "top-ele" style="margin-right: 20px;"><el-avatar size="small" shape="square"></el-avatar></div>-->
   <div class = "top-ele"><el-button @click = "$router.push({name:'table',params:{info: $store.state.tableInfo}})"> 分享 </el-button></div>
-<!--  <p>{{this.$store.state.tableInfo}}</p>-->
 <!--  <div v-html="valueHtml"></div>-->
 <!--  <div>{{valueHtml}}</div>-->
 </div>
+<!--  <div v-html="valueHtml"></div>-->
+<!--  <div>{{valueHtml}}</div>-->
 <div style="border-bottom: 1px solid #e8e8e8;">
   <Toolbar
       id="editor-toolbar"
@@ -34,7 +35,57 @@
     />
   </div>
 </div>
+<el-drawer v-model="drawerDisplay" :show-close="false">
+  <template #title>
+    <h4 >xxx 文档的评论</h4>
+    <el-button  @click = "displayNewComment = true" text><el-icon size="20px"><CirclePlus /></el-icon></el-button>
+  </template>
+  <div id="comment-area" v-if="displayNewComment">
+    <el-input
+        v-model="commentContent"
+        :autosize="{ minRows: 2, maxRows: 4 }"
+        type="textarea"
+        placeholder="请输入评论内容..."
+    />
+    <div style="display: flex;margin-top: 10px">
+      <el-button style="margin-right:10px;margin-left: auto"  @click = "" text>
+        <el-icon size="20px"><Position /></el-icon>
+      </el-button>
+    </div>
+  </div>
+  <div id="comment-list" style="margin-top: 30px">
+    <el-collapse v-model="activeNames" @change="handleChange">
+      <el-collapse-item  name="1">
+        <template #title>
+          <el-avatar :size="30" src="http://43.138.71.108/api/url/?location=./DD_file/user/avatar/Iamzzy.jpg" /><div style="margin-left: 20px">Consistency</div>
+        </template>
+        <div v-html="commentContent">
 
+        </div>
+        <div style="display: flex">
+          <el-popconfirm title="你确定要删除此评论?">
+            <template #reference>
+              <el-button style="margin-right:10px;margin-left: auto" size="small"  @click = "displayDeletePop=true" text>
+                <el-icon size="10px"><CloseBold /></el-icon>
+              </el-button>
+            </template>
+          </el-popconfirm>
+        </div>
+
+      </el-collapse-item>
+      <el-collapse-item title="Feedback" name="2">
+        <div>
+          Operation feedback: enable the users to clearly perceive their
+          operations by style updates and interactive effects;
+        </div>
+        <div>
+          Visual feedback: reflect current state by updating or rearranging
+          elements of the page.
+        </div>
+      </el-collapse-item>
+    </el-collapse>
+  </div>
+  </el-drawer>
 </template>
 
 <script>
@@ -48,6 +99,10 @@ export default {
     return {
       valueHtml : "<p>开始编辑文件</p>",
       title : "空文件空文件空文件",
+      auth: 2,
+      drawerDisplay : true,
+      commentContent : "",
+      displayNewComment : false,
     };
   },
   setup() {
