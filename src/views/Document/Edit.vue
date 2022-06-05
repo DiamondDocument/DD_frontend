@@ -6,6 +6,8 @@
   <div class = "top-ele" style="text-align: center;min-width: 100px;margin-right: auto  ">{{ title }}</div>
 <!--  <div class = "top-ele" style="margin-right: 20px;"><el-avatar size="small" shape="square"></el-avatar></div>-->
   <div class = "top-ele"><el-button @click = "$router.push({name:'table',params:{info: $store.state.tableInfo}})"> 分享 </el-button></div>
+  <div class = "top-ele"><el-button @click = "save"> 保存 </el-button></div>
+  <div class = "top-ele"><el-button @click = "exportFile"> 导出 </el-button></div>
 <!--  <div v-html="valueHtml"></div>-->
 <!--  <div>{{valueHtml}}</div>-->
 </div>
@@ -86,6 +88,7 @@
     </el-collapse>
   </div>
   </el-drawer>
+  <div >{{valueHtml}}</div>
 </template>
 
 <script>
@@ -186,14 +189,21 @@ export default {
   },
   methods: {
     getDoc(){
-      this.$axios.get("document",{
+      console.log("发送获取文档请求...");
+      this.$axios.get("/document/content",{
         params:{
-          userId : this.$store.state.loginUser.userId,
+          // userId : this.$store.state.loginUser.userId,
+          userId : 'Iamzzy',
           docId : this.$route.params.documentId,
         }
       }).then((response)=>{
+        console.log("请求完毕");
         if(response.status === 200){
-          this.$data.valueHtml = response.data;
+          if(response.data.code === 0){
+            this.$data.valueHtml = response.data.content;
+          }else{
+            console.log("请求错误");
+          }
         }else{
           console.log("请求错误");
         }
@@ -203,11 +213,17 @@ export default {
     },
     save(){
       this.$axios.post("document/save",{
-        "content" : valueHtml,
+        "content" : this.valueHtml,
         "docId" : this.$route.params.documentId,
-        "userId" : this.$store.state.loginUser.userId,
+        // "userId" : this.$store.state.loginUser.userId,
+        "userId" : 'Iamzzy',
       }).then((response)=>{
         if(response.status === 200){
+          if(response.data.code === 0){
+            console.log("保存成功");
+          }else{
+            console.log("请求错误");
+          }
           //保存成功
         }else{
           console.log("请求错误");
@@ -219,7 +235,42 @@ export default {
     change(){
       console.log('onchange!');
     },
+    exportFile(){
+      console.log("发送导出文档请求...");
+      this.$axios.get("/document/export",{
+        params:{
+          docId : this.$route.params.documentId,
+        }
+      }).then((response)=>{
+        console.log("请求完毕");
+        if(response.status === 200){
+          if(response.data.code === 0){
+            console.log("导出成功");
+            this.$axios.get(response.data.download, {responseType: 'blob'}).then((response)=>{
+              if(response.status === 200){
+                let fileURL = window.URL.createObjectURL(new Blob([response.data]));
+                let fileLink = document.createElement('a');
+                fileLink.href = fileURL;
+                fileLink.setAttribute('download', response.headers['content-disposition'].split('filename=')[1]);
+                document.body.appendChild(fileLink);
+                console.log();
+                fileLink.click();
+              }else console.log("请求错误status");
+            }).catch((err) => {
+              console.log("请求错误");
+            });
+          }else{
+            console.log("请求错误");
+          }
+        }else{
+          console.log("请求错误");
+        }
+      }).catch((err) => {
+        console.log("请求错误");
+      });
+    }
   },
+
 }
 </script>
 
