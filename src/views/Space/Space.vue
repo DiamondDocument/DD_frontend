@@ -1,6 +1,5 @@
 <template>
-
-  <el-menu default-active="'/' +this.$route.path.split('/')[1]">
+  <el-menu default-active="'/' +this.$route.path.split('/')[1]" v-if="!moving">
     <el-input v-model="input" placeholder="空间内搜索文件" style="width: 20%"></el-input>
     <el-button type="primary" style="margin-left: 10px">
       <el-icon style="vertical-align: middle;">
@@ -17,6 +16,7 @@
   </el-menu>
   <el-table :data="tableData" stripe
             v-loading="loading"
+            v-show="!moving"
             element-loading-text="少女折寿中"
             height="800"
             style="width:100%;margin-top: 0"
@@ -41,6 +41,7 @@
   <authority ref="authority" @altAuthority="altAuthority"></authority>
   <share ref="share" :curFileId="curFileId" @altAuthority="altAuthority"></share>
   <new-file ref="newFile"></new-file>
+  <move ref="move" @commit="commitPos" v-if="moving"></move>
 </template>
 
 <script>
@@ -52,9 +53,10 @@ import share from "@/components/share";
 import {ref} from "vue";
 import {ElMessage} from "element-plus";
 import newFile from "@/components/newFile";
+import move from "@/views/Space/Move";
 export default {
   name: "Space",
-  components: {Search, Template, index, authority, share, newFile},
+  components: {Search, Template, index, authority, share, newFile, move},
   props:{
     spaceType: {
       type: Number,
@@ -70,6 +72,7 @@ export default {
       curFileAth: Number,
       curFileShared: Boolean,
       exportLink: '',           //下载文件的链接
+      moving: false,         //是否在移动文件，决定文件系统如何显示
       tableData: [
         {
           id:0,
@@ -119,6 +122,7 @@ export default {
     const authority = ref()
     const share=ref()
     const newFile=ref()
+    const move=ref()
     function showAuthority() {
       authority.value.show()
     }
@@ -128,7 +132,6 @@ export default {
     function showNewFile() {
       newFile.value.show()
     }
-
     return {
       input :ref(''),
       showAuthority,
@@ -232,8 +235,26 @@ export default {
       })
     },
     move (){
-
-      ElMessage("请选择移动到：")
+      this.moving=true
+    },
+    commitPos(folderId) {
+      this.moving=false
+      this.$axios.post("/move",
+          {
+            params:{
+              folderId: folderId
+            }
+          }
+      ).then((response)=>{
+        if(response.status === 200){
+          console.log(response.data);
+          ElMessage("移动成功")
+        }else{
+          console.log('failed')
+        }
+      }).catch((err)=>{
+        console.log('err!!!')
+      });
     },
     remove (){
       this.$axios.post("/remove",
