@@ -66,9 +66,10 @@ export default {
       loading: false,           //暂时不用
       link:'',                  //分享用的链接
       // curFile: this.tableData.,          //当前鼠标选中的文件
-      curFileId:Number,
+      curFileId: Number,
       curFileAth: Number,
-      curFileShared:Boolean,
+      curFileShared: Boolean,
+      exportLink: '',           //下载文件的链接
       tableData: [
         {
           id:0,
@@ -162,12 +163,12 @@ export default {
       })
     },
     collect () {
-      this.$axios.post("/space", {
-        "type": 2,
-        // "documentId": this.curFile.id
-        "documentId": this.curFileId
+      this.$axios.post("/collect", {
+        params:{
+          fileId: this.curFileId
+        }
       }).then((response) => {
-        if (response.status===1) {
+        if (response.status===200) {
           ElMessage("收藏成功/已经被收藏")
         }
         else {
@@ -179,10 +180,11 @@ export default {
     },
     altAuthority(ath){
       ElMessage(ath)
-      this.$axios.post("/space",{
-        "type": 3,
-        "authority": ath,
-        "documentId": this.curFileId
+      this.$axios.post("/altAuthority",{
+        params:{
+          authority: ath,
+          fileId: this.curFileId,
+        },
       }).then((response)=>{
         if (response.status===1){
           ElMessage('修改成功')
@@ -195,28 +197,115 @@ export default {
       })
     },
     move (){
+
       ElMessage("请选择移动到：")
     },
     remove (){
-      ElMessage("删除成功")
+      this.$axios.post("/remove",
+          {
+            params:{
+              fileId: this.curFileId
+            }
+          }
+      ).then((response)=>{
+        if(response.status === 200){
+          console.log(response.data);
+          ElMessage("删除成功")
+        }else{
+          console.log('failed')
+        }
+      }).catch((err)=>{
+        console.log('err!!!')
+      });
     },
     _export (){
-      ElMessage("请选择保存位置")
-    },
-    share (){
-      ElMessage("生成分享链接")
+      this.$axios.get("/export",{
+        params:{
+          fileId: this.curFileId
+        }
+      }).then((response)=>{
+        this.exportLink=response.data;
+        let input = document.createElement("input"); // 创建input对象
+        input.value = this.exportLink; // 设置复制内容
+        document.body.appendChild(input); // 添加临时实例
+        input.select(); // 选择实例内容
+        document.execCommand("Copy"); // 执行复制
+        document.body.removeChild(input); // 删除临时实例
+        ElMessage('已复制下载链接')
+      });
     },
     notShare(){
-      ElMessage("取消分享")
+      this.$axios.post("/notShare",
+          {
+            params:{
+              fileId: this.curFileId
+            }
+          }
+      ).then((response)=>{
+        if(response.status === 200){
+          console.log(response.data);
+          ElMessage("取消分享")
+        }else{
+          console.log('failed')
+        }
+      }).catch((err)=>{
+        console.log('err!!!')
+      });
+
     },
     disCollect() {
-      ElMessage("已取消收藏")
+      this.$axios.post("/notCollect",
+          {
+            params:{
+              fileId: this.curFileId
+            }
+          }
+      ).then((response)=>{
+        if(response.status === 200){
+          console.log(response.data);
+          ElMessage("取消收藏")
+        }else{
+          console.log('failed')
+        }
+      }).catch((err)=>{
+        console.log('err!!!')
+      });
     },
     recover() {
-      ElMessage("成功恢复")
+      this.$axios.post("/recover",
+          {
+            params:{
+              fileId: this.curFileId
+            }
+          }
+      ).then((response)=>{
+        if(response.status === 200){
+          console.log(response.data);
+          ElMessage("成功恢复")
+        }else{
+          console.log('failed')
+        }
+      }).catch((err)=>{
+        console.log('err!!!')
+      });
     },
     del() {
-      ElMessage("已彻底删除")
+      this.$axios.post("/del",
+          {
+            params:{
+              fileId: this.curFileId
+            }
+          }
+      ).then((response)=>{
+        if(response.status === 200){
+          console.log(response.data);
+          ElMessage("彻底删除")
+        }else{
+          console.log('failed')
+        }
+      }).catch((err)=>{
+        console.log('err!!!')
+      });
       },
   }
 }
