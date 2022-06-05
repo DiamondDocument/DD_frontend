@@ -110,6 +110,7 @@ export default {
     }
   },
   methods: {
+
     rowContextmenu (row, column, event) {
       this.menuVisible = false
       this.menuVisible = true

@@ -1,4 +1,4 @@
-<template>
+<template onload="getMessage">
   <p>{{$route.params.tableId}}giao</p>
   <el-menu default-active="'/' +this.$route.path.split('/')[1]">
     <el-button type="primary" style="margin-left: 20px" @click="allRead">全部已读</el-button>
@@ -88,12 +88,14 @@ export default {
       messageNotRead: 4,
       messages: [
         {
+          id:0,
           type: 1,
           title: '团队邀请',
           abstract: '赵老板 邀请您加入 DiamondDocument',
           read: false
         },
         {
+          id:1,
           type: 0,
           title: '文档被评论',
           abstract: '赵老板 评论了您的文档 产品计划说明书',
@@ -101,6 +103,7 @@ export default {
           read: false
         },
         {
+          id:3,
           type: 2,
           title: '收到加入团队的申请',
           abstract: '赵老板 申请加入您的团队 金刚石团队',
@@ -118,15 +121,36 @@ export default {
     }
   },
   methods: {
+    getMessage() {
+
+    },
     read(i) {
       this.messages[i].read=true;
+      this.$axios.post("/readMessage",
+          {
+            params:{
+              messageId: this.messages[i].id
+            }
+          }
+      ).then((response)=>{
+        if(response.status === 200){
+          console.log(response.data);
+        }else{
+          console.log('failed')
+        }
+      }).catch((err)=>{
+        console.log(err)
+      });
       this.messageNotRead--;
     },
     allRead() {
-      this.messageNotRead=0;
       let i = 0;
       while (i < this.messageNum){
-        this.messages[i].read=true;
+        if (this.messages[i].read) {
+          i++;
+          continue
+        }
+        this.read(i)
         i++;
       }
     }

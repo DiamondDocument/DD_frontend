@@ -25,7 +25,8 @@
             @row-contextmenu="rowContextmenu"
             highlight-current-row
             @row-dblclick="edit"
-            @cell-mouse-enter="recordId">
+            @cell-mouse-enter="recordId"
+            onload="getTableData">
     <el-table-column prop="name" label="文件名" width="450"></el-table-column>
     <el-table-column prop="author" label="创建者" width="300"></el-table-column>
     <el-table-column prop="altDate" label="修改日期" width="400"></el-table-column>
@@ -65,7 +66,6 @@ export default {
       menuVisible: false,       //右键菜单不显示
       loading: false,           //暂时不用
       link:'',                  //分享用的链接
-      // curFile: this.tableData.,          //当前鼠标选中的文件
       curFileId: Number,
       curFileAth: Number,
       curFileShared: Boolean,
@@ -77,9 +77,10 @@ export default {
           author: '赵老板',
           altDate: '1919-08-10',
           altUser: 'lyh',
-          authority: '1',
+          authority: 1,
           size: '20K',
           shared: false,
+          isFolder: false,
         },
         {
           id:1,
@@ -87,9 +88,10 @@ export default {
           author: '赵老板',
           altDate: '1919-08-10',
           altUser: 'lyh',
-          authority: '2',
+          authority: 2,
           size: '98K',
           shared:true,
+          isFolder: false,
         },
       ],
       options: [
@@ -126,6 +128,7 @@ export default {
     function showNewFile() {
       newFile.value.show()
     }
+
     return {
       input :ref(''),
       showAuthority,
@@ -137,6 +140,33 @@ export default {
     }
   },
   methods: {
+    //开局获得文件列表
+    getTableData(){
+      this.$axios.get('/getFormData', {
+        params: {
+          spaceType: this.spaceType,
+          UserId: this.state.loginUser.userId
+        }
+      }).then((response)=>{
+        this.tableData=response.data
+      }).catch((err)=>{
+        ElMessage('err!!!')
+      })
+    },
+    //获得打开的文件夹里面的文件列表
+    getFolderData() {
+      this.$axios.get('/getFileFormData', {
+        params: {
+          fileId: this.curFileId,
+          UserId: this.state.loginUser.userId
+        }
+      }).then((response)=>{
+        this.tableData.clear
+        this.tableData=response.data
+      }).catch((err)=>{
+        ElMessage('err!!!')
+      })
+    },
     rowContextmenu (row, column, event) {
       this.menuVisible = false
       this.menuVisible = true
@@ -157,10 +187,15 @@ export default {
       this.curFileShared=row.shared
     },
     edit (row) {
-      this.$router.push({
-        name: "documentEdit",
-        params: {documentId: row.id}
-      })
+      if (row.isFolder){
+        this.getFolderData()
+      }
+      else {
+        this.$router.push({
+          name: "documentEdit",
+          params: {documentId: row.id}
+        })
+      }
     },
     collect () {
       this.$axios.post("/collect", {
