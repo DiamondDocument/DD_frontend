@@ -1,5 +1,4 @@
 <template>
-  <p>{{$route.params.tableId}}giao</p>
 
   <el-menu default-active="'/' +this.$route.path.split('/')[1]">
     <el-input v-model="input" placeholder="空间内搜索文件" style="width: 20%"></el-input>

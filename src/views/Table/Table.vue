@@ -1,4 +1,5 @@
 <template >
+
   <el-container>
     <el-header class="Header" style="height: 50px">
       <img src="../../assets/logo.jpg" style="width: 50px; height: 50px;">
@@ -51,7 +52,6 @@
         </el-menu>
       </el-aside>
       <el-main style="padding: 0px">
-        <p>{{$store.state.tableInfo}}giao</p>
         <router-view></router-view>
       </el-main>
 <!--      <el-main>-->
