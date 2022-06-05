@@ -129,7 +129,7 @@ export default {
         return;
       }
 
-      this.$axios.get("/api/user/register/check-id", {
+      this.$axios.get("user/register/check-id", {
         params:{
           userId: this.userId,
         }
@@ -169,10 +169,8 @@ export default {
     },
 
     sendCode: function (){
-      this.$axios.get("/api/user/send-identifying", {
-        params:{
-          email: this.email
-        }
+      this.$axios.post("user/register",{
+        "email" : this.email,
       }).then(res => {
         if (res.status === 200){
           if (res.data.code === 0) ElMessage('发送成功');
@@ -197,7 +195,8 @@ export default {
         return;
       }
 
-      this.$axios.post("api/user/register",{
+
+      this.$axios.post("user/register",{
         "userId": this.userId,
         "nickName" : "", //可以为空
         "email" : this.email,
@@ -205,7 +204,10 @@ export default {
         "verificationCode" : this.code //5位数字字符串
       }).then(res => {
         if (res.status === 200){
-          if(res.data.code === 0) ElMessage("注册成功！");
+          if(res.data.code === 0) {
+            ElMessage("注册成功！");
+            this.$router.push({name: 'login', params:{}})
+          }
           else if (res.data.code === 1) ElMessage("用户名（邮箱）已经存在");
           else if (res.data.code === 2) ElMessage('昵称不合法');
           else if (res.data.code === 3) ElMessage('邮箱验证码错误');

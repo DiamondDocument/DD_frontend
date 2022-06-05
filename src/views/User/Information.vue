@@ -312,7 +312,7 @@ export default {
     commit: function (){
       this.changeNickname();
       this.changeIntroduction();
-      this.changeEmail();
+      if (!(this.c_email === ''))this.changeEmail();
 
       this.getInformation();
       this.cardSite = '1';

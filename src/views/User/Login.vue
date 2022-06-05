@@ -91,7 +91,11 @@ export default {
     // 需要具体分密码错误 or 用户名不存在？
 
     login: function () {
-      this.$axios.get("/api/user/login", {
+      console.log('login is called!');
+      console.log(this.userId);
+      console.log(this.pwd)
+      console.log(typeof(this.pwd))
+      this.$axios.get("user/login", {
         params:{
           userId: this.userId,
           email: this.email,
@@ -99,10 +103,12 @@ export default {
         }
       }).then((response)=>{
         if (response.status === 200){
+          console.log(response.data.code);
           switch (response.data.code) {
             case 0:
               this.$store.commit({type: 'login', userId: response.data.name, nickname: response.data.nickname})
               ElMessage('登录成功');
+              this.$router.push({name: 'table', params:{info: 'my'}})
               break
             case 1:
               ElMessage('用户名或邮箱不存在');
