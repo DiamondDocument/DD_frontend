@@ -8,6 +8,9 @@
       </el-icon>
       <span style="vertical-align: middle;">搜索</span>
     </el-button>
+    <el-button style="float: right; margin-right: 20px">
+      <span style="vertical-align: middle" @click="stepBack">后退</span>
+    </el-button>
     <el-button type="primary" style="float: right; margin-right: 20px">
       <span style="vertical-align: middle" @click="cancel">取消</span>
     </el-button>
@@ -51,6 +54,8 @@ export default {
       curFileShared: Boolean,
       exportLink: '',           //下载文件的链接
       commitFileId: Number,     //确定移动的目标文件夹id
+      openedFolder: [-1,],         //进入文件夹后，记录上一级文件夹的id用来回退，-1表示根目录
+      depth: 0,                 //记录打开文件夹的深度，用来判断是否回退到了根目录
       tableData: [
         {
           id:0,
@@ -134,7 +139,14 @@ export default {
       this.curFileAth = row.authority
       this.curFileShared = row.shared
     },
+    //进入文件夹后的回退功能
+    stepBack() {
+      if (this.openedFolder[this.depth]===-1) return
+      this.curFileId=this.openedFolder[this.depth--]
+      this.getFolderData()
+    },
     edit(row) {
+      this.openedFolder[++this.depth]=this.curFileId
       this.commitFileId = this.curFileId
       this.getFolderData()
     },

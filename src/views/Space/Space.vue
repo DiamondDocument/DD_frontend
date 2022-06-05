@@ -13,6 +13,9 @@
     <el-button type="primary" style="float: right; margin-right: 20px">
       <span style="vertical-align: middle" @click="showNewFile">新建文件</span>
     </el-button>
+    <el-button style="float: right; margin-right: 20px">
+      <span style="vertical-align: middle" @click="stepBack">后退</span>
+    </el-button>
   </el-menu>
   <el-table :data="tableData" stripe
             v-loading="loading"
@@ -41,7 +44,7 @@
   <authority ref="authority" @altAuthority="altAuthority"></authority>
   <share ref="share" :curFileId="curFileId" @altAuthority="altAuthority"></share>
   <new-file ref="newFile"></new-file>
-  <move ref="move" @commit="commitPos" v-if="moving"></move>
+  <move ref="move" @commit="commitPos" @cancel="cancelMove" v-if="moving"></move>
 </template>
 
 <script>
@@ -72,7 +75,9 @@ export default {
       curFileAth: Number,
       curFileShared: Boolean,
       exportLink: '',           //下载文件的链接
-      moving: false,         //是否在移动文件，决定文件系统如何显示
+      moving: false,            //是否在移动文件，决定文件系统如何显示
+      openedFolder: [-1,],         //进入文件夹后，记录上一级文件夹的id用来回退，-1表示根目录
+      depth: 0,                 //记录打开文件夹的深度，用来判断是否回退到了根目录
       tableData: [
         {
           id:0,
@@ -122,7 +127,6 @@ export default {
     const authority = ref()
     const share=ref()
     const newFile=ref()
-    const move=ref()
     function showAuthority() {
       authority.value.show()
     }
@@ -189,8 +193,15 @@ export default {
       this.curFileAth=row.authority
       this.curFileShared=row.shared
     },
+    //进入文件夹后的回退功能
+    stepBack() {
+      if (this.openedFolder[this.depth]===-1) return
+      this.curFileId=this.openedFolder[this.depth--]
+      this.getFolderData()
+    },
     edit (row) {
       if (row.isFolder){
+        this.openedFolder[++this.depth]=this.curFileId
         this.getFolderData()
       }
       else {
@@ -255,6 +266,9 @@ export default {
       }).catch((err)=>{
         console.log('err!!!')
       });
+    },
+    cancelMove() {
+      this.moving=false
     },
     remove (){
       this.$axios.post("/remove",
