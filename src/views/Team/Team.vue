@@ -3,9 +3,8 @@
 
     <div class="information"
          style="height:180px;
-                width: 100%;
-                background: #ebebeb;
-                position: absolute"
+                width: 93%;
+                position: absolute;"
     >
 
       <el-image v-if="userType === 0" @click="changeImg" class="teamImg" :src="team_img" fit="fill" >
@@ -23,10 +22,10 @@
 
       <div style="float: left; padding: 10px" v-if="changing === 1">
         <el-input type="text"
-                  v-model="c_teamName"
+                  v-model="team_name"
                   placeholder="请输入团队名称"/>
         <el-input type="textarea"
-                  v-model="c_teamIntroduction"
+                  v-model="team_introduction"
                   placeholder="请输入团队简介"
                   style="margin-top: 10px"/>
       </div>
@@ -36,7 +35,7 @@
       <div style="
       height: 180px;
       float: right;
-      margin: auto 20px;">
+      margin: auto 40px;">
 
         <div style="margin-top: 20px">
           <el-button v-if="userType === 0" type="danger" @click="dropTeam">
@@ -59,9 +58,9 @@
             申请加入
           </el-button>
 
-          <el-button v-else type="info" disabled="true">
-            你究竟是谁？？
-          </el-button>
+          <div v-else type="info" disabled="true">
+            请先登录
+          </div>
         </div>
 
         <el-button v-if="userType === 0"
@@ -115,7 +114,7 @@
              style="
              float: right;
              width: 80%">
-          <el-avatar src="circleUrl" style="float: left; margin-top: 20px"/>
+          <el-avatar :src="mem.url" style="float: left; margin-top: 20px"/>
           <div style="float: left; margin-left: 25px; margin-top: 25px">
             {{mem.nickName}}
           </div>
@@ -126,11 +125,11 @@
               position: absolute;
               right: 15px;
               float: right;">
-          <el-button  type="danger" style="margin: 5px" @click="removeMem">
+          <el-button  type="danger" style="margin: 5px" @click="removeMem(mem.userId)">
             移除成员
           </el-button>
           <br>
-          <el-button style="margin: 5px" @click="transPri">
+          <el-button style="margin: 5px" @click="transPri(mem.userId)">
             转让权限
           </el-button>
         </div>
@@ -148,23 +147,14 @@ export default {
   data(){
     return {
       changing : 0,
-      userType: 0,
+      userType: -1,
       teamId: '',
-      team_img:"../../assets/logo.png",
+      team_img:"",
       team_name: "软工",
       team_introduction: "for test",
       c_teamName: '',
       c_teamIntroduction: '',
-      memList: [
-        {
-          id: 1,
-          nickName: "小王"
-        },
-        {
-          id: 2,
-          nickName: "小李"
-        }
-      ]
+      memList: null,
     }
   },
 
@@ -179,12 +169,14 @@ export default {
 
     endChange: function (){
       this.changing = 0;
-      this.$axios.post("/api/team/modify/name",
+      this.$axios.post("team/modify/name",
           {
             "teamId" : this.teamId,
-            "newName": this.c_teamName
+            "newName": this.team_name,
           }).then((res)=>{
         if (res.status === 200){
+          console.log('change name data = ');
+          console.log(res.data);
           if (res.data.code === 0) ElMessage("修改团队名称成功！");
           else if (res.data.code === 1) ElMessage("团队不存在");
           else ElMessage("系统错误！！");
@@ -193,12 +185,14 @@ export default {
         console.log(err);
       })
 
-      this.$axios.post("/api/team/modify/name",
+      this.$axios.post("team/modify/introduction",
           {
             "teamId" : this.teamId,
-            "newIntro": this.c_teamIntroduction
+            "newIntro": this.team_introduction,
           }).then((res)=>{
         if (res.status === 200){
+          console.log('change introduction data = ');
+          console.log(res.data);
           if (res.data.code === 0) ElMessage("修改团队简介成功！");
           else if (res.data.code === 1) ElMessage("团队不存在");
           else ElMessage("系统错误！！");
@@ -222,11 +216,14 @@ export default {
       console.log(e.currentTarget.files[0].name)//文件名
       let form = new FormData();
       form.append("file",e.currentTarget.files[0]);
-      form.append("userId", this.$store.state.loginUser.userId)
-      this.axios.post("/api/team/modify/avatar",form).then((response)=>{
+      form.append("teamId", this.teamId);
+      console.log(form);
+      this.axios.post("team/modify/avatar",form).then((response)=>{
         if(response.status === 200){
-          ElMessage("上传成功！");
+          console.log('change avatar data = ');
           console.log(response.data);
+          if (response.data.code === 0) ElMessage("上传成功！");
+          else ElMessage('系统错误');
         }else{
           ElMessage("上传失败!");
           console.log("status is not 200!");
@@ -234,7 +231,6 @@ export default {
       }).catch((err)=>{
         console.log(err);
       });
-      // }
     },
 
     invite: function (){
@@ -242,19 +238,63 @@ export default {
     },
 
     dropTeam: function (){
-      console.log("dropTeam is called!")
+      console.log("dropTeam is called!");
+      this.axios.post("team/dismiss",{
+        "teamId": this.teamId,
+        "userId": this.$store.state.loginUser.userId,
+      }).then((response)=>{
+        if(response.status === 200){
+          console.log('dropTeam data = ');
+          console.log(response.data);
+          if (response.data.code === 0) ElMessage("解散成功！");
+          else if (response.data.code === 1) ElMessage('你不是队长');
+          else ElMessage('系统错误');
+        }else console.log("status is not 200!");
+      }).catch((err)=>{
+        console.log(err);
+      });
     },
 
+    // 无接口？！！
     leaveTeam: function (){
       console.log("leaveTeam is called!")
     },
 
     accept: function (){
       console.log("accept is called!")
+      this.axios.post("team/invite-deal",{
+        "teamId": this.teamId,
+        "userId": this.$store.state.loginUser.userId,
+        "deal": 1,
+      }).then((response)=>{
+        if(response.status === 200){
+          console.log('dropTeam data = ');
+          console.log(response.data);
+          if (response.data.code === 0) ElMessage("成功加入！");
+          else ElMessage('系统错误');
+        }else console.log("status is not 200!");
+      }).catch((err)=>{
+        console.log(err);
+      });
+      location.reload();
     },
 
     apply: function (){
-      console.log("apply is called!")
+      console.log("apply is called!");
+      this.axios.post("team/apply-deal",{
+        "teamId": this.teamId,
+        "userId": this.$store.state.loginUser.userId,
+      }).then((response)=>{
+        if(response.status === 200){
+          console.log('apply data = ');
+          console.log(response.data);
+          if (response.data.code === 0) ElMessage("成功提交申请！");
+          else ElMessage('系统错误');
+        }else console.log("status is not 200!");
+      }).catch((err)=>{
+        console.log(err);
+      });
+      location.reload();
     },
 
     goUser: function (userId){
@@ -262,22 +302,143 @@ export default {
       this.$router.push({name: 'userInformation', params: {userId: userId}});
     },
 
-    removeMem: function (){
+    removeMem: function (memberId){
       console.log("removeMem is called!");
+      this.axios.post("team/remove",{
+        "teamId": this.teamId,
+        "captainId" :  this.$store.state.loginUser.userId,
+        "memberId" : memberId,
+      }).then((response)=>{
+        if(response.status === 200){
+          console.log('remove mem data = ');
+          console.log(response.data);
+          if (response.data.code === 0) ElMessage("成功移除！");
+          else ElMessage('系统错误');
+        }else console.log("status is not 200!");
+      }).catch((err)=>{
+        console.log(err);
+      });
+      location.reload();
     },
 
-    transPri: function (){
+    transPri: function (memberId){
       console.log("transPri is called!");
+      this.axios.post("team/transfer ",{
+        "teamId": this.teamId,
+        "oldCaptainId" : this.$store.state.loginUser.userId,
+        "newCaptainId" : memberId,
+      }).then((response)=>{
+        if(response.status === 200){
+          console.log('transPri data = ');
+          console.log(response.data);
+          if (response.data.code === 0) ElMessage("成功转让！");
+          else ElMessage('系统错误');
+        }else console.log("status is not 200!");
+      }).catch((err)=>{
+        console.log(err);
+      });
+      location.reload();
     },
 
     checkUserType: function (){
       console.log("checkUserType is called!");
-    }
+      this.axios.get("team/team-status",{
+        params:{
+          teamId: this.teamId,
+          userId: this.$store.state.loginUser.userId,
+        }
+      }).then(res => {
+        console.log('userType data =  ');
+        console.log(res.data);
+        if (res.status === 200){
+          if (res.data.code === 0) this.userType = res.data.status;
+          else console.log('code = ' + res.data.code);
+        }else console.log('status is not 200!');
+      }).catch(err => {
+        console.log(err);
+      })
+    },
+
+    getTeamInformation: function (){
+      console.log('getTeamInformation is called');
+      console.log('teamId is ' + this.teamId);
+      //  获取团队基本信息
+      this.axios.get("team/information",{
+        params:{
+          teamId: this.teamId,
+        }
+      }).then(res => {
+        if (res.status === 200){
+          console.log('get information data = ');
+          console.log(res.data);
+          if (res.data.code === 0) {
+            this.team_name = res.data.name;
+            this.team_introduction = res.data.intro;
+          }
+          else console.log('code = ' + res.data.code);
+        }else console.log('status is not 200!');
+      }).catch(err => {
+        console.log(err);
+      })
+      // 获取团队头像
+      this.axios.get("team/get-avatar",{
+        params:{
+          teamId: this.teamId,
+        }
+      }).then(res => {
+        if (res.status === 200){
+          console.log('get-avatar data = ');
+          console.log(res.data)
+          if (res.data.code === 0) this.team_img = res.data.url;
+          else console.log('code = ' + res.data.code);
+        }else console.log('status is not 200!');
+      }).catch(err => {
+        console.log(err);
+      })
+
+      this.axios.get("team/member",{
+        params:{
+          teamId: this.teamId,
+        }
+      }).then(res => {
+        if (res.status === 200){
+          console.log('get mems data = ')
+          console.log(res.data)
+          if (res.data.code === 0) this.memList = res.data.member;
+          else console.log('code = ' + res.data.code);
+        }else console.log('status is not 200!');
+      }).catch(err => {
+        console.log(err);
+      })
+    },
+
+    // getMemsAvatar: function (){
+    //   for (let i = 0; i < this.memList.length; i++) {
+    //     this.axios.get("user/get-avatar",{
+    //       params:{
+    //         userId: this.memList[i].userId,
+    //       }
+    //     }).then(res => {
+    //       if (res.status === 200){
+    //         if (res.data.code === 0) this.memList[i].url = res.data.url;
+    //         else console.log('user-Avatar: code = ' + res.data.code);
+    //       }else console.log('status is not 200!');
+    //     }).catch(err => {
+    //       console.log(err);
+    //     })
+    //   }
+    // }
+
+
   },
   created() {
+    console.log(this.$store.state.loginUser.userId)
     this.teamId = this.$route.params.teamId;
     this.checkUserType();
+    this.getTeamInformation();
 
+    // console.log(typeof (this.memList))
+    // this.getMemsAvatar();
   }
 }
 
@@ -295,7 +456,7 @@ export default {
   width: 100px;
 }
 .block {
-  margin:0 auto;
+  margin: 10px auto;
   padding: 10px;
   width: 75%;
   height: 100px;

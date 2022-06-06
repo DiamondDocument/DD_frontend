@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="isOwner">
+    <div v-if="isOwner === true">
       <el-tabs v-model="cardSite" type="border-card" @tab-click="clean">
         <el-tab-pane label="个人信息" name="1">
 
@@ -9,7 +9,7 @@
                  style="display:none"
                  @change="upload($event)"/>
 
-          <el-avatar :size="200" :src="circleUrl" style="float: left; " @click="changeImg"/>
+          <el-avatar :size="200" :src="url" style="float: left; " @click="changeImg"/>
           <el-form
               label-position="Right"
               label-width="100px"
@@ -30,10 +30,13 @@
             </el-form-item>
 
             <el-form-item label="用户简介：">
-              {{ introduction }}
+              1 2 3
             </el-form-item>
           </el-form>
 
+          <el-button type="danger" @click="logout" style="margin-left: 300px">
+            退出登录
+          </el-button>
         </el-tab-pane>
 
         <!--      切换清空 邮箱 密码 时无法消除错误提示    -->
@@ -132,8 +135,8 @@
       </el-tabs>
     </div>
 
-    <div v-if="!isOwner">
-      <div style="float: left; margin-left: 20px;">
+    <div v-if="isOwner === false">
+      <div style="float: left; margin-left: 20px; margin-right: 50px">
         <el-avatar :size="200" :src="url" />
       </div>
 
@@ -161,6 +164,10 @@
             {{ introduction }}
           </el-form-item>
         </el-form>
+
+        <el-button type="success" @click="goTable" style="margin-left: 50px">
+          进入TA的工作台
+        </el-button>
       </div>
 
     </div>
@@ -173,11 +180,10 @@ import qs from "qs";
 import {ElMessage} from "element-plus";
 
 export default {
-
   name: "Information",
   data(){
     return {
-      isOwner: 1,
+      isOwner: -1,
       userId: '',
       url: '',
       cardSite: '1',
@@ -199,6 +205,7 @@ export default {
     }
   },
   methods: {
+
     clean: function (){
       this.c_nickName = '';
       this.c_introduction = '';
@@ -206,6 +213,16 @@ export default {
       this.c_code = '';
       this.newPwd = '';
       this.oldPwd = '';
+      this.confirm = '';
+    },
+
+    logout: function(){
+      this.$store.commit("logout");
+      this.$router.push({name: 'login'});
+    },
+
+    goTable: function (){
+      this.$router.push({name: 'table', params:{info: 'other-'+this.userId}});
     },
 
     checkEmail: function (){    //检查邮箱格式
@@ -245,7 +262,7 @@ export default {
       let form = new FormData();
       form.append("file",e.currentTarget.files[0]);
       form.append("userId", this.$store.state.loginUser.userId)
-      this.axios.post("/api/user/modify/avatar",form).then((response)=>{
+      this.axios.post("user/modify/avatar",form).then((response)=>{
         if(response.status === 200){
           if (response.data.code === 0){
             ElMessage("上传成功！");
@@ -260,29 +277,36 @@ export default {
 
     changeNickname: function (){
       console.log('changeNickname is called!')
-      this.$axios.post("/api/user/modify/nickname",
+      this.$axios.post("user/modify/nickname",
           {
             "userId" : this.userId,
             "newNick" : this.c_nickName,
           }).then((res)=>{
         if (res.status === 200){
-          if (res.data.code === 0) ElMessage("修改成功！");
+          if (res.data.code === 0) {
+            ElMessage("修改成功！");
+            this.nickName = this.c_nickName;
+          }
           else ElMessage("系统错误！！");
         }else console.log("return status != 200!!");
       }).catch((err)=>{
         console.log(err);
       })
+
     },
 
     changeIntroduction: function (){
       console.log('changeIntroduction is called!');
-      this.$axios.post("/api/user/modify/introduction",
+      this.$axios.post("user/modify/introduction",
           {
             "userId" : this.userId,
             "newIntro" : this.c_introduction,
           }).then((res)=>{
         if (res.status === 200){
-          if (res.data.code === 0) ElMessage("修改成功！");
+          if (res.data.code === 0) {
+            ElMessage("修改成功！");
+            this.introduction = this.c_introduction;
+          }
           else if (res.data.code === 1) ElMessage("用户不存在");
           else ElMessage("系统错误！！");
         }else console.log("return status != 200!!");
@@ -293,14 +317,17 @@ export default {
 
     changeEmail: function (){
       console.log('changeEmail is called !');
-      this.$axios.post("/api/user/modify/email",
+      this.$axios.post("user/modify/email",
           {
             "userId" : this.userId,
             "newEmail" : this.c_email,
             "verificationCode": this.c_code,
           }).then((res)=>{
         if (res.status === 200){
-          if (res.data.code === 0) ElMessage("修改成功！");
+          if (res.data.code === 0) {
+            ElMessage("修改成功！");
+            this.email = this.c_email;
+          }
           else if (res.data.code === 1) ElMessage("验证码错误！");
           else ElMessage("系统错误！！");
         }else console.log("return status != 200!!");
@@ -310,17 +337,16 @@ export default {
     },
 
     commit: function (){
-      this.changeNickname();
-      this.changeIntroduction();
+      if (!(this.c_nickName === ''))this.changeNickname();
+      if (!(this.c_introduction === ''))this.changeIntroduction();
       if (!(this.c_email === ''))this.changeEmail();
 
       this.getInformation();
       this.cardSite = '1';
-      this.clean();
     },
 
     sendCode: function (){
-      this.$axios.get("/api/user/send-identifying", {
+      this.$axios.get("user/send-identifying", {
         params:{
           email: this.c_email,
         }
@@ -340,7 +366,7 @@ export default {
         ElMessage('两次输入密码不同');
         return;
       }
-      this.$axios.post("/api/user/modify/password",
+      this.$axios.post("user/modify/password",
           {
             "userId" : this.userId,
             "newPwd" : this.newPwd,
@@ -355,16 +381,19 @@ export default {
         console.log(err);
       })
 
-      location.reload();
+      this.cardSite = '1';
     },
 
     getInformation: function (){
-      this.$axios.get("/api/user/information", {
+      console.log('get user information');
+      this.$axios.get("user/information", {
         params:{
           userId: this.userId,
         }
       }).then((response)=>{
         if (response.status === 200){
+          console.log('user data');
+          console.log(response.data);
           if (response.data.code === 0){
             this.nickName = response.data.nickName;
             this.email = response.data.email;
@@ -378,12 +407,13 @@ export default {
     },
 
     getAvatar: function (){
-      this.$axios.get("/api/user/get-avatar", {
+      this.$axios.get("user/get-avatar", {
         params:{
           userId: this.userId,
         }
       }).then((response)=>{
         if (response.status === 200){
+          console.log(response.data)
           if (response.data.code === 0){
             this.url = response.data.url;
           }else console.log("用户头像获取错误");
@@ -396,8 +426,11 @@ export default {
 
   created() {
     this.isOwner = (this.$route.params.userId === this.$store.state.loginUser.userId);
-
-    console.log('' + this.$route.params.userId + ' - ' + this.$store.state.loginUser.userId);
+    // console.log((this.$route.params.userId === this.$store.state.loginUser.userId));
+    // console.log(this.isOwner);
+    // console.log(this.$route.params.userId);
+    // console.log(' - ');
+    // console.log(this.$store.state.loginUser.userId);
     this.userId = this.$route.params.userId;
 
     this.getInformation();

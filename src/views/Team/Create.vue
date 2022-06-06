@@ -69,18 +69,20 @@ export default {
 
       console.log("调用teamCreate");
 
-      this.$axios.post("/api/team/create",
+      console.log(this.$store.state.loginUser.userId);
+      this.$axios.post("team/create",
           {
             "teamName" : this.teamName,
             "teamIntroductory" : this.teamIntroduction,
-            "userId": this.$route.params.userId,
+            "userId": this.$store.state.loginUser.userId,
           }).then((res)=>{
-
-            console.log("进入回调函数")
+            console.log("进入回调函数");
+            console.log(res.data);
             if (res.status === 200){
               if (res.data.code === 0) {
                 ElMessage("创建成功！");
-                 this.teamId = res.data.teamId;
+                this.teamId = res.data.teamId;
+                this.$router.push({name: 'table', params: {info: 'team-' + this.teamId}});
               }
               else if (res.data.code === 1) ElMessage("团队名称不合规范, 团队名称只能由数字字母汉字组成");
               else ElMessage("系统错误！！");
@@ -89,10 +91,12 @@ export default {
         console.log(err);
       })
 
-      this.$router.push({name: 'table', params: {info: 'team-' + this.teamId}});
-
     }
   },
+  // for test
+  created() {
+    console.log(this.$store.state.loginUser.userId);
+  }
 }
 </script>
 
