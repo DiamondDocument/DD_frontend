@@ -1,7 +1,7 @@
 <template >
   <el-container>
     <el-header class="Header" style="height: 50px">
-      <img src="../../assets/logo.jpg" style="width: 50px; height: 50px;">
+      <img src="../../assets/logo2.png" style="width: 50px; height: 50px;">
 
       <div>
         <a href="#" style="padding: 0 10px 0 0">头像</a>

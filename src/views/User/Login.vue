@@ -2,7 +2,7 @@
   <div class="login">
 
     <div style="margin:20px auto; width: 80px; ">
-      <img src="../../assets/logo.png" alt="logo"> <br>
+      <img src="../../assets/logo2.png" alt="logo" style="margin: 0 auto;"> <br>
       <h2 class="title" style="margin:0 auto">登录</h2>
     </div>
     <br>
