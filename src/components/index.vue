@@ -1,13 +1,13 @@
 <template>
   <div id="contextmenu" class="contextmenu">
-    <div v-if="spaceType===1 || spaceType===0" class="contextmenu__item" @click="collect()">收藏</div>
-    <div v-if="spaceType===1" class="contextmenu__item" @click="move()">移动</div>
-    <div v-if="spaceType===1" class="contextmenu__item" @click="authority()">设置权限</div>
-    <div v-if="spaceType===1" class="contextmenu__item" @click="rename()">重命名</div>
-    <div v-if="spaceType===1" class="contextmenu__item" @click="remove()">删除</div>
-    <div v-if="spaceType===1 || spaceType===2 || spaceType===0" class="contextmenu__item" @click="_export()">导出</div>
-    <div v-if="(spaceType===1 || spaceType===2 || spaceType===0) && !shared" class="contextmenu__item" @click="share()">分享</div>
-    <div v-if="(spaceType===1 || spaceType===2 || spaceType===0) && shared" class="contextmenu__item" @click="notShare()">取消分享</div>
+    <div v-if="spaceType===1 || spaceType===0" class="contextmenu__item" @click="collect()"><el-icon style="margin: auto 10px auto 0 "><CollectionTag /></el-icon>收藏</div>
+    <div v-if="spaceType===1" class="contextmenu__item" @click="move()"><el-icon style="margin: auto 10px auto 0 "><Ticket /></el-icon><div>移动</div></div>
+    <div v-if="spaceType===1" class="contextmenu__item" @click="authority()"><el-icon style="margin: auto 10px auto 0 "><Key /></el-icon><div>设置权限</div></div>
+    <div v-if="spaceType===1" class="contextmenu__item" @click="rename()"><el-icon style="margin: auto 10px auto 0 "><Ticket /></el-icon><div>重命名</div></div>
+    <div v-if="spaceType===1" class="contextmenu__item" @click="remove()"><el-icon style="margin: auto 10px auto 0 "><Remove /></el-icon><div>删除</div></div>
+    <div v-if="spaceType===1 || spaceType===2 || spaceType===0" class="contextmenu__item" @click="_export()"><el-icon style="margin: auto 10px auto 0 "><Ticket /></el-icon><div>导出</div></div>
+    <div v-if="(spaceType===1 || spaceType===2 || spaceType===0) && !shared" class="contextmenu__item" @click="share()"><el-icon style="margin: auto 10px auto 0 "><Share /></el-icon><div>分享</div></div>
+    <div v-if="(spaceType===1 || spaceType===2 || spaceType===0) && shared" class="contextmenu__item" @click="notShare()"><el-icon style="margin: auto 10px auto 0 "><Lock /></el-icon><div>取消分享</div></div>
     <div v-if="spaceType===2" class="contextmenu__item" @click="disCollect()">取消收藏</div>
     <div v-if="spaceType===3" class="contextmenu__item" @click="recover()">恢复文件</div>
     <div v-if="spaceType===3" class="contextmenu__item" @click="del()">彻底删除</div>
@@ -16,8 +16,10 @@
 
 
 <script>
+import {Ticket} from "@element-plus/icons-vue";
 export default {
   name: "index",
+  components: {Ticket},
   props: {
     spaceType: {
       type: Number,
@@ -87,9 +89,10 @@ export default {
 
 <style scoped>
 .contextmenu__item {
-  display: block;
-  line-height: 50px;
-  text-align: center;
+  display: flex;
+  line-height: 40px;
+  text-align: left;
+  padding-left: 10px;
 }
 .contextmenu__item:not(:last-child) {
   border-bottom: 1px solid rgba(171, 171, 171, 0.2);
@@ -97,7 +100,7 @@ export default {
 .contextmenu {
   position: absolute;
   background-color: #ffffff;
-  width: 170px;  font-size: 17px;
+  width: 140px;  font-size: 13px;
   color: #4d4d4d;
   /*border-radius: 10px;*/
   -webkit-box-sizing: border-box;
