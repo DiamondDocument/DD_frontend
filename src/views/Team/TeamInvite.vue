@@ -1,5 +1,5 @@
 <template>
-  <div style="width: 1000px; margin: 0 auto;">
+  <div style="width: 80%; margin: 0 auto;">
 
     <div style="
          width: 600px;
@@ -25,21 +25,21 @@
 
     <el-row v-for="(user, index) in userList" :key="user.userId"
             class="block">
-      <el-avatar src="circleUrl" style="margin: 10px; float: left" />
-
       <div @click="goUser(user.userId)"
-           style="float: right; width: 800px">
+           style="float: right; width: 80%">
+        <el-avatar :src="user.url" style="margin: 10px; float: left" />
         <h3 >
-          {{user.userNickname}}
+          {{user.nickName}}
         </h3>
         <p >
-          {{user.userIntroduction}}
+          {{user.intro}}
         </p>
       </div>
 
       <el-button type="success"
                  @click.stop="inviteUser(user.userId)"
                  style="
+                 float: right;
                  margin: auto 20px;">
         邀请
       </el-button>
@@ -58,29 +58,9 @@ export default {
   data(){
     return {
       teamId: '',
-      teamName: 'DiamondPick',
+      teamName: '',
       keyword: '',
-      userList: [
-        {
-          userId: '1',
-          userNickname: '赵赵',
-          userIntroduction: '不要停下来啊',
-        },
-        {
-          userId: '2',
-          userNickname: 'THR',
-          userIntroduction: '我的名字叫THR，20岁。住在北航522宿舍，未婚。我在龟友连锁店服务。' +
-              '每天都要加班到晚上8点才能回家。我不抽烟，酒仅止于浅尝。晚上11点睡，每天要睡足8个小时。' +
-              '睡前，我一定喝一杯温牛奶，然后做20分钟的柔软操，上了床，马上熟睡。' +
-              '一觉到天亮，决不把疲劳和压力，留到第二天。医生都说我很正常 '
-        },
-        {
-          userId: '3',
-          userNickname: '王王',
-          userIntroduction: '这个彬彬就是逊啦'
-        }
-      ],
-
+      userList: [],
     }
   },
   methods: {
@@ -105,14 +85,18 @@ export default {
       this.$router.push({name: 'userInvite', params:{userId: userId, teamId: this.teamId}});
     },
     search: function (){
-      this.$router.push({name: 'teamInvite', params: {keyword: this.keyword, teamId: this.teamId}});
+      this.$router.push({name: 'block', params: {
+          option: '1',
+          keyword: this.keyword,
+          teamId: this.teamId
+      }});
     },
   },
   created() {
     this.keyword = this.$route.params.keyword;
     this.teamId = this.$route.params.teamId;
     
-    this.$axios.get(" team/information", {
+    this.$axios.get("team/information", {
       params:{
         teamId: this.teamId
       }
@@ -127,7 +111,19 @@ export default {
       console.log(err);
     });
 
-    // 缺失接口
+    this.$axios.get("search/user", {
+      params:{
+        key: this.keyword,
+      }
+    }).then((response)=>{
+      if (response.status === 200){
+        if (response.data.code === 0){
+          this.userList = response.data.users;
+        } else ElMessage("系统错误！")
+      }else console.log("请求返回status不为200")
+    }).catch((err)=>{
+      console.log(err);
+    });
   }
 }
 </script>

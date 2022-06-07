@@ -4,131 +4,142 @@
       <el-tabs v-model="cardSite" type="border-card" @tab-click="clean">
         <el-tab-pane label="个人信息" name="1">
 
-          <input type="file"
-                 ref="clearFile"
-                 style="display:none"
-                 @change="upload($event)"/>
+          <div style="width: 80%; margin: 0 auto">
+            <input type="file"
+                   ref="clearFile"
+                   style="display:none"
+                   @change="upload($event)"/>
 
-          <el-avatar :size="200" :src="url"  v-if="avatarUpdater" style="float: left; " @click="changeImg"/>
-          <el-form
-              label-position="Right"
-              label-width="100px"
-              style="
+            <el-avatar :size="200" :src="url"  v-if="avatarUpdater" style="float: left; " @click="changeImg"/>
+            <el-form
+                label-position="Right"
+                label-width="100px"
+                style="
               max-width: 100%;
               margin: 20px;
-        ">
-            <el-form-item label="用户名：">
-              {{ userId }}
-            </el-form-item>
+            ">
+              <el-form-item label="用户名：">
+                {{ userId }}
+              </el-form-item>
 
-            <el-form-item label="用户昵称：">
-              {{ nickName }}
-            </el-form-item>
+              <el-form-item label="用户昵称：">
+                {{ nickName }}
+              </el-form-item>
 
-            <el-form-item label="邮箱：">
-              {{ email }}
-            </el-form-item>
+              <el-form-item label="邮箱：">
+                {{ email }}
+              </el-form-item>
 
-            <el-form-item label="用户简介：">
-              {{ introduction }}
-            </el-form-item>
-          </el-form>
+              <el-form-item label="用户简介：">
+                {{ introduction }}
+              </el-form-item>
+            </el-form>
 
-          <el-button type="danger" @click="logout" style="margin-left: 300px">
-            退出登录
-          </el-button>
+            <el-button type="danger" @click="logout" style="margin-left: 300px">
+              退出登录
+            </el-button>
+          </div>
+
         </el-tab-pane>
 
         <!--      切换清空 邮箱 密码 时无法消除错误提示    -->
 
         <el-tab-pane label="修改信息" name="2">
-          <el-form
-              label-position="Right"
-              label-width="100px"
-              style="max-width: 460px"
-          >
-            <el-form-item label="用户昵称：">
-              <el-input type="text"
-                        style="margin-bottom: 10px"
-                        v-model="c_nickName"
-                        />
-            </el-form-item>
 
-            <el-form-item label="用户简介：">
-              <el-input type="textarea" :autosize="{ minRows: 2, maxRows: 4 }"
-                        style="margin-bottom: 10px"
-                        v-model="c_introduction"
-              />
-            </el-form-item>
+          <div style="width: 80%; margin: 0 auto">
+            <el-form
+                label-position="Right"
+                label-width="100px"
+                style="max-width: 460px"
+            >
+              <el-form-item label="用户昵称：">
+                <el-input type="text"
+                          style="margin-bottom: 10px"
+                          v-model="c_nickName"
+                />
+              </el-form-item>
 
-            <el-form-item label="邮箱：">
-              <el-input type="text"
-                        style="margin-bottom: 10px"
-                        v-model="c_email"
-                        @blur="checkEmail">
-                <template #append>
-                  <el-button  @click="sendCode" :disabled="!(emailCheckRes === 0)">发送验证码</el-button>
-                </template>
-              </el-input>
-              <p v-if="emailCheckRes === 1" style="
+              <el-form-item label="用户简介：">
+                <el-input type="textarea" :autosize="{ minRows: 2, maxRows: 4 }"
+                          style="margin-bottom: 10px"
+                          v-model="c_introduction"
+                />
+              </el-form-item>
+
+              <el-form-item label="邮箱：">
+                <el-input type="text"
+                          style="margin-bottom: 10px"
+                          v-model="c_email"
+                          @change="checkEmail">
+                  <template #append>
+                    <el-button  @click="sendCode" :disabled="!(emailCheckRes === 0)">发送验证码</el-button>
+                  </template>
+                </el-input>
+                <p v-if="emailCheckRes === 1" style="
                font-size: 12px;
                color: red;
           ">
-                邮箱格式错误
-              </p>
-            </el-form-item>
+                  邮箱格式错误
+                </p>
+              </el-form-item>
 
-            <el-form-item label="验证码">
-              <el-input type="text"
-                        v-model="c_code"
-                        style="
+              <el-form-item label="验证码">
+                <el-input type="text"
+                          v-model="c_code"
+                          style="
                       width: 200px;
                       float: left ;"/>
-            </el-form-item>
+              </el-form-item>
 
 
-          </el-form>
-          <el-button type="success"
-                     @click="commit"
-                     style="margin-left: 100px">
-            提交修改
-          </el-button>
+            </el-form>
+            <el-button type="success"
+                       @click="commit"
+                       style="margin-left: 100px">
+              提交修改
+            </el-button>
+          </div>
+
         </el-tab-pane>
 
 
         <el-tab-pane label="修改密码" name="3">
-          <el-form
-              label-position="Right"
-              label-width="100px"
-              style="max-width: 460px"
-          >
-            <el-form-item label="原密码：">
-              <el-input v-model="oldPwd" type="password"/>
-            </el-form-item>
 
-            <el-form-item label="新密码：">
-              <el-input v-model="newPwd" type="password" @blur="checkPwd"/>
-              <p v-if="(pwdCheckRes === 1 || pwdCheckRes === 2)" style="
+          <div style="width: 80%; margin: 0 auto">
+            <el-form
+                label-position="Right"
+                label-width="100px"
+                style="max-width: 460px"
+            >
+              <el-form-item label="原密码：">
+                <el-input v-model="oldPwd" type="password"/>
+              </el-form-item>
+
+              <el-form-item label="新密码：">
+                <el-input v-model="newPwd" type="password" @change="checkPwd"/>
+                <p v-if="(pwdCheckRes === 1 || pwdCheckRes === 2)" style="
                font-size: 12px;
                color: red;
-            ">
-                密码只能由6-20个数字，英文字母或下划线组成
-              </p>
-            </el-form-item>
+                ">
+                  密码只能由6-20个数字，英文字母或下划线组成
+                </p>
+              </el-form-item>
 
 
 
-            <el-form-item label="确认密码：">
-              <el-input v-model="confirm" type="password" />
-            </el-form-item>
+              <el-form-item label="确认密码：">
+                <el-input v-model="confirm" type="password" />
+              </el-form-item>
 
-            <div style="margin-left: 200px;">
-              <el-button type="success" @click="changePwd">
-                提交修改
-              </el-button>
-            </div>
+              <div style="margin-left: 200px;">
+                <el-button type="success" @click="changePwd">
+                  提交修改
+                </el-button>
+              </div>
 
-          </el-form>
+            </el-form>
+          </div>
+
         </el-tab-pane>
 
       </el-tabs>
@@ -267,12 +278,7 @@ export default {
           if (response.data.code === 0){
             ElMessage("上传成功！");
             console.log(response.data);
-            this.avatarUpdater = false;
-            this.$nextTick(function (){
-              console.log('update img !');
-              this.getAvatar();
-              this.avatarUpdater = true;
-            })
+            location.reload();
           }else if (response.data.code === 1) ElMessage("上传失败")
         }else console.log("status is not 200!");
       }).catch((err)=>{

@@ -12,7 +12,7 @@ const teamInformation = {
   component:() =>import('../views/Team/Team.vue'),
 };
 const teamInvite = {
-  path: 'team/invite/:keyword?',
+  path: 'team/invite/:teamId/:keyword?',
   name: 'teamInvite',
   component:() =>import('../views/Team/TeamInvite.vue'),
 };
@@ -22,6 +22,12 @@ const teamList = {
   path: 'team/list/:key?',
   name: 'teamList',
   component:() =>import('../views/Team/List.vue'),
+};
+
+const block =  {
+  path: 'block',
+  name: 'block',
+  component:() =>import('../views/Team/block'),
 };
 /*
 const otherTeamList = {
@@ -143,6 +149,7 @@ const table = {
     teamInvite,
     teamCreate,
     teamInformation,
+    block,
     //空间
     recent,
     space,

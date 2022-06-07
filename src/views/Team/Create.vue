@@ -69,6 +69,11 @@ export default {
 
       console.log("调用teamCreate");
 
+      if (this.teamName === '' || this.teamIntroduction === ''){
+        ElMessage('团队名称和团队简介不可以为空！');
+        return;
+      }
+
       console.log(this.$store.state.loginUser.userId);
       this.$axios.post("team/create",
           {

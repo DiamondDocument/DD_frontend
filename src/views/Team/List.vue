@@ -13,7 +13,7 @@
                 width: 70%"
                 >
         <template #prepend>
-          <el-icon><Search /></el-icon>
+          <el-icon><Search/></el-icon>
         </template>
         <template #append>
           <el-button type="primary" @click="search">
@@ -37,7 +37,7 @@
             {{team.name}}
           </h3>
           <p >
-            {{team.introduction}}
+            {{team.intro}}
           </p>
         </div>
 
@@ -75,7 +75,11 @@ export default {
   },
   methods: {
     search: function (){
-      this.$router.push({name:'teamList', params:{key: this.key}});
+      this.$router.push({name: 'block', params: {
+        option: '0',
+        key: this.key
+      }})
+      // this.$router.push({name:'teamList', params:{key: this.key}});
     },
 
     goTeam: function (index){
@@ -90,20 +94,38 @@ export default {
     console.log(this.$store.state.loginUser.userId);
     // console.log(this.$route.params.key === '');
     this.key = this.$route.params.key;
-    this.$axios.get("search/team", {
-      params:{
-        key: this.key,
-      }
-    }).then((response)=>{
-      console.log('search team data = ');
-      console.log(response.data);
-      if (response.status === 200){
-        this.teamList = response.data.teams;
-        console.log(this.teamList);
-      }else console.log("请求返回status不为200")
-    }).catch((err)=>{
-      console.log(err);
-    });
+    console.log('key is ' + this.key);
+    if (this.key === '' || this.key === null || this.key === undefined){
+      this.$axios.get("user/team", {
+        params:{
+          userId: this.$store.state.loginUser.userId,
+        }
+      }).then((response)=>{
+        console.log('search team data = ');
+        console.log(response.data);
+        if (response.status === 200){
+          if (response.data.code === 0) this.teamList = response.data.teams;
+        }else console.log("请求返回status不为200")
+      }).catch((err)=>{
+        console.log(err);
+      });
+    }else{
+      this.$axios.get("search/team", {
+        params:{
+          key: this.key,
+        }
+      }).then((response)=>{
+        console.log('search team data = ');
+        console.log(response.data);
+        if (response.status === 200){
+          if (response.data.code === 0) this.teamList = response.data.teams;
+        }else console.log("请求返回status不为200")
+      }).catch((err)=>{
+        console.log(err);
+      });
+    }
+
+    console.log(this.teamList);
   }
 }
 </script>

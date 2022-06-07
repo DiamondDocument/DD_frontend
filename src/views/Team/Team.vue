@@ -30,21 +30,42 @@
                   style="margin-top: 10px"/>
       </div>
 
-
-
       <div style="
       height: 180px;
       float: right;
       margin: auto 40px;">
 
         <div style="margin-top: 20px">
-          <el-button v-if="userType === 0" type="danger" @click="dropTeam">
-            解散团队
-          </el-button>
 
-          <el-button v-else-if="userType === 1" type="danger" @click="leaveTeam">
-            离开团队
-          </el-button>
+          <el-popconfirm
+              v-if="userType === 0"
+              confirm-button-text="确认"
+              cancel-button-text="取消"
+              title="确认要解散团队吗?"
+              @confirm="dropTeam"
+          >
+            <template #reference>
+              <el-button  type="danger" >
+                解散团队
+              </el-button>
+            </template>
+          </el-popconfirm>
+
+
+          <el-popconfirm
+              v-else-if="userType === 1"
+              confirm-button-text="确认"
+              cancel-button-text="取消"
+              title="确认要离开团队吗?"
+              @confirm="leaveTeam"
+          >
+            <template #reference>
+              <el-button  type="danger" >
+                离开团队
+              </el-button>
+            </template>
+          </el-popconfirm>
+
 
           <el-button v-else-if="userType === 2" type="info" disabled="true">
             待审核
@@ -110,28 +131,50 @@
                 top:180px;
                 padding: 20px ">
       <el-row v-for="mem in memList" :key="mem.id" class="block">
-        <div @click="goUser(mem.id)"
+        <div @click="goUser(mem.userId)"
              style="
              float: right;
              width: 80%">
           <el-avatar :src="mem.url" style="float: left; margin-top: 20px"/>
           <div style="float: left; margin-left: 25px; margin-top: 25px">
-            {{mem.nickName}}
+            {{mem.name}}
           </div>
         </div>
-        <div v-if="userType === 0"
+        <div v-if="userType === 0 && mem.userId !== this.$store.state.loginUser.userId"
              style="
              height: 80px;
               position: absolute;
               right: 15px;
               float: right;">
-          <el-button  type="danger" style="margin: 5px" @click="removeMem(mem.userId)">
-            移除成员
-          </el-button>
+
+          <el-popconfirm
+              confirm-button-text="确认"
+              cancel-button-text="取消"
+              title="确认将该成员移除团队吗?"
+              @confirm="removeMem(mem.userId)"
+          >
+            <template #reference>
+              <el-button  type="danger" style="margin: 5px">
+                移除成员
+              </el-button>
+            </template>
+          </el-popconfirm>
+
           <br>
-          <el-button style="margin: 5px" @click="transPri(mem.userId)">
-            转让权限
-          </el-button>
+
+          <el-popconfirm
+              confirm-button-text="确认"
+              cancel-button-text="取消"
+              title="确认要将队长权限转让给该成员吗?"
+              @confirm="transPri(mem.userId)"
+          >
+            <template #reference>
+              <el-button style="margin: 5px">
+                转让权限
+              </el-button>
+            </template>
+          </el-popconfirm>
+
         </div>
 
       </el-row>
@@ -150,8 +193,8 @@ export default {
       userType: -1,
       teamId: '',
       team_img:"",
-      team_name: "软工",
-      team_introduction: "for test",
+      team_name: "",
+      team_introduction: "",
       c_teamName: '',
       c_teamIntroduction: '',
       memList: null,
@@ -222,7 +265,10 @@ export default {
         if(response.status === 200){
           console.log('change avatar data = ');
           console.log(response.data);
-          if (response.data.code === 0) ElMessage("上传成功！");
+          if (response.data.code === 0) {
+            ElMessage("上传成功！");
+            location.reload();
+          }
           else ElMessage('系统错误');
         }else{
           ElMessage("上传失败!");
@@ -234,7 +280,7 @@ export default {
     },
 
     invite: function (){
-      this.$router.push({name: 'teamInvite', params: {key: ''}});
+      this.$router.push({name: 'teamInvite', params: {teamId: this.teamId ,keyword: ''}});
     },
 
     dropTeam: function (){
@@ -253,6 +299,7 @@ export default {
       }).catch((err)=>{
         console.log(err);
       });
+      this.$router.push({name: 'table', params:{info: 'my'}});
     },
 
     // 无接口？！！
@@ -404,6 +451,7 @@ export default {
         if (res.status === 200){
           console.log('get mems data = ')
           console.log(res.data)
+          console.log(typeof (res.data.member))
           if (res.data.code === 0) this.memList = res.data.member;
           else console.log('code = ' + res.data.code);
         }else console.log('status is not 200!');
@@ -412,24 +460,6 @@ export default {
       })
     },
 
-    // getMemsAvatar: function (){
-    //   for (let i = 0; i < this.memList.length; i++) {
-    //     this.axios.get("user/get-avatar",{
-    //       params:{
-    //         userId: this.memList[i].userId,
-    //       }
-    //     }).then(res => {
-    //       if (res.status === 200){
-    //         if (res.data.code === 0) this.memList[i].url = res.data.url;
-    //         else console.log('user-Avatar: code = ' + res.data.code);
-    //       }else console.log('status is not 200!');
-    //     }).catch(err => {
-    //       console.log(err);
-    //     })
-    //   }
-    // }
-
-
   },
   created() {
     console.log(this.$store.state.loginUser.userId)
@@ -437,8 +467,6 @@ export default {
     this.checkUserType();
     this.getTeamInformation();
 
-    // console.log(typeof (this.memList))
-    // this.getMemsAvatar();
   }
 }
 
