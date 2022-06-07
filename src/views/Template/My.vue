@@ -9,29 +9,29 @@
   </div>
 
 
-  <el-row v-if="!selectPos">
-    <el-col
-        v-for="(temps, i) in templates"
-        :span="6.5"
-        :offset="i > 0 ? 0.5 : 0"
-    >
-      <el-card class="box-card">
-        <img
-            :src="temps.url"
-            class="image"
-            style="position: center"
-            @click="this.$router.push({name: 'templateDetail', params:{templateId:temps.tempId}})"
-        />
-        <div style="padding: 14px; margin: 0;">
-          <p>{{temps.tempName}}</p>
-          <div class="bottom">
-            <p>作者：{{temps.creatorId}}</p>
-            <el-button type="primary" round @click="useTmp(temps)">立即使用</el-button>
-          </div>
-        </div>
-      </el-card>
-    </el-col>
-  </el-row>
+<!--  <el-row v-if="!selectPos">-->
+<!--    <el-col-->
+<!--        v-for="(temps, i) in templates"-->
+<!--        :span="6.5"-->
+<!--        :offset="i > 0 ? 0.5 : 0"-->
+<!--    >-->
+<!--      <el-card class="box-card">-->
+<!--        <img-->
+<!--            :src="temps.url"-->
+<!--            class="image"-->
+<!--            style="position: center"-->
+<!--            @click="this.$router.push({name: 'templateDetail', params:{templateId:temps.tempId}})"-->
+<!--        />-->
+<!--        <div style="padding: 14px; margin: 0;">-->
+<!--          <p>{{temps.tempName}}</p>-->
+<!--          <div class="bottom">-->
+<!--            <p>作者：{{temps.creatorId}}</p>-->
+<!--            <el-button type="primary" round @click="useTmp(temps)">立即使用</el-button>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </el-card>-->
+<!--    </el-col>-->
+<!--  </el-row>-->
   <tmp-pos ref="tmpPos" v-if="selectPos" @commit="commit" @cancel="selectPos=false"></tmp-pos>
   <el-scrollbar >
     <div id="out">
@@ -55,29 +55,6 @@
 
 
 
-<!--  <el-row>-->
-<!--    <el-col-->
-<!--        v-for="(temps, i) in templates"-->
-<!--        :span="6.5"-->
-<!--        :offset="i > 0 ? 0.5 : 0"-->
-<!--    >-->
-<!--      <el-card class="box-card">-->
-<!--        <img-->
-<!--            :src="temps.url"-->
-<!--            id="image"-->
-<!--            style="position: center"-->
-<!--            @click="this.$router.push({name: 'templateDetail', params:{templateId:temps.tempId}})"-->
-<!--        />-->
-<!--        <div style="padding: 14px; margin: 0;">-->
-
-<!--          <div class="bottom">-->
-<!--            <p id="author">作者：{{temps.creatorId}}</p>-->
-<!--            <el-button type="primary" round @click="useTmp(temps)">立即使用</el-button>-->
-<!--          </div>-->
-<!--        </div>-->
-<!--      </el-card>-->
-<!--    </el-col>-->
-<!--  </el-row>-->
 </template>
 
 <script>
