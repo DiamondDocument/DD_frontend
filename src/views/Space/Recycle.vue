@@ -11,8 +11,7 @@
             style="width:100%;margin-top: 0"
             :row-style="{height: '0'}"
             :cell-style="{padding: '20px'}"
-            @row-contextmenu="rowContextmenu"
-            before-load="getFolderData(0)">
+            @row-contextmenu="rowContextmenu">
     <el-table-column prop="docName" label="文件名" width="450"></el-table-column>
     <el-table-column prop="creatorName" label="创建者" width="300"></el-table-column>
     <el-table-column prop="modifyTime" label="修改日期" width="400"></el-table-column>
@@ -89,6 +88,9 @@ export default {
       input :ref(''),
     }
   },
+  mounted() {
+    this.getFolderData(0)
+  },
   methods: {
     rowContextmenu (row, column, event) {
       this.menuVisible = false
@@ -125,6 +127,7 @@ export default {
       }).catch((err) => {
         ElMessage(err)
       })
+      return 0;
     },
     //暂时不做了
     // search(){

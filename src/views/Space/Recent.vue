@@ -11,8 +11,7 @@
             :cell-style="{padding: '20px'}"
             @row-contextmenu="rowContextmenu"
             highlight-current-row
-            @row-dblclick="edit"
-            befoe-load="getFolderData(0)">
+            @row-dblclick="edit">
     <el-table-column prop="docName" label="文件名" width="450"></el-table-column>
     <el-table-column prop="creatorName" label="创建者" width="300"></el-table-column>
     <el-table-column prop="modifyTime" label="修改日期" width="400"></el-table-column>
@@ -97,6 +96,9 @@ export default {
       showShare,
       share,
     }
+  },
+  mounted() {
+    this.getFolderData(0)
   },
   methods: {
     rowContextmenu (row, column, event) {

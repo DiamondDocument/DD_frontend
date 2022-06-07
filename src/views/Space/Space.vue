@@ -28,8 +28,7 @@
             @row-contextmenu="rowContextmenu"
             highlight-current-row
             @row-dblclick="edit"
-            @cell-mouse-enter="recordId"
-            before-load="getFolderData(0)">
+            @cell-mouse-enter="recordId">
     <el-table-column prop="docName" label="文件名" width="450"></el-table-column>
     <el-table-column prop="creatorName" label="创建者" width="300"></el-table-column>
     <el-table-column prop="modifyTime" label="修改日期" width="400"></el-table-column>
@@ -151,6 +150,9 @@ export default {
       authority,
       share,
     }
+  },
+  mounted() {
+    this.getFolderData(0)
   },
   methods: {
     //获得打开的文件夹里面的文件列表
