@@ -2,13 +2,6 @@
   <p>{{$route.params.tableId}}giao</p>
 
   <el-menu default-active="'/' +this.$route.path.split('/')[1]">
-    <el-input v-model="input" placeholder="空间内搜索文件" style="width: 20%"></el-input>
-    <el-button type="primary" style="margin-left: 10px" @click="search">
-      <el-icon style="vertical-align: middle;">
-        <search />
-      </el-icon>
-      <span style="vertical-align: middle;">搜索</span>
-    </el-button>
     <el-select v-model="value" placeholder="排序方式" style="float: right; margin-right: 20px">
       <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
     </el-select>
@@ -19,9 +12,9 @@
             :row-style="{height: '0'}"
             :cell-style="{padding: '20px'}"
             @row-contextmenu="rowContextmenu"
-            before-load="getTableData">
+            before-load="getFolderData(0)">
     <el-table-column prop="docName" label="文件名" width="450"></el-table-column>
-    <el-table-column prop="creatorId" label="创建者" width="300"></el-table-column>
+    <el-table-column prop="creatorName" label="创建者" width="300"></el-table-column>
     <el-table-column prop="modifyTime" label="修改日期" width="400"></el-table-column>
     <el-table-column prop="modifierName" label="修改人" width="300"></el-table-column>
     <el-table-column prop="size" label="大小" width="300"></el-table-column>
@@ -56,6 +49,7 @@ export default {
       curFileAth: Number,
       curFileShared: Boolean,
       exportLink: '',           //下载文件的链接
+      folderId: null,
       tableData: [
         {
           docId: 0,
@@ -110,44 +104,54 @@ export default {
       this.menuVisible = false;
       document.removeEventListener('click', this.foo);
     },
-    //开局获得文件列表
-    getTableData() {
-      this.$axios.get('/getFormData', {
+    //获得打开的文件夹里面的文件列表
+    getFolderData() {
+      this.$axios.get('/api/space/recycle', {
         params: {
-          spaceType: this.spaceType,
-          UserId: this.state.loginUser.userId
+          type: "user",
+          ownerId: this.$store.state.userId,
         }
       }).then((response) => {
-        this.tableData = response.data
-      }).catch((err) => {
-        ElMessage(err)
-      })
-    },
-    search(){
-      //搜索框为空，默认获取全部文件，也能相当于在搜索之后的返回
-      if (this.input==='') {
-        this.getTableData()
-        return
-      }
-      let that = this;
-      this.$axios.post("/api/search/document", {
-        "type": "user",
-        "ownerId": this.$store.state.userId,
-        "visitorId": this.$store.state.userId,
-        "key": this.input,
-      }).then((response) => {
-        if (response.status === 0) {
-          that.tableData.clear();
-          that.tableData=response.data.documents;
-        } else if (response.status === 1) {
-          ElMessage('获取失败')
-        } else{
+        if(response.status===0){
+          this.tableData.clear()
+          this.tableData = response.data.files
+        }
+        else if (response.status===-1){
+          ElMessage('获取列表失败')
+        }
+        else{
           ElMessage('其他错误')
         }
       }).catch((err) => {
         ElMessage(err)
       })
     },
+    //暂时不做了
+    // search(){
+    //   //搜索框为空，默认获取全部文件，也能相当于在搜索之后的返回
+    //   if (this.input==='') {
+    //     this.getTableData()
+    //     return
+    //   }
+    //   let that = this;
+    //   this.$axios.post("/api/search/document", {
+    //     "type": "user",
+    //     "ownerId": this.$store.state.userId,
+    //     "visitorId": this.$store.state.userId,
+    //     "key": this.input,
+    //   }).then((response) => {
+    //     if (response.status === 0) {
+    //       that.tableData.clear();
+    //       that.tableData=response.data.documents;
+    //     } else if (response.status === 1) {
+    //       ElMessage('获取失败')
+    //     } else{
+    //       ElMessage('其他错误')
+    //     }
+    //   }).catch((err) => {
+    //     ElMessage(err)
+    //   })
+    // },
     recover() {
       this.$axios.post("/api/file/recover",
           {
@@ -166,7 +170,7 @@ export default {
       });
     },
     del() {
-      this.$axios.post("api/file/complete-remove",
+      this.$axios.post("/api/file/complete-remove",
           {
             "userId": this.$store.state.userId,
             "fileId": this.curFileId,

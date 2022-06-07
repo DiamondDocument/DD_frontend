@@ -14,7 +14,7 @@
       <span style="vertical-align: middle" @click="showNewFile">新建文件</span>
     </el-button>
     <el-button style="float: right; margin-right: 20px">
-      <span style="vertical-align: middle" @click="stepBack">后退</span>
+      <span style="vertical-align: middle" @click="getFolderData(1)">后退</span>
     </el-button>
   </el-menu>
   <el-table :data="tableData" stripe
@@ -29,9 +29,9 @@
             highlight-current-row
             @row-dblclick="edit"
             @cell-mouse-enter="recordId"
-            before-load="getTableData">
+            before-load="getFolderData(0)">
     <el-table-column prop="docName" label="文件名" width="450"></el-table-column>
-    <el-table-column prop="creatorId" label="创建者" width="300"></el-table-column>
+    <el-table-column prop="creatorName" label="创建者" width="300"></el-table-column>
     <el-table-column prop="modifyTime" label="修改日期" width="400"></el-table-column>
     <el-table-column prop="modifierName" label="修改人" width="300"></el-table-column>
     <el-table-column prop="size" label="大小" width="300"></el-table-column>
@@ -43,7 +43,7 @@
          data-popper-placement="top"></index>
   <authority ref="authority" @altAuthority="altAuthority"></authority>
   <share ref="share" :curFileId="curFileId" @altAuthority="altAuthority"></share>
-  <new-file ref="newFile" :fatherId="openedFolder"></new-file>
+  <new-file ref="newFile" :fatherId="folderId"></new-file>
   <move ref="move" @commit="move" @cancel="this.moving=false" v-if="moving"></move>
 <!--  重命名懒得再写组件了，space臃肿就臃肿一点吧……-->
   <el-dialog title="重命名" v-model="renameVisible" width="30%">
@@ -81,19 +81,19 @@ export default {
       spaceType: 1,             //空间类型用于区分右键菜单显示内容等
       menuVisible: false,       //右键菜单不显示
       loading: false,           //暂时不用
-      link: '',                  //分享用的链接
+      link: '',                 //分享用的链接
       curFileId: Number,
       curFileAth: Number,
       curFileShared: Boolean,
       exportLink: '',           //下载文件的链接
       moving: false,            //是否在移动文件，决定文件系统如何显示
-      openedFolder: [-1,],         //进入文件夹后，记录上一级文件夹的id用来回退，-1表示根目录
-      depth: 0,                 //记录打开文件夹的深度，用来判断是否回退到了根目录
-      renameVisible: false,      //控制重命名对话框显示
+      folderId: null,           //当前处在的文件夹的id，null为根目录
+      renameVisible: false,     //控制重命名对话框显示
       tableData: [
         {
+          fileType: 1,
           docId: 0,
-          docName: '金刚石需求文档',
+          docName: '看到我说明你没获取到文件列表',
           creatorName: '赵老板',
           modifyTime: '1919-08-10',
           modifierName: 'lyh',
@@ -153,29 +153,28 @@ export default {
     }
   },
   methods: {
-    //开局获得文件列表
-    getTableData() {
-      this.$axios.get('/getFormData', {
-        params: {
-          spaceType: this.spaceType,
-          UserId: this.state.loginUser.userId
-        }
-      }).then((response) => {
-        this.tableData = response.data
-      }).catch((err) => {
-        ElMessage(err)
-      })
-    },
     //获得打开的文件夹里面的文件列表
-    getFolderData() {
-      this.$axios.get('/getFileFormData', {
+    getFolderData(isback) {
+      this.$axios.get('/api/space', {
         params: {
-          fileId: this.curFileId,
-          UserId: this.state.loginUser.userId
+          type: "user",
+          ownerId: this.$store.state.userId,
+          folderId: this.folderId,
+          visitorId: this.$store.state.userId,
+          isBack: isback,
         }
       }).then((response) => {
-        this.tableData.clear
-        this.tableData = response.data
+        if(response.status===0){
+          this.folderId=response.data.parentId
+          this.tableData.clear()
+          this.tableData = response.data.files
+        }
+        else if (response.status===-1){
+          ElMessage('获取列表失败')
+        }
+        else{
+          ElMessage('其他错误')
+        }
       }).catch((err) => {
         ElMessage(err)
       })
@@ -199,17 +198,13 @@ export default {
       this.curFileAth = row.authority
       this.curFileShared = row.shared
     },
-    //进入文件夹后的回退功能
-    stepBack() {
-      if (this.openedFolder[this.depth] === -1) return
-      this.curFileId = this.openedFolder[this.depth--]
-      this.getFolderData()
-    },
+    //打开文档或文件夹
     edit(row) {
-      if (row.isFolder) {
-        this.openedFolder[++this.depth] = this.curFileId
-        this.getFolderData()
-      } else {
+      if (row.fileType===2) {
+        this.folderId = this.curFileId
+        this.getFolderData(0)
+      }
+      else {
         this.$router.push({
           name: "documentEdit",
           params: {documentId: row.id}
@@ -219,7 +214,7 @@ export default {
     search(){
       //搜索框为空，默认获取全部文件，也能相当于在搜索之后的返回
       if (this.input==='') {
-        this.getTableData()
+        this.getFolderData(0)
         return
       }
       let that = this;
@@ -276,7 +271,7 @@ export default {
     },
     altAuthority(ath) {
       ElMessage(ath)
-      this.$axios.post("api/file/authority", {
+      this.$axios.post("/api/file/authority", {
         "fileId": this.curFileId,
         "newAuth": ath,
       }).then((response) => {
@@ -292,7 +287,7 @@ export default {
       })
     },
     move(folderId) {
-      this.$axios.post("api/file/move",
+      this.$axios.post("/api/file/move",
           {
             "fileId": this.curFileId,
             "newParentId": folderId,
@@ -312,7 +307,7 @@ export default {
       this.moving = false
     },
     remove() {
-      this.$axios.post("api/file/remove",
+      this.$axios.post("/api/file/remove",
           {
             "userId": this.$store.state.userId,
             "fileId": this.curFileId,

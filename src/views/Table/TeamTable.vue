@@ -44,7 +44,7 @@
 
         </el-menu>
       </el-aside>
-        <el-main>
+        <el-main style="height: 695px">
           <router-view></router-view>
         </el-main>
     </el-container>

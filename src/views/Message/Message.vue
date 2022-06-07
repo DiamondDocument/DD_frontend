@@ -34,11 +34,9 @@ export default {
     requestResult,
   },
   setup () {
-    // 拿到confirm的dom
     const fileComment = ref()
     const joinRequest = ref()
     const requestResult = ref()
-    // 唤起confirm
     function showConfirm (type, s) {
       switch (type) {
         case 0:
