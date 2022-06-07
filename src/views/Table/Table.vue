@@ -10,7 +10,7 @@
 <!--        <el-button @click="goInformation">-->
 <!--        头像-->
 <!--      </el-button>-->
-        <el-avatar :src="avatar" style="width: 40px; height: 40px " @click="goInformation"/>
+        <el-avatar :src="url" style="width: 40px; height: 40px " @click="goInformation"/>
 
         <el-icon @click="this.$router.push({name:'message'})" style=""><MessageBox /></el-icon>
       </div>
@@ -126,7 +126,7 @@ export default {
       type: 'recent',
       isCollapse: false,
       userId: '',
-      avatar: '',
+      url: '',
     }
   },
   // components: {
@@ -164,26 +164,32 @@ export default {
     },
     handleClose(key, keyPath) {
       console.log(key, keyPath);
-    }
+    },
+    getAvatar: function (){
+      console.log('get avatar')
+      this.$axios.get("user/get-avatar", {
+        params:{
+          userId: this.userId,
+        }
+      }).then((response)=>{
+        if (response.status === 200){
+          console.log(response.data)
+          if (response.data.code === 0){
+            this.url = response.data.url;
+          }else console.log("用户头像获取错误");
+        }else console.log("请求返回status不为200")
+      }).catch((err)=>{
+        console.log(err);
+      });
+    },
   },
 
   // THR: 测试全局状态
   created(){
-    console.log(this.$store.state.loginUser.userId);
-    this.userId = this.$store.state.userId;
-    this.$axios.get("/user/get-avatar", {
-      params:{
-        userId: this.userId,
-      }
-    }).then((response)=>{
-      if (response.status === 200){
-        if (response.data.code === 0){
-          this.avatar = response.data.url;
-        }else ElMessage("个人头像获取错误");
-      }else console.log("请求返回status不为200")
-    }).catch((err)=>{
-      console.log(err);
-    });
+    this.userId = this.$store.state.loginUser.userId;
+    console.log(this.userId);
+
+    this.getAvatar();
   }
 }
 

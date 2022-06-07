@@ -44,21 +44,24 @@
 
         </el-menu>
       </el-aside>
-      <el-main class="Main" width="100%" v-if="type==='recent'" style="padding: 0; height: 100%">
-        <space :spaceType="0"></space>
+      <el-main style="padding: 0px">
+        <router-view></router-view>
       </el-main>
-      <el-main class="Main" width="100%" v-if="type==='mySpace'" style="padding: 0; height: 100%">
-        <space :spaceType="1"></space>
-      </el-main>
-      <el-main class="Main" width="100%" v-else-if="type==='collection'" style="padding: 0; height: 100%">
-        <space :spaceType="2"></space>
-      </el-main>
-      <el-main class="Main" width="100%" v-else-if="type==='bin'" style="padding: 0; height: 100%">
-        <space :spaceType="3"></space>
-      </el-main>
-      <el-main class="Main" width="100%" v-else-if="type==='message'" style="padding: 0; height: 900px">
-        <message></message>
-      </el-main>
+<!--      <el-main class="Main" width="100%" v-if="type==='recent'" style="padding: 0; height: 100%">-->
+<!--        <space :spaceType="0"></space>-->
+<!--      </el-main>-->
+<!--      <el-main class="Main" width="100%" v-if="type==='mySpace'" style="padding: 0; height: 100%">-->
+<!--        <space :spaceType="1"></space>-->
+<!--      </el-main>-->
+<!--      <el-main class="Main" width="100%" v-else-if="type==='collection'" style="padding: 0; height: 100%">-->
+<!--        <space :spaceType="2"></space>-->
+<!--      </el-main>-->
+<!--      <el-main class="Main" width="100%" v-else-if="type==='bin'" style="padding: 0; height: 100%">-->
+<!--        <space :spaceType="3"></space>-->
+<!--      </el-main>-->
+<!--      <el-main class="Main" width="100%" v-else-if="type==='message'" style="padding: 0; height: 900px">-->
+<!--        <message></message>-->
+<!--      </el-main>-->
     </el-container>
   </el-container>
 
@@ -121,7 +124,8 @@ export default {
     return {
       type: 'recent',
       isCollapse: false,
-      Id: '',
+      userId: '',
+      otherId: '',
       Name: '',
       avatar: ''
     }
@@ -154,10 +158,13 @@ export default {
     }
   },
   created() {
-    this.Id = this.$store.state.tableId;
+    this.userId = this.$store.state.loginUser.userId;
+    this.otherId = this.$route.params.info.split(":")[1];
+    console.log(this.otherId);
+
     this.$axios.get("/user/information", {
       params:{
-        userId: this.Id,
+        userId: this.otherId,
       }
     }).then((response)=>{
       if (response.status === 200){
@@ -171,7 +178,7 @@ export default {
 
     this.$axios.get("/user/get-avatar", {
       params:{
-        userId: this.Id,
+        userId: this.userId,
       }
     }).then((response)=>{
       if (response.status === 200){
