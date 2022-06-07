@@ -153,7 +153,7 @@ export default {
     //获取消息列表
     getMessage() {
       console.log("getmsg")
-      this.$axios.get('/api/message/list', {
+      this.$axios.get('/message/list', {
         params: {
           userId: this.$store.state.userId,
         }
