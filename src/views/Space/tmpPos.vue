@@ -8,7 +8,7 @@
       <span style="vertical-align: middle" @click="cancel">取消</span>
     </el-button>
     <el-button type="primary" style="float: right; margin-right: 20px">
-      <span style="vertical-align: middle" @click="commit">移动到此处</span>
+      <span style="vertical-align: middle" @click="commit">创建到此处</span>
     </el-button>
   </el-menu>
   <el-table :data="tableData" stripe
@@ -33,7 +33,7 @@
 import {ElMessage} from "element-plus";
 import {ref} from "vue";
 export default {
-  name: "Move",
+  name: "tmpPos",
   components: {},
   props:{
   },

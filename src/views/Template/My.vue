@@ -30,18 +30,23 @@
       </el-card>
     </el-col>
   </el-row>
+  <tmp-pos ref="tmpPos" v-if="selectPos" @commit="commit" @cancel="selectPos=false"></tmp-pos>
 </template>
 
 <script>
 import {ElMessage} from "element-plus";
+import tmpPos from "@/views/Space/tmpPos";
 
 export default {
   name: "MyTemplate.vue",
-
+  components:[tmpPos],
   data() {
     return {
       userId: '',
-      spaceUsing: Boolean,
+      spaceUsing: false,    //是否正在被space调用
+      selectPos: false,     //是否在选择创建位置
+      curTmpId: Number,     //当前选中的id
+      curTmpName: '',       //当前选中的name
       templates: [
         {
           tempName: 'for space test'
@@ -69,8 +74,36 @@ export default {
   },
   methods:{
     useTmp(tmp){
-      this.$emit('useTmp',tmp.tempId, tmp.tempName)
-    }
+      if (this.spaceUsing)
+        this.$emit('useTmp', tmp.tempId, tmp.tempName)
+      this.selectPos=true
+      this.curTmpId=tmp.tempId;
+    },
+    commit(id){
+      this.$axios.post("/api/file/create", {
+        "type": 1,
+        "name": this.curTmpName,
+        "templateId": this.curTmpId,
+        "authority": 3,
+        "creatorId": this.$store.state.userId,
+        "parentId": id,
+      }).then((response)=>{
+        if (response.status===0){
+          ElMessage('创建成功')
+        }
+        else if (response.status===-1){
+          ElMessage('创建失败')
+        }
+        else if (response.status===1){
+          ElMessage('文件重名,已自动修改')
+        }
+        else{
+          ElMessage('其他错误')
+        }
+      }).catch((err)=>{
+        console.log(err)
+      });
+    },
   }
 }
 </script>
