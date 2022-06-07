@@ -169,10 +169,12 @@ export default {
     },
 
     sendCode: function (){
-      this.$axios.post("user/register",{
+      this.$axios.post("user/send-identifying",{
         "email" : this.email,
       }).then(res => {
         if (res.status === 200){
+          console.log(res.data.code);
+          console.log(typeof (res.data.code));
           if (res.data.code === 0) ElMessage('发送成功');
           else ElMessage('发送失败');
         }else console.log('status is not 200!');
@@ -198,7 +200,7 @@ export default {
 
       this.$axios.post("user/register",{
         "userId": this.userId,
-        "nickName" : "", //可以为空
+        "nickName" : this.userId, //可以为空
         "email" : this.email,
         "pwd" : this.pwd,
         "verificationCode" : this.code //5位数字字符串

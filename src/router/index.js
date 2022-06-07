@@ -1,9 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-
 //团队相关路由
 const teamCreate =  {
-  path: 'team/create/:userId',
+  path: 'team/create',
   name: 'teamCreate',
   component:() =>import('../views/Team/Create.vue'),
 };
@@ -38,12 +37,12 @@ const userInformation = {
   component:() =>import('../views/User/Information.vue'),
 };
 const userInvite = {
-  path: 'user/invite/:userId',
+  path: 'user/invite/:userId/:teamId',
   name: 'userInvite',
   component:() =>import('../views/User/Invite.vue'),
 };
 const userApply = {
-  path: 'user/apply/:userId',
+  path: 'user/apply/:userId/:teamId',
   name: 'userApply',
   component:() =>import('../views/User/Apply.vue'),
 };

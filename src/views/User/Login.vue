@@ -71,8 +71,8 @@ export default {
   name: "Login",
   data() {
     return {
-      userId: '',
-      email: '',
+      userId: null,
+      email: null,
       pwd: '',
       activeName: 'first',
       loginBg: 'url(' + require('../../assets/bk.jpg') + ')'
@@ -84,8 +84,8 @@ export default {
   },
   methods: {
     handleClick: function (){
-      this.userId = '';
-      this.pwd = '';
+      this.userId = null;
+      this.pwd = null;
       this.email = '';
     },
     // 需要具体分密码错误 or 用户名不存在？
@@ -106,7 +106,9 @@ export default {
           console.log(response.data.code);
           switch (response.data.code) {
             case 0:
-              this.$store.commit({type: 'login', userId: response.data.name, nickname: response.data.nickname})
+              console.log(response.data)
+              this.$store.commit({type: 'login', userId: response.data.userId, nickname: response.data.nickName})
+              console.log(this.$store.state.loginUser.userId);
               ElMessage('登录成功');
               this.$router.push({name: 'table', params:{info: 'my'}})
               break

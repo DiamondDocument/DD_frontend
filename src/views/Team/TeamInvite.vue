@@ -85,7 +85,7 @@ export default {
   },
   methods: {
     inviteUser: function (userId){
-      this.$axios.post("/api/team/invite",
+      this.$axios.post("team/invite",
           {
             "teamId" : this.teamId,
             "userId" : userId
@@ -111,7 +111,8 @@ export default {
   created() {
     this.keyword = this.$route.params.keyword;
     this.teamId = this.$route.params.teamId;
-    this.$axios.get(" /api/team/information", {
+    
+    this.$axios.get(" team/information", {
       params:{
         teamId: this.teamId
       }
