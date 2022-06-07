@@ -139,7 +139,8 @@ export default {
   methods: {
     // THR: for test
     goInformation: function (){
-      this.$router.push({name: 'userInformation', params: {userId: 'u123'}})
+      // this.$router.push({name: 'userInformation', params: {userId: 'u123'}});
+      this.$router.push({name: 'userInformation', params: {userId: this.$store.state.loginUser.userId}});
     },
 
     toMessage() {

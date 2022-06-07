@@ -56,20 +56,21 @@ export default {
   data(){
     return {
       key: '',
-      teamList: [
-        {
-          teamId: "00127",
-          name: "CTS",
-          url: '',
-          introduction: "CTS 很简单的啦 java助教说话又好听"
-        },
-        {
-          teamId: "00128",
-          name: "软工",
-          url: '',
-          introduction: "金刚石文档"
-        }
-      ]
+      teamList: [],
+      // teamList: [
+      //   {
+      //     teamId: "00127",
+      //     name: "CTS",
+      //     url: '',
+      //     introduction: "CTS 很简单的啦 java助教说话又好听"
+      //   },
+      //   {
+      //     teamId: "00128",
+      //     name: "软工",
+      //     url: '',
+      //     introduction: "金刚石文档"
+      //   }
+      // ]
     }
   },
   methods: {
@@ -89,22 +90,20 @@ export default {
     console.log(this.$store.state.loginUser.userId);
     // console.log(this.$route.params.key === '');
     this.key = this.$route.params.key;
-    // if (this.keyword.length === 0){
-    //   this.$axios.get("search/team", {
-    //     params:{
-    //       userId: this.userId,
-    //     }
-    //   }).then((response)=>{
-    //     if (response.status === 200){
-    //       this.teamList = response.data.teams;
-    //       console.log(this.teamList);
-    //     }else console.log("请求返回status不为200")
-    //   }).catch((err)=>{
-    //     console.log(err);
-    //   });
-    // }else {
-    //
-    // }
+    this.$axios.get("search/team", {
+      params:{
+        key: this.key,
+      }
+    }).then((response)=>{
+      console.log('search team data = ');
+      console.log(response.data);
+      if (response.status === 200){
+        this.teamList = response.data.teams;
+        console.log(this.teamList);
+      }else console.log("请求返回status不为200")
+    }).catch((err)=>{
+      console.log(err);
+    });
   }
 }
 </script>
