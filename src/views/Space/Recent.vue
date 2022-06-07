@@ -114,18 +114,13 @@ export default {
       document.removeEventListener('click', this.foo);
     },
     //获得打开的文件夹里面的文件列表
-    getFolderData(isback) {
-      this.$axios.get('/api/space', {
+    getFolderData() {
+      this.$axios.get('/api/space/last', {
         params: {
-          type: "user",
-          ownerId: this.$store.state.userId,
-          folderId: this.folderId,
-          visitorId: this.$store.state.userId,
-          isBack: isback,
+          userId: this.$store.state.userId,
         }
       }).then((response) => {
         if(response.status===0){
-          this.folderId=response.data.parentId
           this.tableData.clear()
           this.tableData = response.data.files
         }
