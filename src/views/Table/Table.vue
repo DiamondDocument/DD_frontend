@@ -1,23 +1,19 @@
 <template >
 
-  <el-container>
+  <el-container style="height: 100%">
     <el-header class="Header" style="height: 50px">
       <img src="../../assets/logo2.png" style="width: 50px; height: 50px;">
 
       <div>
-<!--        <a href="#" style="padding: 0 10px 0 0">头像</a>-->
-<!--  THR: for test     -->
-<!--        <el-button @click="goInformation">-->
-<!--        头像-->
-<!--      </el-button>-->
         <el-avatar :src="url" style="width: 40px; height: 40px " @click="goInformation"/>
 
         <el-icon @click="this.$router.push({name:'message'})" style=""><MessageBox /></el-icon>
       </div>
     </el-header>
     <el-container>
-      <el-aside class="Aside" style="width: auto">
-     <el-menu default-active="1-4-1" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
+      <el-aside class="Aside" style="width: auto;">
+     <el-menu default-active="1-4-1" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" :collapse="isCollapse"
+      style="height: 695px">
           <el-menu-item index="1">
             <el-icon v-if="!isCollapse" @click="isCollapse=!isCollapse" style="float: right; "><DArrowLeft /></el-icon>
             <el-icon v-else @click="isCollapse=!isCollapse" style="float: right;"><DArrowRight /></el-icon>
