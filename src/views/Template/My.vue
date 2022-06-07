@@ -16,7 +16,7 @@
           <p>{{temps.tempName}}</p>
           <div class="bottom">
             <p>作者：{{temps.creatorId}}</p>
-            <el-button type="primary" round>立即使用</el-button>
+            <el-button type="primary" round @click="useTmp(temps)">立即使用</el-button>
           </div>
         </div>
       </el-card>
@@ -55,6 +55,11 @@ export default {
     }).catch((err) => {
       console.log(err);
     });
+  },
+  methods:{
+    useTmp(tmp){
+      this.$emit('useTmp',tmp.tempId, tmp.tempName)
+    }
   }
 }
 </script>
