@@ -2,20 +2,23 @@
   <div>
 
     <div class="information"
-         style="height:180px;
+         style="height:200px;
                 width: 93%;
                 position: absolute;"
     >
 
-      <el-image v-if="userType === 0" @click="changeImg" class="teamImg" :src="team_img" fit="fill" >
-      </el-image>
-      <el-image v-else class="teamImg" :src="team_img" fit="fill" >
-      </el-image>
+      <el-image v-if="userType === 0"
+                @click="changeImg"
+                class="teamImg"
+                :src="team_img"
+                fit="fill" />
+      <el-image v-else class="teamImg" :src="team_img" fit="fill" />
+
       <div style="float: left; padding: 10px" v-if="changing === 0">
-        <h2 class="teamName">
+        <h2 style="font-size: 35px">
           {{ team_name }}
         </h2>
-        <p class="mainText">
+        <p style="font-size: 20px">
           {{ team_introduction }}
         </p>
       </div>
@@ -31,9 +34,9 @@
       </div>
 
       <div style="
-      height: 180px;
+      height: 200px;
       float: right;
-      margin: auto 40px;">
+      margin-right: 200px;">
 
         <div style="margin-top: 20px">
 
@@ -317,31 +320,37 @@ export default {
         if(response.status === 200){
           console.log('dropTeam data = ');
           console.log(response.data);
-          if (response.data.code === 0) ElMessage("成功加入！");
+          if (response.data.code === 0) {
+            ElMessage("成功加入！");
+            location.reload();
+          }
           else ElMessage('系统错误');
         }else console.log("status is not 200!");
       }).catch((err)=>{
         console.log(err);
       });
-      location.reload();
+
     },
 
     apply: function (){
       console.log("apply is called!");
-      this.axios.post("team/apply-deal",{
+      this.axios.post("team/apply",{
         "teamId": this.teamId,
         "userId": this.$store.state.loginUser.userId,
       }).then((response)=>{
         if(response.status === 200){
           console.log('apply data = ');
           console.log(response.data);
-          if (response.data.code === 0) ElMessage("成功提交申请！");
+          if (response.data.code === 0) {
+            ElMessage("成功提交申请！");
+            location.reload();
+          }
           else ElMessage('系统错误');
         }else console.log("status is not 200!");
       }).catch((err)=>{
         console.log(err);
       });
-      location.reload();
+
     },
 
     goUser: function (userId){
@@ -359,13 +368,16 @@ export default {
         if(response.status === 200){
           console.log('remove mem data = ');
           console.log(response.data);
-          if (response.data.code === 0) ElMessage("成功移除！");
+          if (response.data.code === 0) {
+            ElMessage("成功移除！");
+            location.reload();
+          }
           else ElMessage('系统错误');
         }else console.log("status is not 200!");
       }).catch((err)=>{
         console.log(err);
       });
-      location.reload();
+
     },
 
     transPri: function (memberId){
@@ -378,13 +390,15 @@ export default {
         if(response.status === 200){
           console.log('transPri data = ');
           console.log(response.data);
-          if (response.data.code === 0) ElMessage("成功转让！");
+          if (response.data.code === 0) {
+            ElMessage("成功转让！");
+            location.reload();
+          }
           else ElMessage('系统错误');
         }else console.log("status is not 200!");
       }).catch((err)=>{
         console.log(err);
       });
-      location.reload();
     },
 
     checkUserType: function (){
@@ -479,14 +493,14 @@ export default {
 
 .teamImg {
   float: left;
-  margin: 25px 25px 25px 50px;
-  height: 100px;
-  width: 100px;
+  margin: 25px 50px 25px 150px;
+  height: 150px;
+  width: 150px;
 }
 .block {
   margin: 10px auto;
   padding: 10px;
-  width: 75%;
+  width: 60%;
   height: 100px;
   border-style: solid;
   border-width: 1px;

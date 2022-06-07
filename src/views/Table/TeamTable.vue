@@ -34,7 +34,7 @@
 
           <el-menu-item index="5" >
             <el-icon><opportunity /></el-icon>
-            <span slot="title">团队详情</span>
+            <span slot="title" @click="this.$router.push({name: 'team', params: {teamId: this.TeamId}})">团队详情</span>
           </el-menu-item>
 
           <el-menu-item index="6" @click="this.$router.push({name: 'recycle'})">

@@ -1,11 +1,12 @@
 <template>
   <div style="
+      background-color: white;
       text-align: center;
       border-style: solid;
       border-width: 1px;
       border-color: lightgray;
       border-radius: 5px;
-      margin: 10px auto;
+      margin: 20px auto;
       width: 300px;">
 
     <el-avatar

@@ -1,5 +1,5 @@
 <template>
-  <div style="width: 80%; margin: 0 auto;">
+  <div style="width: 75%; margin: 0 auto;">
 
     <div style="
          width: 600px;
@@ -10,6 +10,7 @@
     </div>
     <el-input placeholder="请输入用户昵称"
               @keyup.enter="search"
+              size="large"
               v-model="keyword"
               style="
               margin-bottom: 20px">
@@ -23,28 +24,31 @@
       </template>
     </el-input>
 
-    <el-row v-for="(user, index) in userList" :key="user.userId"
-            class="block">
-      <div @click="goUser(user.userId)"
-           style="float: right; width: 80%">
-        <el-avatar :src="user.url" style="margin: 10px; float: left" />
-        <h3 >
-          {{user.nickName}}
-        </h3>
-        <p >
-          {{user.intro}}
-        </p>
-      </div>
+    <div style="width: 75%; margin: 0 auto;">
+      <el-row v-for="(user, index) in userList" :key="user.userId"
+              class="block">
+        <div @click="goUser(user.userId)"
+             style="float: right; width: 80%">
+          <el-avatar :src="user.url" style="margin: 10px; float: left" />
+          <h3 >
+            {{user.nickName}}
+          </h3>
+          <p >
+            {{user.intro}}
+          </p>
+        </div>
 
-      <el-button type="success"
-                 @click.stop="inviteUser(user.userId)"
-                 style="
+        <el-button type="success"
+                   @click.stop="inviteUser(user.userId)"
+                   style="
                  float: right;
                  margin: auto 20px;">
-        邀请
-      </el-button>
+          邀请
+        </el-button>
 
-    </el-row>
+      </el-row>
+    </div>
+
   </div>
 
 </template>
