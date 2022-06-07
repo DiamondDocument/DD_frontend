@@ -7,14 +7,14 @@
     >
       <el-card class="box-card">
         <img
-            src="{{temps.url}}"
+            src="temps.url"
             class="image"
             style="position: center"
         />
         <div style="padding: 14px; margin: 0;">
-          <p>{{temps.title}}</p>
+          <p>{{temps.tempName}}</p>
           <div class="bottom">
-            <p>作者：{{temps.author}}</p>
+            <p>作者：{{temps.creatorId}}</p>
             <el-button text class="button" >立即使用</el-button>
           </div>
         </div>
@@ -36,7 +36,7 @@ export default {
   },
 
   created() {
-    this.userId = this.$store.state.tableId;
+    this.userId = this.$store.state.loginUser.userId
     this.$axios.get("/template/list/collection", {
       params: {
         userId: this.userId,

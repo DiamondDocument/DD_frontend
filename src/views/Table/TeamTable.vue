@@ -100,6 +100,7 @@ export default {
     return {
       type: 'recent',
       isCollapse: false,
+      userId: '',
       TeamId: '',
       TeamName: '',
       avatar: '',
@@ -133,7 +134,9 @@ export default {
     }
   },
   created() {
-    this.TeamId = this.$store.state.tableId;
+    this.userId = this.$store.state.loginUser.userId;
+    this.TeamId = this.$route.params.info.split(":")[1];
+
     this.$axios.get("/team/information", {
       params:{
         teamId: this.TeamId,
@@ -142,21 +145,21 @@ export default {
       if (response.status === 200){
         if (response.data.code === 0){
           this.TeamName = response.data.name;
-        }else ElMessage("团队信息获取错误");
+        }else console.log("团队信息获取错误");
       }else console.log("请求返回status不为200")
     }).catch((err)=>{
       console.log(err);
     });
 
-    this.$axios.get("/team/get-avatar", {
+    this.$axios.get("/user/get-avatar", {
       params:{
-        teamId: this.teamId,
+        userId: this.userId,
       }
     }).then((response)=>{
       if (response.status === 200){
         if (response.data.code === 0){
           this.avatar = response.data.url;
-        }else ElMessage("个人头像获取错误");
+        }else console.log("头像获取错误");
       }else console.log("请求返回status不为200")
     }).catch((err)=>{
       console.log(err);

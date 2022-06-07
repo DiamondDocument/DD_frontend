@@ -1,8 +1,8 @@
 <template>
   <div>
-    <Table v-if="$route.params.info === 'my'"></Table>
-    <TeamTable v-else-if="$route.params.info === 'team'"></TeamTable>
-    <OtherTable v-else="$route.params.info === 'other'"></OtherTable>
+    <Table v-if="type === 'my'"></Table>
+    <TeamTable v-else-if="type === 'team'"></TeamTable>
+    <OtherTable v-else></OtherTable>
   </div>
 </template>
 
@@ -14,19 +14,24 @@ import OtherTable from "@/views/Table/OtherTable";
 import Table from "@/views/Table/Table";
 export default {
   name: "TableJudge",
+  data() {
+    return {
+      type: '',
+      loginBg: 'url(' + require('../../assets/bk.jpg') + ')'
+    }
+  },
   components: {
     Table,
     OtherTable,
     TeamTable
   },
-  data(){
-    return{
-      loginBg: 'url(' + require('../../assets/bk.jpg') + ')'
-    };
-  },
+
   created() {
+    this.type = this.$route.params.info.split(":")[0];
+
     document.body.style.backgroundSize = '100%';
     document.body.style.backgroundImage = this.loginBg;
+
     this.$store.commit(
         "changeTable",
         this.$route.params.info,

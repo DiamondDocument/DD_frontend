@@ -1,11 +1,11 @@
 <template >
   <div class="login">
-
-    <div style="margin:20px auto; width: 80px; ">
-      <img src="../../assets/logo2.png" alt="logo" style="margin: 0 auto;"> <br>
+    <div style="margin-left: auto;margin-right: auto;width: 300px">
+      <img src="../../assets/logo2.png" alt="logo" style="width: 300px"/>
+    </div>
+    <div style="margin-top:0px ;margin-left: auto;margin-right: auto; width: 80px; ">
       <h2 class="title" style="margin:0 auto">登录</h2>
     </div>
-    <br>
     <div class="Wireframe">
       <el-tabs :model-value="activeName" class="demo-tabs" stretch="true" @tab-click="handleClick">
         <el-tab-pane label="用户名登录" name="first">
@@ -110,7 +110,7 @@ export default {
               this.$store.commit({type: 'login', userId: response.data.userId, nickname: response.data.nickName})
               console.log(this.$store.state.loginUser.userId);
               ElMessage('登录成功');
-              this.$router.push({name: 'table', params:{info: 'my'}})
+              this.$router.push({name: 'table', params:{info: 'my-' + this.userId}})
               break
             case 1:
               ElMessage('用户名或邮箱不存在');
