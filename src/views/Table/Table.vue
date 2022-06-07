@@ -17,7 +17,7 @@
       </div>
     </el-header>
     <el-container>
-      <el-aside class="Aside" style="width: auto">
+      <el-aside class="Aside" style="width: 140px">
          <el-menu default-active="1-4-1" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
             <el-menu-item index="1">
               <el-icon v-if="!isCollapse" @click="isCollapse=!isCollapse" style="float: right; "><DArrowLeft /></el-icon>

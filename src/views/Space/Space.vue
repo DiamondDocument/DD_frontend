@@ -1,6 +1,8 @@
 <template>
   <div style="margin: 15px 0 5px 0;border-bottom: 1px solid #e8e8e8;padding-bottom: 10px">
     <el-menu default-active="'/' +this.$route.path.split('/')[1]" v-if="!moving">
+<!--      <el-icon style="width: 5%"><ArrowLeftBold /></el-icon>-->
+      <el-button type="primary" icon="ArrowLeft" text>返回上一级</el-button>
       <el-input v-model="input" placeholder="空间内搜索文件" style="width: 20%"></el-input>
       <el-button type="primary" style="margin-left: 10px"  @click="search">
         <el-icon style="vertical-align: middle;">
@@ -15,7 +17,7 @@
         <span style="vertical-align: middle" @click="showNewFile">新建文件</span>
       </el-button>
       <el-button style="float: right; margin-right: 20px">
-        <span style="vertical-align: middle" @click="getFolderData(1)">后退</span>
+<!--        <span style="vertical-align: middle" @click="getFolderData(1)">后退</span>-->
       </el-button>
     </el-menu>
   </div>
