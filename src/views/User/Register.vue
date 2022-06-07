@@ -2,7 +2,7 @@
 
   <div class="register">
       <div style="margin:20px auto; width: 80px; ">
-        <img src="../../assets/logo.png" alt="logo"> <br>
+        <img src="../../assets/logo2.png" alt="logo"> <br>
         <h2 class="title" style="margin:0 auto">注册</h2>
       </div>
       <div class="Wireframe">

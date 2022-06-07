@@ -1,11 +1,11 @@
 <template >
   <el-container>
     <el-header class="Header" style="height: 50px">
-      <img src="../../assets/logo.png" style="width: 50px; height: 50px;">
+      <img src="../../assets/logo2.png" style="width: 50px; height: 50px;">
 
       <div>
-        <a href="#" style="padding: 0 10px 0 0">头像</a>
-        <el-icon @click="toMessage"><MessageBox /></el-icon>
+        <el-avatar :src="avatar" style="width: 40px; height: 40px; "/>
+        <el-icon @click="toMessage" ><MessageBox /></el-icon>
 
       </div>
     </el-header>
@@ -17,27 +17,27 @@
             <el-icon v-else @click="isCollapse=!isCollapse" style="float: right;"><DArrowRight /></el-icon>
           </el-menu-item>
 
-          <el-menu-item index="2" @click="toMySpace">
+          <el-menu-item index="2" @click="this.$router.push({path: '/table/my'})">
             <el-icon><HomeFilled /></el-icon>
             <span slot="title">返回我的空间</span>
 
           </el-menu-item>
 
           <el-menu-item index="3">
-            <el-divider content-position="center"><p v-if="!isCollapse">Ta的名称</p></el-divider>
+            <el-divider content-position="center"><p v-if="!isCollapse">{{ Name }}</p></el-divider>
           </el-menu-item>
 
-          <el-menu-item index="4" >
+          <el-menu-item index="4" @click="this.$router.push({name: 'space'})">
             <el-icon><house /></el-icon>
             <span slot="title">Ta的空间</span>
           </el-menu-item>
 
-          <el-menu-item index="5" >
+          <el-menu-item index="5" @click="this.$router.push({name: 'collection'})">
             <el-icon><opportunity /></el-icon>
             <span slot="title">Ta的收藏</span>
           </el-menu-item>
 
-          <el-menu-item index="6" >
+          <el-menu-item index="6" @click="this.$router.push({name: 'teamList'})">
             <el-icon><user-filled /></el-icon>
             <span slot="title">Ta的团队</span>
           </el-menu-item>
@@ -122,7 +122,8 @@ export default {
       type: 'recent',
       isCollapse: false,
       Id: '',
-      Name: ''
+      Name: '',
+      avatar: ''
     }
   },
   components: {
@@ -134,7 +135,7 @@ export default {
       this.type = 'message';
     },
     toMySpace() {
-      this.type='mySpace';
+      this.info = '/table/my';
     },
     toMyCollection() {
       this.type='collection'
@@ -152,22 +153,36 @@ export default {
       console.log(key, keyPath);
     }
   },
-  // created() {
-  //   this.Id = this.$store.state.tableId;
-  //   this.$axios.get("/user/information", {
-  //     params:{
-  //       userId: this.Id,
-  //     }
-  //   }).then((response)=>{
-  //     if (response.status === 200){
-  //       if (response.data.code === 0){
-  //         this.Name = response.data.nickName;
-  //       }else ElMessage("团队信息获取错误");
-  //     }else console.log("请求返回status不为200")
-  //   }).catch((err)=>{
-  //     console.log(err);
-  //   });
-  // }
+  created() {
+    this.Id = this.$store.state.tableId;
+    this.$axios.get("/user/information", {
+      params:{
+        userId: this.Id,
+      }
+    }).then((response)=>{
+      if (response.status === 200){
+        if (response.data.code === 0){
+          this.Name = response.data.nickName;
+        }else ElMessage("个人信息获取错误");
+      }else console.log("请求返回status不为200")
+    }).catch((err)=>{
+      console.log(err);
+    });
+
+    this.$axios.get("/user/get-avatar", {
+      params:{
+        userId: this.Id,
+      }
+    }).then((response)=>{
+      if (response.status === 200){
+        if (response.data.code === 0){
+          this.avatar = response.data.url;
+        }else ElMessage("头像获取错误");
+      }else console.log("请求返回status不为200")
+    }).catch((err)=>{
+      console.log(err);
+    });
+  }
 }
 
 

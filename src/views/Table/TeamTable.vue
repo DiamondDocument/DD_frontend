@@ -1,10 +1,10 @@
 <template >
   <el-container>
     <el-header class="Header" style="height: 50px">
-      <img src="../../assets/logo.png" style="width: 50px; height: 50px;">
+      <img src="../../assets/logo2.png" style="width: 50px; height: 50px;">
 
       <div>
-        <img src="#" style="padding: 0 10px 0 0">
+        <el-avatar :src="avatar" style="width: 40px; height: 40px "/>
         <el-icon @click="this.$router.push('/message')"><MessageBox /></el-icon>
 
       </div>
@@ -17,17 +17,17 @@
             <el-icon v-else @click="isCollapse=!isCollapse" style="float: right;"><DArrowRight /></el-icon>
           </el-menu-item>
 
-          <el-menu-item index="2" @click="toMySpace">
+          <el-menu-item index="2" @click="this.$router.push({path: '/table/my'})">
             <el-icon><HomeFilled /></el-icon>
             <span slot="title">返回我的空间</span>
 
           </el-menu-item>
 
           <el-menu-item index="3">
-            <el-divider content-position="center"><p v-if="!isCollapse">{{TeamName}}的空间</p></el-divider>
+            <el-divider content-position="center"><p v-if="!isCollapse">{{ TeamName }}</p></el-divider>
           </el-menu-item>
 
-          <el-menu-item index="4" >
+          <el-menu-item index="4" @click="this.$router.push({name: 'space'})">
             <el-icon><house /></el-icon>
             <span slot="title">团队空间</span>
           </el-menu-item>
@@ -37,7 +37,7 @@
             <span slot="title">团队详情</span>
           </el-menu-item>
 
-          <el-menu-item index="6" >
+          <el-menu-item index="6" @click="this.$router.push({name: 'recycle'})">
             <el-icon><delete /></el-icon>
             <span slot="title">回收站</span>
           </el-menu-item>
@@ -75,15 +75,6 @@ Aside {
 a {
   text-decoration: none;
 }
-.Main {
-  background-color: azure;
-  /*background: url("../assets/logo.png") ;*/
-  /*background-size: 100% 100%;*/
-}
-.el-Main {
-
-}
-
 </style>
 
 <style>
@@ -111,6 +102,7 @@ export default {
       isCollapse: false,
       TeamId: '',
       TeamName: '',
+      avatar: '',
     }
   },
   components: {
@@ -140,7 +132,6 @@ export default {
       console.log(key, keyPath);
     }
   },
-
   created() {
     this.TeamId = this.$store.state.tableId;
     this.$axios.get("/team/information", {
@@ -152,6 +143,20 @@ export default {
         if (response.data.code === 0){
           this.TeamName = response.data.name;
         }else ElMessage("团队信息获取错误");
+      }else console.log("请求返回status不为200")
+    }).catch((err)=>{
+      console.log(err);
+    });
+
+    this.$axios.get("/team/get-avatar", {
+      params:{
+        teamId: this.teamId,
+      }
+    }).then((response)=>{
+      if (response.status === 200){
+        if (response.data.code === 0){
+          this.avatar = response.data.url;
+        }else ElMessage("个人头像获取错误");
       }else console.log("请求返回status不为200")
     }).catch((err)=>{
       console.log(err);

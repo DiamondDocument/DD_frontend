@@ -7,10 +7,12 @@
       <div>
 <!--        <a href="#" style="padding: 0 10px 0 0">头像</a>-->
 <!--  THR: for test     -->
-        <el-button @click="goInformation">
-        头像
-      </el-button>
-        <el-icon @click="this.$router.push({name:'message'})"><MessageBox /></el-icon>
+<!--        <el-button @click="goInformation">-->
+<!--        头像-->
+<!--      </el-button>-->
+        <el-avatar :src="avatar" style="width: 40px; height: 40px " @click="goInformation"/>
+
+        <el-icon @click="this.$router.push({name:'message'})" style=""><MessageBox /></el-icon>
       </div>
     </el-header>
     <el-container>
@@ -94,12 +96,8 @@ a {
 }
 .Main {
   background-color: azure;
-  /*background: url("../assets/logo.png") ;*/
-  /*background-size: 100% 100%;*/
 }
-.el-Main {
 
-}
 
 </style>
 
@@ -119,6 +117,7 @@ a {
 import Space from "@/views/Space/Space";
 import Message from "@/views/Message/Message";
 import RecommendTemplate from "@/views/Template/Recommend"
+import {ElMessage} from "element-plus";
 
 export default {
   name: 'Table',
@@ -126,6 +125,8 @@ export default {
     return {
       type: 'recent',
       isCollapse: false,
+      userId: '',
+      avatar: '',
     }
   },
   // components: {
@@ -168,6 +169,20 @@ export default {
   // THR: 测试全局状态
   created(){
     console.log(this.$store.state.loginUser.userId);
+    this.userId = this.$store.state.userId;
+    this.$axios.get("/user/get-avatar", {
+      params:{
+        userId: this.userId,
+      }
+    }).then((response)=>{
+      if (response.status === 200){
+        if (response.data.code === 0){
+          this.avatar = response.data.url;
+        }else ElMessage("个人头像获取错误");
+      }else console.log("请求返回status不为200")
+    }).catch((err)=>{
+      console.log(err);
+    });
   }
 }
 

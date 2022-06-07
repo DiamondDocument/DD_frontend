@@ -1,10 +1,9 @@
 <template>
   <el-row>
     <el-col
-        v-for="(o, index) in templateNum"
-        :key="o"
-        :span="6"
-        :offset="index > 0 ? 0.5 : 0"
+        v-for="(temps, i) in templates"
+        :span="6.5"
+        :offset="i > 0 ? 0.5 : 0"
     >
       <el-card class="box-card">
         <img
@@ -13,9 +12,9 @@
             style="position: center"
         />
         <div style="padding: 14px; margin: 0;">
-          <p>{{templates[index].title}}</p>
+<!--          <p>{{temps.title}}</p>-->
           <div class="bottom">
-            <p>作者：{{templates[index].author}}</p>
+<!--            <p>作者：{{temps.author}}</p>-->
             <el-button text class="button">立即使用</el-button>
           </div>
         </div>
@@ -25,40 +24,35 @@
 </template>
 
 <script>
+import {ElMessage} from "element-plus";
+
 export default {
   name: "MyTemplate.vue",
 
   data() {
     return {
-      templateNum: 5,
+      userId: '',
       templates: [
-        {
-          title: '金刚石模板1',
-          author: '我',
-          img: "./assets/logo.png"
-        },
-        {
-          title: '金刚石模板2',
-          author: '我',
-          img: "./assets/logo.png"
-        },
-        {
-          title: '金刚石模板3',
-          author: '我',
-          img: "./assets/logo.png"
-        },
-        {
-          title: '金刚石模板4',
-          author: '我',
-          img: "./assets/logo.png"
-        },
-        {
-          title: '金刚石模板5',
-          author: '我',
-          img: "./assets/logo.png"
-        },
+
       ]
     }
+  },
+
+  created() {
+    this.userId = this.$store.state.tableId;
+    this.$axios.get("/template/list/my", {
+      params: {
+        userId: this.userId,
+      }
+    }).then((response) => {
+      if (response.status === 200) {
+        if (response.data.code === 0) {
+          this.templates = response.data.temps;
+        } else ElMessage("模板信息获取错误");
+      } else console.log("请求返回status不为200")
+    }).catch((err) => {
+      console.log(err);
+    });
   }
 }
 </script>
