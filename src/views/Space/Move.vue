@@ -9,7 +9,7 @@
       <span style="vertical-align: middle;">搜索</span>
     </el-button>
     <el-button style="float: right; margin-right: 20px">
-      <span style="vertical-align: middle" @click="stepBack">后退</span>
+      <span style="vertical-align: middle" @click="getFolderData(1)">后退</span>
     </el-button>
     <el-button type="primary" style="float: right; margin-right: 20px">
       <span style="vertical-align: middle" @click="cancel">取消</span>
@@ -28,9 +28,9 @@
             highlight-current-row
             @row-dblclick="commit"
             @cell-mouse-enter="recordId"
-            before-load="getTableData">
+            before-load="getFolderData(0)">
     <el-table-column prop="docName" label="文件名" width="450"></el-table-column>
-    <el-table-column prop="creatorId" label="创建者" width="300"></el-table-column>
+    <el-table-column prop="creatorName" label="创建者" width="300"></el-table-column>
     <el-table-column prop="modifyTime" label="修改日期" width="400"></el-table-column>
     <el-table-column prop="modifierName" label="修改人" width="300"></el-table-column>
     <el-table-column prop="size" label="大小" width="300"></el-table-column>
@@ -54,10 +54,10 @@ export default {
       curFileShared: Boolean,
       exportLink: '',           //下载文件的链接
       commitFileId: Number,     //确定移动的目标文件夹id
-      openedFolder: [-1,],         //进入文件夹后，记录上一级文件夹的id用来回退，-1表示根目录
-      depth: 0,                 //记录打开文件夹的深度，用来判断是否回退到了根目录
+      folderId: null,
       tableData: [
         {
+          fileType: 1,
           docId: 0,
           docName: '金刚石需求文档',
           creatorName: '赵老板',
@@ -96,28 +96,33 @@ export default {
     }
   },
   methods: {
-    //开局获得文件列表，移动场景下，仅获取文件夹
-    getTableData() {
-      this.$axios.get('/getMoveFormData', {
-        params: {
-          UserId: this.state.loginUser.userId
-        }
-      }).then((response) => {
-        this.tableData = response.data
-      }).catch((err) => {
-        ElMessage(err)
-      })
-    },
     //获得打开的文件夹里面的文件列表
-    getFolderData() {
-      this.$axios.get('/getFileFormData', {
+    getFolderData(isback) {
+      this.$axios.get('/api/space', {
         params: {
-          fileId: this.curFileId,
-          UserId: this.state.loginUser.userId
+          type: "user",
+          ownerId: this.$store.state.userId,
+          folderId: this.folderId,
+          visitorId: this.$store.state.userId,
+          isBack: isback,
         }
       }).then((response) => {
-        this.tableData.clear
-        this.tableData = response.data
+        if(response.status===0){
+          this.folderId=response.data.parentId
+          this.tableData.clear()
+          this.tableData = response.data.files
+          //去掉文档，保留文件夹
+          for (let i = 0; i < this.tableData.length; i++) {
+            if (this.tableData[i].fileType===1)
+              this.tableData.remove(this.tableData[i])
+          }
+        }
+        else if (response.status===-1){
+          ElMessage('获取列表失败')
+        }
+        else{
+          ElMessage('其他错误')
+        }
       }).catch((err) => {
         ElMessage(err)
       })
@@ -128,16 +133,9 @@ export default {
       this.curFileAth = row.authority
       this.curFileShared = row.shared
     },
-    //进入文件夹后的回退功能
-    stepBack() {
-      if (this.openedFolder[this.depth]===-1) return
-      this.curFileId=this.openedFolder[this.depth--]
-      this.getFolderData()
-    },
     edit() {
-      this.openedFolder[++this.depth]=this.curFileId
-      this.commitFileId = this.curFileId
-      this.getFolderData()
+      this.folderId=this.curFileId
+      this.getFolderData(0)
     },
     commit() {
       this.$emit('commit', this.commitFileId)

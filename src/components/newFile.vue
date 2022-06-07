@@ -45,7 +45,7 @@ export default {
       let files = document.getElementById('keyfile').value;
       //选择了新建空白文档
       if (this.fatherId===-1) this.fatherId=null
-      this.$axios.post("api/file/create", {
+      this.$axios.post("/api/file/create", {
         "type": 1,
         "name": this.input,
         "authority": 3,
