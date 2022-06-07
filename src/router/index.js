@@ -52,6 +52,11 @@ const space = {
   name: 'space',
   component:() =>import('../views/Space/Space.vue'),
 };
+const spaceByTemp = {
+  path: 'space/bytemplate/:tempId',
+  name: 'spaceByTemplate',
+  component:() =>import('../views/Space/ByTemplate.vue'),
+}
 const recent = {
   path: 'space/recent',
   name: 'recent',
