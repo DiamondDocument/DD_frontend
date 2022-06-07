@@ -58,7 +58,7 @@
          </el-menu>
       </el-aside>
       <el-main style="padding: 0;margin-bottom: 0;height: 100vh">
-          <div style="height: 670px">
+          <div style="height: 670px;margin-right: auto;margin-left: auto">
             <router-view></router-view>
           </div>
 <!--          <p v-for="item in 100" :key="item" style="line-height: 30px">{{ item }}</p>-->
