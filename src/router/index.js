@@ -1,9 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-
 //团队相关路由
 const teamCreate =  {
-  path: 'team/create/:userId',
+  path: 'team/create',
   name: 'teamCreate',
   component:() =>import('../views/Team/Create.vue'),
 };

@@ -1,10 +1,15 @@
 <template >
+
   <el-container>
     <el-header class="Header" style="height: 50px">
       <img src="../../assets/logo2.png" style="width: 50px; height: 50px;">
 
       <div>
-        <a href="#" style="padding: 0 10px 0 0">头像</a>
+<!--        <a href="#" style="padding: 0 10px 0 0">头像</a>-->
+<!--  THR: for test     -->
+        <el-button @click="goInformation">
+        头像
+      </el-button>
         <el-icon @click="this.$router.push({name:'message'})"><MessageBox /></el-icon>
       </div>
     </el-header>
@@ -51,7 +56,6 @@
         </el-menu>
       </el-aside>
       <el-main style="padding: 0px">
-        <p>{{$store.state.tableInfo}}giao</p>
         <router-view></router-view>
       </el-main>
 <!--      <el-main>-->
@@ -133,6 +137,11 @@ export default {
     this.$store.commit("changeTable", this.$route.params.info);
   },
   methods: {
+    // THR: for test
+    goInformation: function (){
+      this.$router.push({name: 'userInformation', params: {userId: 'u123'}})
+    },
+
     toMessage() {
       this.$router.push({name: "message"});
     },
@@ -154,6 +163,11 @@ export default {
     handleClose(key, keyPath) {
       console.log(key, keyPath);
     }
+  },
+
+  // THR: 测试全局状态
+  created(){
+    console.log(this.$store.state.loginUser.userId);
   }
 }
 

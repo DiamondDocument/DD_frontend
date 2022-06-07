@@ -27,7 +27,7 @@
   </el-table>
   <index v-if="menuVisible" @foo="foo" ref="contextButton" :spaceType="spaceType"
          @collect="collect" @move="move" @remove="remove" @_export="_export"
-         @share="share" @edit="edit" @disCollect="disCollect" @recover="recover"
+         @edit="edit" @disCollect="disCollect" @recover="recover"
          @del="del"
          data-popper-placement="top"></index>
 </template>
@@ -37,6 +37,7 @@ import Template from "@/views/Template/Template";
 import {Search} from "@element-plus/icons-vue";
 import index from "@/components/index"
 import {ref} from "vue";
+import {ElMessage} from "element-plus";
 export default {
   name: "Recycle",
   components: {Search, Template, index},
@@ -49,6 +50,13 @@ export default {
     return {
       spaceType: 3,
       menuVisible: false,
+      loading: false,           //暂时不用
+      link:'',                  //分享用的链接
+      // curFile: this.tableData.,          //当前鼠标选中的文件
+      curFileId: Number,
+      curFileAth: Number,
+      curFileShared: Boolean,
+      exportLink: '',           //下载文件的链接
       tableData: [
         {
           name: '马克思主义基本原理',
@@ -103,29 +111,150 @@ export default {
       ElMessage("进入编辑")
     },
     collect () {
-      ElMessage("收藏成功/已经被收藏")
+      this.$axios.post("/collect", {
+        params:{
+          fileId: this.curFileId
+        }
+      }).then((response) => {
+        if (response.status===200) {
+          ElMessage("收藏成功/已经被收藏")
+        }
+        else {
+          ElMessage('收藏夹已经存在该文件')
+        }
+      }).catch((err)=>{
+        ElMessage(err)
+      })
+    },
+    altAuthority(ath){
+      ElMessage(ath)
+      this.$axios.post("/altAuthority",{
+        params:{
+          authority: ath,
+          fileId: this.curFileId,
+        },
+      }).then((response)=>{
+        if (response.status===1){
+          ElMessage('修改成功')
+        }
+        else{
+          ElMessage('修改失败')
+        }
+      }).catch((err)=>{
+        ElMessage(err)
+      })
     },
     move (){
+
       ElMessage("请选择移动到：")
     },
     remove (){
-      ElMessage("删除成功")
+      this.$axios.post("/remove",
+          {
+            params:{
+              fileId: this.curFileId
+            }
+          }
+      ).then((response)=>{
+        if(response.status === 200){
+          console.log(response.data);
+          ElMessage("删除成功")
+        }else{
+          console.log('failed')
+        }
+      }).catch((err)=>{
+        console.log('err!!!')
+      });
     },
     _export (){
-      ElMessage("请选择保存位置")
+      this.$axios.get("/export",{
+        params:{
+          fileId: this.curFileId
+        }
+      }).then((response)=>{
+        this.exportLink=response.data;
+        let input = document.createElement("input"); // 创建input对象
+        input.value = this.exportLink; // 设置复制内容
+        document.body.appendChild(input); // 添加临时实例
+        input.select(); // 选择实例内容
+        document.execCommand("Copy"); // 执行复制
+        document.body.removeChild(input); // 删除临时实例
+        ElMessage('已复制下载链接')
+      });
     },
-    share (){
-      ElMessage("生成分享链接")
+    notShare(){
+      this.$axios.post("/notShare",
+          {
+            params:{
+              fileId: this.curFileId
+            }
+          }
+      ).then((response)=>{
+        if(response.status === 200){
+          console.log(response.data);
+          ElMessage("取消分享")
+        }else{
+          console.log('failed')
+        }
+      }).catch((err)=>{
+        console.log('err!!!')
+      });
+
     },
     disCollect() {
-      ElMessage("已取消收藏")
+      this.$axios.post("/notCollect",
+          {
+            params:{
+              fileId: this.curFileId
+            }
+          }
+      ).then((response)=>{
+        if(response.status === 200){
+          console.log(response.data);
+          ElMessage("取消收藏")
+        }else{
+          console.log('failed')
+        }
+      }).catch((err)=>{
+        console.log('err!!!')
+      });
     },
     recover() {
-      ElMessage("成功恢复")
+      this.$axios.post("/recover",
+          {
+            params:{
+              fileId: this.curFileId
+            }
+          }
+      ).then((response)=>{
+        if(response.status === 200){
+          console.log(response.data);
+          ElMessage("成功恢复")
+        }else{
+          console.log('failed')
+        }
+      }).catch((err)=>{
+        console.log('err!!!')
+      });
     },
     del() {
-      ElMessage("已彻底删除")
-    }
+      this.$axios.post("/del",
+          {
+            params:{
+              fileId: this.curFileId
+            }
+          }
+      ).then((response)=>{
+        if(response.status === 200){
+          console.log(response.data);
+          ElMessage("彻底删除")
+        }else{
+          console.log('failed')
+        }
+      }).catch((err)=>{
+        console.log('err!!!')
+      });
+    },
   }
 }
 </script>

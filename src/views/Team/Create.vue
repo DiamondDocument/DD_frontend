@@ -8,11 +8,17 @@
         </h2>
       </el-header>
 
-      <el-main style="width: 700px; margin:0 auto">
-        <el-form model="form" label-width="120px" label-position="top">
+      <el-main
+          style="
+          width: 700px;
+          text-align: center;
+          margin:0 auto">
+        <el-form label-width="120px" label-position="top">
 
           <el-form-item label="团队名称">
-            <el-input type="text" v-model="teamName">
+            <el-input type="text"
+                      placeholder="请输入团队名称"
+                      v-model="teamName">
 
             </el-input>
           </el-form-item>
@@ -22,21 +28,8 @@
                 v-model="teamIntroduction"
                 :autosize="{ minRows: 2, maxRows: 4 }"
                 type="textarea"
-                placeholder="Please input"
+                placeholder="请输入团队简介"
             />
-          </el-form-item>
-
-          <el-form-item>
-            <el-radio-group v-model="isPublic" >
-              <el-radio :label="1">
-                <el-icon><CopyDocument /></el-icon>
-                Public
-              </el-radio>
-              <el-radio :label="0">
-                <el-icon><Lock /></el-icon>
-                Private
-              </el-radio>
-            </el-radio-group>
           </el-form-item>
 
         </el-form>
@@ -48,7 +41,7 @@
         </span>
         <el-divider />
 
-        <el-button type="success">创建团队</el-button>
+        <el-button type="success" @click="createTeam">创建团队</el-button>
 
       </el-main>
     </el-container>
@@ -66,36 +59,43 @@ export default {
 
   data(){
     return {
-      userId: '',
       teamName: '',
       teamIntroduction: '',
-      isPublic: 1,
+      teamId: '',
     }
   },
   methods: {
     createTeam: function (){
-      this.$axios.post("/api/team/create",
+
+      console.log("调用teamCreate");
+
+      console.log(this.$store.state.loginUser.userId);
+      this.$axios.post("team/create",
           {
             "teamName" : this.teamName,
             "teamIntroductory" : this.teamIntroduction,
-            "userId": this.userId,
+            "userId": this.$store.state.loginUser.userId,
           }).then((res)=>{
+            console.log("进入回调函数");
+            console.log(res.data);
             if (res.status === 200){
-              if (res.data.code === 0) ElMessage("创建成功！");
-              else if (res.data.code === 1) ElMessage("团队名称不合规范");
+              if (res.data.code === 0) {
+                ElMessage("创建成功！");
+                this.teamId = res.data.teamId;
+                this.$router.push({name: 'table', params: {info: 'team-' + this.teamId}});
+              }
+              else if (res.data.code === 1) ElMessage("团队名称不合规范, 团队名称只能由数字字母汉字组成");
               else ElMessage("系统错误！！");
             }else console.log("return status != 200!!");
       }).catch((err)=>{
         console.log(err);
       })
 
-      // 之后的行为？？？
-
     }
   },
-
+  // for test
   created() {
-    this.userId = this.$route.params.userId;
+    console.log(this.$store.state.loginUser.userId);
   }
 }
 </script>

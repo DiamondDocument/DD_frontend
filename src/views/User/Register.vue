@@ -108,7 +108,6 @@ export default {
       nameCheckRes: -1,
       emailCheckRes: -1,
       pwdCheckRes: -1,
-      identifyingCode: '',
       nameJudge: /^[A-Za-z\d]+$/,
       pwdJudge: /^\w+$/,
       emailJudge: /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/,
@@ -130,20 +129,21 @@ export default {
         return;
       }
 
-      this.$axios.get("/api/user/register/check-id", {
+      this.$axios.get("user/register/check-id", {
         params:{
           userId: this.userId,
         }
       }).then(res => {
-            this.nameCheckRes = res.data.code;
-            if (this.nameCheckRes === -1){
-              console.log('error in checkName');
-              ElMessage('系统错误！')
-            }
-          })
-          .catch(err => {
+        if(res.status === 200){
+          this.nameCheckRes = res.data.code;
+          if (this.nameCheckRes === -1){
+            console.log('error in checkName');
+            ElMessage('系统错误！')
+          }
+        }else console.log("status is not 200!");
+      }).catch(err => {
             console.log(err);         /* 若出现异常则在终端输出相关信息 */
-          })
+      })
     },
 
     checkPwd: function (){
@@ -169,24 +169,18 @@ export default {
     },
 
     sendCode: function (){
-      this.$axios.get("/api/user/send-identifying", {
-        params:{
-          email: this.email
-        }
+      this.$axios.post("user/send-identifying",{
+        "email" : this.email,
       }).then(res => {
-            switch (res.data.code) {
-              case 0:
-                this.identifyingCode = res.data.identifyingCode;
-                ElMessage('发送验证码成功');
-                break;
-              case 1:
-                ElMessage('发送验证码失败,请检查邮箱是否正确');
-                break;
-            }
-          })
-          .catch(err => {
+        if (res.status === 200){
+          console.log(res.data.code);
+          console.log(typeof (res.data.code));
+          if (res.data.code === 0) ElMessage('发送成功');
+          else ElMessage('发送失败');
+        }else console.log('status is not 200!');
+      }).catch(err => {
             console.log(err);
-          })
+      })
     },
 
     register: function () {
@@ -198,29 +192,29 @@ export default {
         ElMessage('请填写验证码')
         return;
       }
-      if (!(this.identifyingCode === this.code)){
-        ElMessage('验证码错误')
-        return;
-      }
       if (!(this.nameCheckRes === 0 && this.emailCheckRes === 0 && this.pwdCheckRes === 0)){
         ElMessage('请检查用户名,邮箱和密码是否合法')
         return;
       }
 
-      this.$axios.post("api/user/register",{
+
+      this.$axios.post("user/register",{
         "userId": this.userId,
-        "pwd": this.pwd,
-        "email": this.email,
+        "nickName" : this.userId, //可以为空
+        "email" : this.email,
+        "pwd" : this.pwd,
+        "verificationCode" : this.code //5位数字字符串
       }).then(res => {
         if (res.status === 200){
-          switch (res.data.code) {
-            case 0:
-              ElMessage("注册成功！");
-              break;
-            default:
-              ElMessage("服务器出现其他错误！");
-              break;
+          if(res.data.code === 0) {
+            ElMessage("注册成功！");
+            this.$router.push({name: 'login', params:{}})
           }
+          else if (res.data.code === 1) ElMessage("用户名（邮箱）已经存在");
+          else if (res.data.code === 2) ElMessage('昵称不合法');
+          else if (res.data.code === 3) ElMessage('邮箱验证码错误');
+          else if (res.data.code === 4) ElMessage('密码不合法！')
+          else ElMessage('其他错误');
         }else console.log("请求返回status不为200")
       }).catch(err => {
             console.log(err);

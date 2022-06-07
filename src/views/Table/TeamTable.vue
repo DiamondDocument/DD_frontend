@@ -45,7 +45,6 @@
         </el-menu>
       </el-aside>
         <el-main>
-          <p>{{$route.params.tableId}}giao</p>
           <router-view></router-view>
         </el-main>
     </el-container>

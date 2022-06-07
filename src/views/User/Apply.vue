@@ -39,7 +39,6 @@
 
     <el-divider/>
 
-
     <span v-if="state === 0">
       是否同意该用户申请?
     </span>
@@ -93,6 +92,7 @@ export default {
 
   methods: {
     deal:function (option){
+      console.log("deal is called!")
       this.$axios.post("/api/team/apply-deal",
           {
             "teamId" : this.teamId,
@@ -116,28 +116,28 @@ export default {
     }
   },
 
-  created() {
-    this.userId = this.$route.params.userId;
-    this.teamId = this.$route.params.teamId;
-    this.$axios.get("/api/user/information", {
-      params:{
-        userId: this.userId,
-      }
-    }).then((response)=>{
-      if (response.status === 200){
-        if (response.data.code === 0){
-          this.nickName = response.data.nickName;
-          this.email = response.data.email;
-          this.introduction = response.data.introduction;
-        }else ElMessage("获取用户信息错误！");
-      }else console.log("请求返回status不为200")
-    }).catch((err)=>{
-      console.log(err);
-    });
-
-    this.checkUserState();
-
-  }
+  // created() {
+  //   this.userId = this.$route.params.userId;
+  //   this.teamId = this.$route.params.teamId;
+  //   this.$axios.get("/api/user/information", {
+  //     params:{
+  //       userId: this.userId,
+  //     }
+  //   }).then((response)=>{
+  //     if (response.status === 200){
+  //       if (response.data.code === 0){
+  //         this.nickName = response.data.nickName;
+  //         this.email = response.data.email;
+  //         this.introduction = response.data.introduction;
+  //       }else ElMessage("获取用户信息错误！");
+  //     }else console.log("请求返回status不为200")
+  //   }).catch((err)=>{
+  //     console.log(err);
+  //   });
+  //
+  //   this.checkUserState();
+  //
+  // }
 }
 </script>
 

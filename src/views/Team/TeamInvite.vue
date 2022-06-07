@@ -8,7 +8,7 @@
       <el-icon size="30px"><Aim /></el-icon>
       <h2>邀请成员到你的团队{{teamName}}中</h2>
     </div>
-    <el-input placeholder="请输入内容"
+    <el-input placeholder="请输入用户昵称"
               @keyup.enter="search"
               v-model="keyword"
               style="
@@ -102,7 +102,7 @@ export default {
     },
 
     goUser: function (userId){
-      this.$router.push({name: 'userInformation', params:{userId: userId}});
+      this.$router.push({name: 'userInvite', params:{userId: userId, teamId: this.teamId}});
     },
     search: function (){
       this.$router.push({name: 'teamInvite', params: {keyword: this.keyword, teamId: this.teamId}});
