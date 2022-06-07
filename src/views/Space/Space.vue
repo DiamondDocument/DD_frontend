@@ -1,42 +1,40 @@
 <template>
-  <div id="giao" style="height: 100%">
-    <el-menu default-active="'/' +this.$route.path.split('/')[1]" v-if="!moving">
-      <el-input v-model="input" placeholder="空间内搜索文件" style="width: 20%"></el-input>
-      <el-button type="primary" style="margin-left: 10px"  @click="search">
-        <el-icon style="vertical-align: middle;">
-          <search />
-        </el-icon>
-        <span style="vertical-align: middle;">搜索</span>
-      </el-button>
-      <el-select v-model="value" placeholder="排序方式" style="float: right; margin-right: 20px">
-        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
-      </el-select>
-      <el-button type="primary" style="float: right; margin-right: 20px">
-        <span style="vertical-align: middle" @click="showNewFile">新建文件</span>
-      </el-button>
-      <el-button style="float: right; margin-right: 20px">
-        <span style="vertical-align: middle" @click="getFolderData(1)">后退</span>
-      </el-button>
-    </el-menu>
-    <el-table :data="tableData" stripe
-              v-loading="loading"
-              v-show="!moving"
-              element-loading-text="少女折寿中"
-              style="width:100%;margin-top: 0"
-              height="100%"
-              :row-style="{height: '0'}"
-              :cell-style="{padding: '20px'}"
-              @row-contextmenu="rowContextmenu"
-              highlight-current-row
-              @row-dblclick="edit"
-              @cell-mouse-enter="recordId">
-      <el-table-column prop="docName" label="文件名" width="450"></el-table-column>
-      <el-table-column prop="creatorName" label="创建者" width="300"></el-table-column>
-      <el-table-column prop="modifyTime" label="修改日期" width="400"></el-table-column>
-      <el-table-column prop="modifierName" label="修改人" width="300"></el-table-column>
-      <el-table-column prop="size" label="大小" width="300"></el-table-column>
-    </el-table>
-  </div>
+  <el-menu default-active="'/' +this.$route.path.split('/')[1]" v-if="!moving">
+    <el-input v-model="input" placeholder="空间内搜索文件" style="width: 20%"></el-input>
+    <el-button type="primary" style="margin-left: 10px"  @click="search">
+      <el-icon style="vertical-align: middle;">
+        <search />
+      </el-icon>
+      <span style="vertical-align: middle;">搜索</span>
+    </el-button>
+    <el-select v-model="value" placeholder="排序方式" style="float: right; margin-right: 20px">
+      <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
+    </el-select>
+    <el-button type="primary" style="float: right; margin-right: 20px">
+      <span style="vertical-align: middle" @click="showNewFile">新建文件</span>
+    </el-button>
+    <el-button style="float: right; margin-right: 20px">
+      <span style="vertical-align: middle" @click="getFolderData(1)">后退</span>
+    </el-button>
+  </el-menu>
+  <el-table :data="tableData" stripe
+            v-loading="loading"
+            v-show="!moving"
+            element-loading-text="少女折寿中"
+            style="width:100%;margin-top: 0"
+            height="100%"
+            :row-style="{height: '0'}"
+            :cell-style="{padding: '20px'}"
+            @row-contextmenu="rowContextmenu"
+            highlight-current-row
+            @row-dblclick="edit"
+            @cell-mouse-enter="recordId">
+    <el-table-column prop="docName" label="文件名" width="450"></el-table-column>
+    <el-table-column prop="creatorName" label="创建者" width="300"></el-table-column>
+    <el-table-column prop="modifyTime" label="修改日期" width="400"></el-table-column>
+    <el-table-column prop="modifierName" label="修改人" width="300"></el-table-column>
+    <el-table-column prop="size" label="大小" width="300"></el-table-column>
+  </el-table>
 
   <index v-if="menuVisible" @foo="foo" ref="index" :spaceType="spaceType" :authority=this.curFileAth :shared="this.curFileShared"
                   @collect="collect" @move="this.moving=true" @remove="remove" @_export="_export"
