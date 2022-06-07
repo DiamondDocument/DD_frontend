@@ -1,7 +1,6 @@
 <template>
-  <div style="margin: 15px 0 5px 0;border-bottom: 1px solid #e8e8e8;padding-bottom: 10px">
-    <el-menu default-active="'/' +this.$route.path.split('/')[1]" v-if="!moving">
-<!--      <el-icon style="width: 5%"><ArrowLeftBold /></el-icon>-->
+  <div style="margin: 15px 0 5px 0;border-bottom: 1px solid #e8e8e8;padding-bottom: 10px" v-if="!moving && !tmpVisible">
+    <el-menu default-active="'/' +this.$route.path.split('/')[1]" >
       <el-button type="primary" icon="ArrowLeft" text>返回上一级</el-button>
       <el-input v-model="input" placeholder="空间内搜索文件" style="width: 20%"></el-input>
       <el-button type="primary" style="margin-left: 10px"  @click="search">
@@ -10,22 +9,20 @@
         </el-icon>
         <span style="vertical-align: middle;">搜索</span>
       </el-button>
-      <el-select v-model="value" placeholder="排序方式" style="float: right; margin-right: 20px">
-        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
-      </el-select>
+<!--      <el-select v-model="value" placeholder="排序方式" style="float: right; margin-right: 20px">-->
+<!--        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>-->
+<!--      </el-select>-->
       <el-button type="primary" style="float: right; margin-right: 20px" icon="Plus">
         <span style="vertical-align: middle" @click="showNewFile" >新建文件</span>
       </el-button>
-<!--      <el-button style="float: right; margin-right: 20px">-->
-<!--        <span style="vertical-align: middle" @click="getFolderData(1)">后退</span>-->
-<!--      </el-button>-->
+      <el-button type="primary" style="float: right; margin-right: 20px" icon="Plus">
+        <span style="vertical-align: middle" @click="tmpVisible=true" >从模板新建</span>
+      </el-button>
     </el-menu>
   </div>
-<!--  <el-divider />-->
-  <div style="height: 570px;">
+  <div style="height: 570px;" v-if="!moving && !tmpVisible">
     <el-table :data="tableData" stripe
               v-loading="loading"
-              v-show="!moving"
               element-loading-text="少女折寿中"
               style="width:100%;margin-top: 0;"
               height="100%"
@@ -39,11 +36,8 @@
       <el-table-column prop="creatorName" label="创建时间" width="350"></el-table-column>
       <el-table-column prop="modifyTime" label="最后修改" width="350"></el-table-column>
       <el-table-column prop="modifierName" label="大小" ></el-table-column>
-<!--      <el-table-column prop="size" label="大小" width="300"></el-table-column>-->
     </el-table>
   </div>
-
-
   <index v-if="menuVisible" @foo="foo" ref="index" :spaceType="spaceType" :authority=this.curFileAth :shared="this.curFileShared"
                   @collect="collect" @move="this.moving=true" @remove="remove" @_export="_export"
                   @share="showShare()" @rename="renameVisible=true"
@@ -53,6 +47,7 @@
   <share ref="share" :curFileId="curFileId" @altAuthority="altAuthority"></share>
   <new-file ref="newFile" :fatherId="folderId"></new-file>
   <move ref="move" @commit="move" @cancel="this.moving=false" v-if="moving"></move>
+  <my ref="My" v-if="tmpVisible" :spaceUsing="1" @useTmp="useTmp"></my>
 <!--  重命名懒得再写组件了，space臃肿就臃肿一点吧……-->
   <el-dialog title="重命名" v-model="renameVisible" width="30%">
     <span>请输入文件名：</span>
@@ -67,7 +62,6 @@
 </template>
 
 <script>
-import Template from "@/views/Template/Template";
 import {Search} from "@element-plus/icons-vue";
 import index from "@/components/index"
 import authority from "@/components/authority";
@@ -76,9 +70,10 @@ import {ref} from "vue";
 import {ElMessage} from "element-plus";
 import newFile from "@/components/newFile";
 import move from "@/views/Space/Move";
+import My from "@/views/Template/My";
 export default {
   name: "Space",
-  components: {Search, Template, index, authority, share, newFile, move},
+  components: {Search, index, authority, share, newFile, move, My},
   props: {
     spaceType: {
       type: Number,
@@ -97,6 +92,7 @@ export default {
       moving: false,            //是否在移动文件，决定文件系统如何显示
       folderId: null,           //当前处在的文件夹的id，null为根目录
       renameVisible: false,     //控制重命名对话框显示
+      tmpVisible: false,
       tableData: [
         {
           fileType: 1,
@@ -341,6 +337,34 @@ export default {
       this.curFileId = row.id
       this.curFileAth = row.authority
       this.curFileShared = row.shared
+    },
+    //从模板创建
+    useTmp(id,name){
+      this.$axios.post("/api/file/create", {
+        "type": 1,
+        "name": name,
+        "authority": 3,
+        "creatorId": this.$store.state.userId,
+        "parentId": this.folderId,
+        "templateId": id,
+      }).then((response)=>{
+        if (response.status===0){
+          ElMessage('创建成功')
+        }
+        else if (response.status===-1){
+          ElMessage('创建失败')
+        }
+        else if (response.status===1){
+          ElMessage('文件重名,已自动修改')
+        }
+        else{
+          ElMessage('其他错误')
+        }
+      }).catch((err)=>{
+        console.log(err)
+      });
+      this.tmpVisible=false
+      this.getFolderData(0)
     },
     //打开文档或文件夹
     edit(row) {
