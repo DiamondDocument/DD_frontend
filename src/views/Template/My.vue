@@ -33,6 +33,51 @@
     </el-col>
   </el-row>
   <tmp-pos ref="tmpPos" v-if="selectPos" @commit="commit" @cancel="selectPos=false"></tmp-pos>
+  <el-scrollbar >
+    <div id="out">
+      <div id="item" v-for="(temps, i) in templates" >
+        <el-card shadow="hover" id="image" :body-style="{ padding: '0px' }">
+          <img
+              :src="temps.url"
+              id="image"
+              @click="this.$router.push({name: 'templateDetail', params:{templateId:temps.tempId}})"
+          />
+          <p id="name">{{temps.tempName}}</p>
+        </el-card>
+
+<!--        <el-button text style="width: 100%"><p style="margin-left: 0;">{{temps.tempName}}</p></el-button>-->
+<!--        <a href="" id="name" @click=""> </a>-->
+
+        <a href="#">作者：{{temps.creatorId}}</a>
+      </div>
+    </div>
+  </el-scrollbar>
+
+
+
+<!--  <el-row>-->
+<!--    <el-col-->
+<!--        v-for="(temps, i) in templates"-->
+<!--        :span="6.5"-->
+<!--        :offset="i > 0 ? 0.5 : 0"-->
+<!--    >-->
+<!--      <el-card class="box-card">-->
+<!--        <img-->
+<!--            :src="temps.url"-->
+<!--            id="image"-->
+<!--            style="position: center"-->
+<!--            @click="this.$router.push({name: 'templateDetail', params:{templateId:temps.tempId}})"-->
+<!--        />-->
+<!--        <div style="padding: 14px; margin: 0;">-->
+
+<!--          <div class="bottom">-->
+<!--            <p id="author">作者：{{temps.creatorId}}</p>-->
+<!--            <el-button type="primary" round @click="useTmp(temps)">立即使用</el-button>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </el-card>-->
+<!--    </el-col>-->
+<!--  </el-row>-->
 </template>
 
 <script>
@@ -112,7 +157,36 @@ export default {
 </script>
 
 <style>
-
+#out {
+  display: grid;
+  grid-template-columns: 250px 250px 250px 250px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 1000px;
+}
+#image {
+  /*width: 218px;*/
+  width: 100%;
+  margin: 0;
+  /*height: 260px;*/
+  object-fit: cover;
+  display: block;
+  border: 1px solid #e8e8e8;
+}
+#item {
+  height: 340px;
+  width: 220px;
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+#name{
+  line-height: 50px;
+  font-size: 15px;
+  height: 50px;
+  text-align: center;
+  color: rgba(0, 0, 0, 0.7);
+  /*flood-color: ;*/
+}
 .bottom {
   margin-top: 13px;
   line-height: 12px;
@@ -125,10 +199,9 @@ export default {
   padding: 0;
   min-height: auto;
 }
-
-.image {
-  width: 140px;
-  display: block;
+a{
+  color: rgba(0, 0, 0, 0.5);
+  font-size: 13px;
 }
 
 .box-card {
