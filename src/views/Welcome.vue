@@ -3,7 +3,7 @@
 <!--  <p>{{this.$router.getRoutes()}}</p>-->
   <nav>
     <el-button @click="$router.push({name:'table',params:{info: 'my'}})">工作台</el-button> |
-    <el-button>登录</el-button> |
+    <el-button @click="$router.push({name:'login'})" >登录</el-button> |
     <el-button>注册</el-button>|
     <el-button @click="$router.push({name:'table',params:{info: 'team:123'}})">团队工作台</el-button>|
     <el-button @click="$router.push({name:'table',params:{info: 'other:123'}})">>他人工作台</el-button>|
@@ -54,6 +54,28 @@ export default {
       ).then((response)=>{
         console.log(response.data);
         this.str = response.data;
+      });
+    },
+    login(){
+      this.$axios.get("/user/login",{
+        params:{
+          userId: 'u123',
+          pwd: '123456',
+          email: null
+        }
+      }).then((response)=>{
+        console.log("请求完毕");
+        if(response.status === 200){
+          if(response.data.code === 0){
+            console.log(response.data);
+          }else{
+            console.log("code");
+          }
+        }else{
+          console.log("请求错误");
+        }
+      }).catch((err) => {
+        console.log("请求错误");
       });
     },
     file(){

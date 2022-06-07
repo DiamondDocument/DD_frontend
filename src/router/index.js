@@ -37,12 +37,12 @@ const userInformation = {
   component:() =>import('../views/User/Information.vue'),
 };
 const userInvite = {
-  path: 'user/invite/:userId',
+  path: 'user/invite/:userId/:teamId',
   name: 'userInvite',
   component:() =>import('../views/User/Invite.vue'),
 };
 const userApply = {
-  path: 'user/apply/:userId',
+  path: 'user/apply/:userId/:teamId',
   name: 'userApply',
   component:() =>import('../views/User/Apply.vue'),
 };

@@ -179,19 +179,37 @@ export default {
       });
     },
     _export (){
-      this.$axios.get("/export",{
+      console.log("发送导出文档请求...");
+      this.$axios.get("/document/export",{
         params:{
-          fileId: this.curFileId
+          docId : this.curFileId,
         }
       }).then((response)=>{
-        this.exportLink=response.data;
-        let input = document.createElement("input"); // 创建input对象
-        input.value = this.exportLink; // 设置复制内容
-        document.body.appendChild(input); // 添加临时实例
-        input.select(); // 选择实例内容
-        document.execCommand("Copy"); // 执行复制
-        document.body.removeChild(input); // 删除临时实例
-        ElMessage('已复制下载链接')
+        console.log("请求完毕");
+        if(response.status === 200){
+          if(response.data.code === 0){
+            console.log("导出成功");
+            this.$axios.get(response.data.download, {responseType: 'blob'}).then((response)=>{
+              if(response.status === 200){
+                let fileURL = window.URL.createObjectURL(new Blob([response.data]));
+                let fileLink = document.createElement('a');
+                fileLink.href = fileURL;
+                fileLink.setAttribute('download', response.headers['content-disposition'].split('filename=')[1]);
+                document.body.appendChild(fileLink);
+                console.log();
+                fileLink.click();
+              }else console.log("请求错误status");
+            }).catch((err) => {
+              console.log("请求错误");
+            });
+          }else{
+            console.log("请求错误");
+          }
+        }else{
+          console.log("请求错误");
+        }
+      }).catch((err) => {
+        console.log("请求错误");
       });
     },
     notShare(){

@@ -9,12 +9,12 @@
                  style="display:none"
                  @change="upload($event)"/>
 
-          <el-avatar :size="200" :src="url" style="float: left; " @click="changeImg"/>
+          <el-avatar :size="200" :src="url"  v-if="avatarUpdater" style="float: left; " @click="changeImg"/>
           <el-form
               label-position="Right"
               label-width="100px"
               style="
-              max-width: 300px;
+              max-width: 100%;
               margin: 20px;
         ">
             <el-form-item label="用户名：">
@@ -30,7 +30,7 @@
             </el-form-item>
 
             <el-form-item label="用户简介：">
-              1 2 3
+              {{ introduction }}
             </el-form-item>
           </el-form>
 
@@ -40,7 +40,6 @@
         </el-tab-pane>
 
         <!--      切换清空 邮箱 密码 时无法消除错误提示    -->
-
 
         <el-tab-pane label="修改信息" name="2">
           <el-form
@@ -136,16 +135,16 @@
     </div>
 
     <div v-if="isOwner === false">
-      <div style="float: left; margin-left: 20px; margin-right: 50px">
+      <div style="float: left; margin-left: 20px; margin-right: 50px; margin-top: 20px;">
         <el-avatar :size="200" :src="url" />
       </div>
 
-      <div >
+      <div style="float:left">
         <el-form
             label-position="Right"
             label-width="100px"
             style="
-              max-width: 300px;
+              max-width: 100%;
               margin: 20px;
         ">
           <el-form-item label="用户名：">
@@ -184,6 +183,7 @@ export default {
   data(){
     return {
       isOwner: -1,
+      avatarUpdater: true,
       userId: '',
       url: '',
       cardSite: '1',
@@ -249,7 +249,7 @@ export default {
 
     changeImg: function (){
       console.log("changeImg is called!");
-      this.$refs.clearFile.click();
+      return  this.$refs.clearFile.click();
     },
 
     upload: function(e){
@@ -267,12 +267,17 @@ export default {
           if (response.data.code === 0){
             ElMessage("上传成功！");
             console.log(response.data);
+            this.avatarUpdater = false;
+            this.$nextTick(function (){
+              console.log('update img !');
+              this.getAvatar();
+              this.avatarUpdater = true;
+            })
           }else if (response.data.code === 1) ElMessage("上传失败")
         }else console.log("status is not 200!");
       }).catch((err)=>{
         console.log(err);
       });
-      // }
     },
 
     changeNickname: function (){
@@ -284,7 +289,7 @@ export default {
           }).then((res)=>{
         if (res.status === 200){
           if (res.data.code === 0) {
-            ElMessage("修改成功！");
+            ElMessage("修改昵称成功！");
             this.nickName = this.c_nickName;
           }
           else ElMessage("系统错误！！");
@@ -292,7 +297,6 @@ export default {
       }).catch((err)=>{
         console.log(err);
       })
-
     },
 
     changeIntroduction: function (){
@@ -304,7 +308,7 @@ export default {
           }).then((res)=>{
         if (res.status === 200){
           if (res.data.code === 0) {
-            ElMessage("修改成功！");
+            ElMessage("修改简介成功！");
             this.introduction = this.c_introduction;
           }
           else if (res.data.code === 1) ElMessage("用户不存在");
@@ -325,7 +329,7 @@ export default {
           }).then((res)=>{
         if (res.status === 200){
           if (res.data.code === 0) {
-            ElMessage("修改成功！");
+            ElMessage("修改邮箱成功！");
             this.email = this.c_email;
           }
           else if (res.data.code === 1) ElMessage("验证码错误！");
@@ -346,10 +350,8 @@ export default {
     },
 
     sendCode: function (){
-      this.$axios.get("user/send-identifying", {
-        params:{
-          email: this.c_email,
-        }
+      this.$axios.post("user/send-identifying", {
+        "email": this.c_email,
       }).then((response)=>{
         if (response.status === 200){
           if (response.data.code === 0){
@@ -373,7 +375,7 @@ export default {
             "oldPwd" : this.oldPwd,
           }).then((res)=>{
         if (res.status === 200){
-          if (res.data.code === 0) ElMessage("修改成功！");
+          if (res.data.code === 0) ElMessage("修改密码成功！");
           else if (res.data.code === 1) ElMessage("原密码错误");
           else ElMessage("系统错误！！");
         }else console.log("return status != 200!!");
@@ -407,6 +409,7 @@ export default {
     },
 
     getAvatar: function (){
+      console.log('get avatar')
       this.$axios.get("user/get-avatar", {
         params:{
           userId: this.userId,
@@ -426,11 +429,6 @@ export default {
 
   created() {
     this.isOwner = (this.$route.params.userId === this.$store.state.loginUser.userId);
-    // console.log((this.$route.params.userId === this.$store.state.loginUser.userId));
-    // console.log(this.isOwner);
-    // console.log(this.$route.params.userId);
-    // console.log(' - ');
-    // console.log(this.$store.state.loginUser.userId);
     this.userId = this.$route.params.userId;
 
     this.getInformation();

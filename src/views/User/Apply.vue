@@ -5,7 +5,7 @@
       border-width: 1px;
       border-color: lightgray;
       border-radius: 5px;
-      margin: 0 auto;
+      margin: 10px auto;
       width: 300px;">
 
     <el-avatar
@@ -46,7 +46,10 @@
       该用户已在团队中
     </span>
     <span v-else-if="state === 2">
-      以及拒绝该用户申请
+      已经拒绝该用户申请
+    </span>
+    <span v-else-if="state === 3">
+      该用户未提交申请
     </span>
     <span v-else>
       other error!
@@ -60,10 +63,10 @@
       text-align: center;
       margin: 0 auto">
         <el-button type="success" @click="deal(1)">
-          确定
+          同意
         </el-button>
         <el-button type="danger" @click="deal(0)">
-          取消
+          拒绝
         </el-button>
       </div>
     </div>
@@ -80,7 +83,8 @@ export default {
   name: "Apply.vue",
   data(){
     return {
-      state: 1,
+      state: -1,
+      flag: false,
       url: '',
       userId: '',
       teamId: '',
@@ -91,9 +95,9 @@ export default {
   },
 
   methods: {
-    deal:function (option){
-      console.log("deal is called!")
-      this.$axios.post("/api/team/apply-deal",
+    sendDeal: function (option){
+      console.log('sendDeal is called!');
+      return this.$axios.post("team/apply-deal",
           {
             "teamId" : this.teamId,
             "userId" : this.userId,
@@ -108,36 +112,104 @@ export default {
       }).catch((err)=>{
         console.log(err);
       })
-      location.reload();
     },
-    //接口缺失
-    checkUserState: function (){
 
-    }
+    isMaster:  function (){
+      console.log('check is master ?');
+      return this.axios.get("team/team-status",{
+        params:{
+          teamId: this.teamId,
+          // userId: this.$store.state.loginUser.userId,
+          userId: 'admin',
+        }
+      }).then(res => {
+        console.log('userType data =  ');
+        console.log(res.data);
+        if (res.status === 200){
+          this.flag =  (res.data.status === 0);
+        }else  console.log('status is not 200!');
+      }).catch(err => {
+        console.log(err);
+      });
+    },
+
+    async deal(option){
+      console.log("deal is called!");
+      await this.isMaster();
+      console.log('flag = ' + this.flag);
+      if (this.flag === false) {
+        ElMessage('你不是该团队的队长');
+        return;
+      }
+      await this.sendDeal(option);
+      await this.checkUserState();
+    },
+
+    checkUserState: function (){
+      console.log("checkUserState is called!");
+      this.axios.get("team/is-apply",{
+        params:{
+          teamId: this.teamId,
+          userId: this.userId,
+        }
+      }).then(res => {
+        console.log('userState data =  ');
+        console.log(res.data);
+        if (res.status === 200){
+          this.state = res.data.code;
+          this.state = 0;
+        }else console.log('status is not 200!');
+      }).catch(err => {
+        console.log(err);
+      })
+
+    },
+
+    getUserInformation: function (){
+      this.$axios.get("user/information", {
+        params:{
+          userId: this.userId,
+        }
+      }).then((response)=>{
+        if (response.status === 200){
+          console.log('user data');
+          console.log(response.data);
+          if (response.data.code === 0){
+            this.nickName = response.data.nickName;
+            this.email = response.data.email;
+            this.introduction = response.data.introduction;
+          }else if(response.data.code === 1) console.log('用户不存在')
+          else console.log("用户信息获取错误");
+        }else console.log("请求返回status不为200")
+      }).catch((err)=>{
+        console.log(err);
+      });
+
+      this.$axios.get("user/get-avatar", {
+        params:{
+          userId: this.userId,
+        }
+      }).then((response)=>{
+        if (response.status === 200){
+          console.log('get User avatar = ')
+          console.log(response.data)
+          if (response.data.code === 0){
+            this.url = response.data.url;
+          }else console.log("用户头像获取错误");
+        }else console.log("请求返回status不为200");
+      }).catch((err)=>{
+        console.log(err);
+      });
+
+    },
   },
 
-  // created() {
-  //   this.userId = this.$route.params.userId;
-  //   this.teamId = this.$route.params.teamId;
-  //   this.$axios.get("/api/user/information", {
-  //     params:{
-  //       userId: this.userId,
-  //     }
-  //   }).then((response)=>{
-  //     if (response.status === 200){
-  //       if (response.data.code === 0){
-  //         this.nickName = response.data.nickName;
-  //         this.email = response.data.email;
-  //         this.introduction = response.data.introduction;
-  //       }else ElMessage("获取用户信息错误！");
-  //     }else console.log("请求返回status不为200")
-  //   }).catch((err)=>{
-  //     console.log(err);
-  //   });
-  //
-  //   this.checkUserState();
-  //
-  // }
+  created() {
+    this.userId = this.$route.params.userId;
+    this.teamId = this.$route.params.teamId;
+    this.checkUserState();
+    this.getUserInformation();
+  }
 }
 </script>
 
