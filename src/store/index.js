@@ -6,22 +6,23 @@ import {createStore} from 'vuex'
 export default new createStore({
   state(){
     return {
-      isLogin : localStorage.getItem('isLogin'),
-      // loginUser: {
-      //   userId: null,
-      //   nickname: null,
-      // },
-      loginUser : localStorage.getItem('loginUser'),
-      tableInfo: localStorage.getItem('tableInfo'),
-      tableType: localStorage.getItem('tableInfo') === null? null: localStorage.getItem('tableInfo').split(":")[0],
-      tableId: localStorage.getItem('tableInfo') === null? null: localStorage.getItem('tableInfo').split(":")[1],
+      isLogin : false,
+      loginUser: {
+        userId: "",
+        nickname: "",
+      },
+      // loginUser : localStorage.getItem('loginUser'),
+      tableInfo: null,
+      tableType: null,
+      tableId: null
     };
   },
   mutations: {
     login(state, user){
+      console.log("set login");
       state.isLogin = true;
-      state.loginUser['userId'] = user.userId;
-      state.loginUser['nickname'] = user.nickname;
+      state.loginUser.userId = user.userId;
+      state.loginUser.nickname = user.nickname;
       localStorage.setItem('isLogin', state.isLogin);
       localStorage.setItem('loginUser', JSON.stringify(state.loginUser));
     },
@@ -39,6 +40,21 @@ export default new createStore({
       // }else{
       //   state.tableInfo = info.tableId + ":" + info.tableType;
       // }
+    },
+    init(state){
+      state.isLogin = localStorage.getItem('isLogin');
+      let localLoginUser = localStorage.getItem('loginUser');
+      // state.loginUser = localStorage.getItem('loginUser');
+      if(localLoginUser !== null){
+        state.loginUser = JSON.parse(localLoginUser);
+      }
+      if(state.tableInfo !== null){
+        state.tableId = state.tableInfo.split(":")[1];
+        state.tableType = state.tableInfo.split(":")[0];
+      }
+      console.log("完成初始化，全局状态为：");
+      console.log(state.tableInfo);
+      console.log(state.isLogin);
     }
   },
   actions: {

@@ -12,6 +12,9 @@
 export default {
   name: 'App',
 
+  created() {
+    this.$store.commit("init");
+  }
 }
 </script>
 
