@@ -47,7 +47,7 @@
   <share ref="share" :curFileId="curFileId" @altAuthority="altAuthority"></share>
   <new-file ref="newFile" :fatherId="folderId"></new-file>
   <move ref="move" @commit="move" @cancel="this.moving=false" v-if="moving"></move>
-  <my ref="My" v-if="tmpVisible" :spaceUsing="1" @useTmp="useTmp"></my>
+  <my ref="My" v-if="tmpVisible" :spaceUsing="true" @useTmp="useTmp" @cancel="tmpVisible=false"></my>
 <!--  重命名懒得再写组件了，space臃肿就臃肿一点吧……-->
   <el-dialog title="重命名" v-model="renameVisible" width="30%">
     <span>请输入文件名：</span>
