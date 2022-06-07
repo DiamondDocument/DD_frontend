@@ -40,17 +40,17 @@ export default {
     const requestResult = ref()
     function showConfirm (type, s) {
       switch (type) {
-        case 0:
+        case 2:
+          ElMessage('跳到个人信息页')
+          break;
+        case 4:
+          ElMessage('跳转到团队详情页')
+          break;
+        case 6:
           fileComment.value.show(s)
           break;
-        case 1:
-          confirm('跳转到团队详情页')
-          break;
-        case 2:
-          joinRequest.value.show(s)
-          break;
-        case 3:
-          requestResult.value.show(s)
+        case 7:
+          ElMessage('跳到文档页')
           break;
         default:
           ElMessage('未知邮件类型！！！！')
@@ -152,12 +152,14 @@ export default {
   methods: {
     //获取消息列表
     getMessage() {
+      console.log("getmsg")
       this.$axios.get('/api/message/list', {
         params: {
           userId: this.$store.state.userId,
         }
       }).then((response) => {
         if(response.status===0) {
+          console.log("in code===0")
           this.messages.clear()
           this.messages = response.data.msg
           this.messageNum = this.messages.length
