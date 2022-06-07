@@ -7,7 +7,9 @@
       </el-button>
     </el-menu>
   </div>
-  <el-row>
+
+
+  <el-row v-if="!selectPos">
     <el-col
         v-for="(temps, i) in templates"
         :span="6.5"
@@ -39,7 +41,7 @@ import tmpPos from "@/views/Space/tmpPos";
 
 export default {
   name: "MyTemplate.vue",
-  components:[tmpPos],
+  components:{tmpPos},
   data() {
     return {
       userId: '',
@@ -77,7 +79,7 @@ export default {
       if (this.spaceUsing)
         this.$emit('useTmp', tmp.tempId, tmp.tempName)
       this.selectPos=true
-      this.curTmpId=tmp.tempId;
+      this.curTmpId=tmp.tempId
     },
     commit(id){
       this.$axios.post("/api/file/create", {
@@ -103,6 +105,7 @@ export default {
       }).catch((err)=>{
         console.log(err)
       });
+      this.selectPos=false
     },
   }
 }
