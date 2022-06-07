@@ -28,11 +28,11 @@
             highlight-current-row
             @row-dblclick="commit"
             @cell-mouse-enter="recordId"
-            onload="getTableData">
-    <el-table-column prop="name" label="文件名" width="450"></el-table-column>
-    <el-table-column prop="author" label="创建者" width="300"></el-table-column>
-    <el-table-column prop="altDate" label="修改日期" width="400"></el-table-column>
-    <el-table-column prop="altUser" label="修改人" width="300"></el-table-column>
+            before-load="getTableData">
+    <el-table-column prop="docName" label="文件名" width="450"></el-table-column>
+    <el-table-column prop="creatorId" label="创建者" width="300"></el-table-column>
+    <el-table-column prop="modifyTime" label="修改日期" width="400"></el-table-column>
+    <el-table-column prop="modifierName" label="修改人" width="300"></el-table-column>
     <el-table-column prop="size" label="大小" width="300"></el-table-column>
   </el-table>
 </template>
@@ -58,25 +58,14 @@ export default {
       depth: 0,                 //记录打开文件夹的深度，用来判断是否回退到了根目录
       tableData: [
         {
-          id:0,
-          name: '金刚石需求文档',
-          author: '赵老板',
-          altDate: '1919-08-10',
-          altUser: 'lyh',
+          docId: 0,
+          docName: '金刚石需求文档',
+          creatorName: '赵老板',
+          modifyTime: '1919-08-10',
+          modifierName: 'lyh',
           authority: 1,
           size: '20K',
           shared: false,
-          isFolder: false,
-        },
-        {
-          id:1,
-          name: '金刚石产品计划书',
-          author: '赵老板',
-          altDate: '1919-08-10',
-          altUser: 'lyh',
-          authority: 2,
-          size: '98K',
-          shared:true,
           isFolder: false,
         },
       ],
@@ -116,7 +105,7 @@ export default {
       }).then((response) => {
         this.tableData = response.data
       }).catch((err) => {
-        ElMessage('err!!!')
+        ElMessage(err)
       })
     },
     //获得打开的文件夹里面的文件列表
@@ -130,7 +119,7 @@ export default {
         this.tableData.clear
         this.tableData = response.data
       }).catch((err) => {
-        ElMessage('err!!!')
+        ElMessage(err)
       })
     },
     //跟踪鼠标指向的文件信息
@@ -145,7 +134,7 @@ export default {
       this.curFileId=this.openedFolder[this.depth--]
       this.getFolderData()
     },
-    edit(row) {
+    edit() {
       this.openedFolder[++this.depth]=this.curFileId
       this.commitFileId = this.curFileId
       this.getFolderData()

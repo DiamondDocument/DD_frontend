@@ -1,7 +1,7 @@
 <template>
   <el-menu default-active="'/' +this.$route.path.split('/')[1]" v-if="!moving">
     <el-input v-model="input" placeholder="空间内搜索文件" style="width: 20%"></el-input>
-    <el-button type="primary" style="margin-left: 10px">
+    <el-button type="primary" style="margin-left: 10px"  @click="search">
       <el-icon style="vertical-align: middle;">
         <search />
       </el-icon>
@@ -29,22 +29,33 @@
             highlight-current-row
             @row-dblclick="edit"
             @cell-mouse-enter="recordId"
-            onload="getTableData">
-    <el-table-column prop="name" label="文件名" width="450"></el-table-column>
-    <el-table-column prop="author" label="创建者" width="300"></el-table-column>
-    <el-table-column prop="altDate" label="修改日期" width="400"></el-table-column>
-    <el-table-column prop="altUser" label="修改人" width="300"></el-table-column>
+            before-load="getTableData">
+    <el-table-column prop="docName" label="文件名" width="450"></el-table-column>
+    <el-table-column prop="creatorId" label="创建者" width="300"></el-table-column>
+    <el-table-column prop="modifyTime" label="修改日期" width="400"></el-table-column>
+    <el-table-column prop="modifierName" label="修改人" width="300"></el-table-column>
     <el-table-column prop="size" label="大小" width="300"></el-table-column>
   </el-table>
   <index v-if="menuVisible" @foo="foo" ref="index" :spaceType="spaceType" :authority=this.curFileAth :shared="this.curFileShared"
-                  @collect="collect" @move="move" @remove="remove" @_export="_export"
-                  @share="showShare()" @disCollect="disCollect" @recover="recover"
-                  @del="del" @authority = "showAuthority()" @notShare="notShare"
+                  @collect="collect" @move="this.moving=true" @remove="remove" @_export="_export"
+                  @share="showShare()" @rename="renameVisible=true"
+                  @authority = "showAuthority()" @notShare="notShare"
          data-popper-placement="top"></index>
   <authority ref="authority" @altAuthority="altAuthority"></authority>
   <share ref="share" :curFileId="curFileId" @altAuthority="altAuthority"></share>
-  <new-file ref="newFile"></new-file>
-  <move ref="move" @commit="commitPos" @cancel="cancelMove" v-if="moving"></move>
+  <new-file ref="newFile" :fatherId="openedFolder"></new-file>
+  <move ref="move" @commit="move" @cancel="this.moving=false" v-if="moving"></move>
+<!--  重命名懒得再写组件了，space臃肿就臃肿一点吧……-->
+  <el-dialog title="重命名" v-model="renameVisible" width="30%">
+    <span>请输入文件名：</span>
+    <el-input v-model="reName" style="width: 20%"></el-input>
+    <template #footer>
+    <span class="dialog-footer">
+      <el-button @click="renameVisible = false">取 消</el-button>
+      <el-button type="primary" @click="rename">确 定</el-button>
+    </span>
+    </template>
+  </el-dialog>
 </template>
 
 <script>
@@ -60,7 +71,7 @@ import move from "@/views/Space/Move";
 export default {
   name: "Space",
   components: {Search, Template, index, authority, share, newFile, move},
-  props:{
+  props: {
     spaceType: {
       type: Number,
     },
@@ -70,7 +81,7 @@ export default {
       spaceType: 1,             //空间类型用于区分右键菜单显示内容等
       menuVisible: false,       //右键菜单不显示
       loading: false,           //暂时不用
-      link:'',                  //分享用的链接
+      link: '',                  //分享用的链接
       curFileId: Number,
       curFileAth: Number,
       curFileShared: Boolean,
@@ -78,27 +89,17 @@ export default {
       moving: false,            //是否在移动文件，决定文件系统如何显示
       openedFolder: [-1,],         //进入文件夹后，记录上一级文件夹的id用来回退，-1表示根目录
       depth: 0,                 //记录打开文件夹的深度，用来判断是否回退到了根目录
+      renameVisible: false,      //控制重命名对话框显示
       tableData: [
         {
-          id:0,
-          name: '金刚石需求文档',
-          author: '赵老板',
-          altDate: '1919-08-10',
-          altUser: 'lyh',
+          docId: 0,
+          docName: '金刚石需求文档',
+          creatorName: '赵老板',
+          modifyTime: '1919-08-10',
+          modifierName: 'lyh',
           authority: 1,
           size: '20K',
           shared: false,
-          isFolder: false,
-        },
-        {
-          id:1,
-          name: '金刚石产品计划书',
-          author: '赵老板',
-          altDate: '1919-08-10',
-          altUser: 'lyh',
-          authority: 2,
-          size: '98K',
-          shared:true,
           isFolder: false,
         },
       ],
@@ -120,24 +121,29 @@ export default {
           label: '大小',
         },
       ],
-      value:'',
+      value: '',
     }
   },
   setup() {
     const authority = ref()
-    const share=ref()
-    const newFile=ref()
+    const share = ref()
+    const newFile = ref()
+
     function showAuthority() {
       authority.value.show()
     }
+
     function showShare() {
       share.value.show()
     }
+
     function showNewFile() {
       newFile.value.show()
     }
+
     return {
-      input :ref(''),
+      reName: ref(''),
+      input: ref(''),
       showAuthority,
       showShare,
       showNewFile,
@@ -148,16 +154,16 @@ export default {
   },
   methods: {
     //开局获得文件列表
-    getTableData(){
+    getTableData() {
       this.$axios.get('/getFormData', {
         params: {
           spaceType: this.spaceType,
           UserId: this.state.loginUser.userId
         }
-      }).then((response)=>{
-        this.tableData=response.data
-      }).catch((err)=>{
-        ElMessage('err!!!')
+      }).then((response) => {
+        this.tableData = response.data
+      }).catch((err) => {
+        ElMessage(err)
       })
     },
     //获得打开的文件夹里面的文件列表
@@ -167,20 +173,20 @@ export default {
           fileId: this.curFileId,
           UserId: this.state.loginUser.userId
         }
-      }).then((response)=>{
+      }).then((response) => {
         this.tableData.clear
-        this.tableData=response.data
-      }).catch((err)=>{
-        ElMessage('err!!!')
+        this.tableData = response.data
+      }).catch((err) => {
+        ElMessage(err)
       })
     },
-    rowContextmenu (row, column, event) {
+    rowContextmenu(row, column, event) {
       this.menuVisible = false
       this.menuVisible = true
       // 阻止右键默认行为
       event.preventDefault()
       this.$nextTick(() => {
-        this.$refs.index.init(row,column,event)
+        this.$refs.index.init(row, column, event)
       })
     },
     foo() { // 取消鼠标监听事件 菜单栏
@@ -189,118 +195,151 @@ export default {
     },
     //跟踪鼠标指向的文件信息
     recordId(row) {
-      this.curFileId=row.id
-      this.curFileAth=row.authority
-      this.curFileShared=row.shared
+      this.curFileId = row.id
+      this.curFileAth = row.authority
+      this.curFileShared = row.shared
     },
     //进入文件夹后的回退功能
     stepBack() {
-      if (this.openedFolder[this.depth]===-1) return
-      this.curFileId=this.openedFolder[this.depth--]
+      if (this.openedFolder[this.depth] === -1) return
+      this.curFileId = this.openedFolder[this.depth--]
       this.getFolderData()
     },
-    edit (row) {
-      if (row.isFolder){
-        this.openedFolder[++this.depth]=this.curFileId
+    edit(row) {
+      if (row.isFolder) {
+        this.openedFolder[++this.depth] = this.curFileId
         this.getFolderData()
-      }
-      else {
+      } else {
         this.$router.push({
           name: "documentEdit",
           params: {documentId: row.id}
         })
       }
     },
-    collect () {
-      this.$axios.post("/collect", {
-        params:{
-          fileId: this.curFileId
-        }
+    search(){
+      //搜索框为空，默认获取全部文件，也能相当于在搜索之后的返回
+      if (this.input==='') {
+        this.getTableData()
+        return
+      }
+      let that = this;
+      this.$axios.post("/api/search/document", {
+        "type": "user",
+        "ownerId": this.$store.state.userId,
+        "visitorId": this.$store.state.userId,
+        "key": this.input,
       }).then((response) => {
-        if (response.status===200) {
-          ElMessage("收藏成功/已经被收藏")
+        if (response.status === 0) {
+          that.tableData.clear();
+          that.tableData=response.data.documents;
+        } else if (response.status === 1) {
+          ElMessage('获取失败')
+        } else{
+          ElMessage('其他错误')
         }
-        else {
-          ElMessage('收藏夹已经存在该文件')
-        }
-      }).catch((err)=>{
+      }).catch((err) => {
         ElMessage(err)
       })
     },
-    altAuthority(ath){
-      ElMessage(ath)
-      this.$axios.post("/altAuthority",{
-        params:{
-          authority: ath,
-          fileId: this.curFileId,
-        },
-      }).then((response)=>{
-        if (response.status===1){
+    rename() {
+      this.$axios.post("/api/file/rename", {
+        "fileId": this.curFileId,
+        "newName": this.reName,
+      }).then((response) => {
+        if (response.status === 0) {
           ElMessage('修改成功')
+        } else if (response.status === 1) {
+          ElMessage('文件重名，已自动修改')
+        } else {
+          ElMessage('其他错误')
         }
-        else{
-          ElMessage('修改失败')
+      }).catch((err) => {
+        ElMessage(err)
+      })
+      this.renameVisible = false;
+    },
+    collect() {
+      this.$axios.post("/api/document/like", {
+        "userId": this.$store.state.userId,
+        "docId": this.curFileId
+      }).then((response) => {
+        if (response.status === 0) {
+          ElMessage("收藏成功/已经被收藏")
+        } else if (response.status === 1) {
+          ElMessage('收藏夹已经存在该文件')
+        } else {
+          ElMessage('您没有权限')
         }
-      }).catch((err)=>{
+      }).catch((err) => {
         ElMessage(err)
       })
     },
-    move (){
-      this.moving=true
+    altAuthority(ath) {
+      ElMessage(ath)
+      this.$axios.post("api/file/authority", {
+        "fileId": this.curFileId,
+        "newAuth": ath,
+      }).then((response) => {
+        if (response.status === 0) {
+          ElMessage('修改成功')
+        } else if(response.status===-1){
+          ElMessage('修改失败')
+        }else{
+          ElMessage('其他错误')
+        }
+      }).catch((err) => {
+        ElMessage(err)
+      })
     },
-    commitPos(folderId) {
-      this.moving=false
-      this.$axios.post("/move",
+    move(folderId) {
+      this.$axios.post("api/file/move",
           {
-            params:{
-              folderId: folderId
-            }
+            "fileId": this.curFileId,
+            "newParentId": folderId,
           }
-      ).then((response)=>{
-        if(response.status === 200){
+      ).then((response) => {
+        if (response.status === 0) {
           console.log(response.data);
           ElMessage("移动成功")
-        }else{
-          console.log('failed')
+        } else if (response.status === 1) {
+          ElMessage('有重名文件，已自动修改')
+        } else {
+          ElMessage('其他错误')
         }
-      }).catch((err)=>{
-        console.log('err!!!')
+      }).catch((err) => {
+        console.log(err)
       });
+      this.moving = false
     },
-    cancelMove() {
-      this.moving=false
-    },
-    remove (){
-      this.$axios.post("/remove",
+    remove() {
+      this.$axios.post("api/file/remove",
           {
-            params:{
-              fileId: this.curFileId
-            }
+            "userId": this.$store.state.userId,
+            "fileId": this.curFileId,
           }
-      ).then((response)=>{
-        if(response.status === 200){
-          console.log(response.data);
+      ).then((response) => {
+        if (response.status === 0) {
           ElMessage("删除成功")
-        }else{
-          console.log('failed')
+        } else {
+          console.log('其他错误')
         }
-      }).catch((err)=>{
-        console.log('err!!!')
+      }).catch((err) => {
+        console.log(err)
       });
     },
-    _export (){
+    _export() {
       console.log("发送导出文档请求...");
-      this.$axios.get("/document/export",{
-        params:{
-          docId : this.curFileId,
+      this.$axios.get("/document/export", {
+        params: {
+          docId: this.curFileId,
         }
-      }).then((response)=>{
+      }).then((response) => {
         console.log("请求完毕");
-        if(response.status === 200){
-          if(response.data.code === 0){
+        if (response.status === 200) {
+          if (response.data.code === 0) {
             console.log("导出成功");
-            this.$axios.get(response.data.download, {responseType: 'blob'}).then((response)=>{
-              if(response.status === 200){
+            this.$axios.get(response.data.download, {responseType: 'blob'}).then((response) => {
+              if (response.status === 200) {
                 let fileURL = window.URL.createObjectURL(new Blob([response.data]));
                 let fileLink = document.createElement('a');
                 fileLink.href = fileURL;
@@ -308,94 +347,57 @@ export default {
                 document.body.appendChild(fileLink);
                 console.log();
                 fileLink.click();
-              }else console.log("请求错误status");
+              } else console.log("请求错误status");
             }).catch((err) => {
-              console.log("请求错误");
+              console.log(err);
             });
-          }else{
+          } else {
             console.log("请求错误");
           }
-        }else{
+        } else {
           console.log("请求错误");
         }
       }).catch((err) => {
-        console.log("请求错误");
+        console.log(err);
       });
     },
-    notShare(){
-      this.$axios.post("/notShare",
+    notShare() {
+      this.$axios.post("/api/document/dis-share",
           {
-            params:{
-              fileId: this.curFileId
-            }
+            "docId": this.curFileId
           }
-      ).then((response)=>{
-        if(response.status === 200){
+      ).then((response) => {
+        if (response.status === 0) {
           console.log(response.data);
           ElMessage("取消分享")
-        }else{
+        } else {
           console.log('failed')
+          ElMessage('操作失败')
         }
-      }).catch((err)=>{
-        console.log('err!!!')
-      });
-
-    },
-    disCollect() {
-      this.$axios.post("/notCollect",
-          {
-            params:{
-              fileId: this.curFileId
-            }
-          }
-      ).then((response)=>{
-        if(response.status === 200){
-          console.log(response.data);
-          ElMessage("取消收藏")
-        }else{
-          console.log('failed')
-        }
-      }).catch((err)=>{
-        console.log('err!!!')
+      }).catch((err) => {
+        console.log(err)
       });
     },
-    recover() {
-      this.$axios.post("/recover",
-          {
-            params:{
-              fileId: this.curFileId
-            }
-          }
-      ).then((response)=>{
-        if(response.status === 200){
-          console.log(response.data);
-          ElMessage("成功恢复")
-        }else{
-          console.log('failed')
-        }
-      }).catch((err)=>{
-        console.log('err!!!')
-      });
-    },
-    del() {
-      this.$axios.post("/del",
-          {
-            params:{
-              fileId: this.curFileId
-            }
-          }
-      ).then((response)=>{
-        if(response.status === 200){
-          console.log(response.data);
-          ElMessage("彻底删除")
-        }else{
-          console.log('failed')
-        }
-      }).catch((err)=>{
-        console.log('err!!!')
-      });
-      },
-  }
+    //暂时不在其他空间设置取消收藏的操作
+    // disCollect() {
+    //   this.$axios.post("/notCollect",
+    //       {
+    //         params:{
+    //           fileId: this.curFileId
+    //         }
+    //       }
+    //   ).then((response)=>{
+    //     if(response.status === 200){
+    //       console.log(response.data);
+    //       ElMessage("取消收藏")
+    //     }else{
+    //       console.log('failed')
+    //     }
+    //   }).catch((err)=>{
+    //     console.log('err!!!')
+    //   });
+    // },
+  },
 }
 </script>
 

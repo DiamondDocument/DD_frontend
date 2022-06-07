@@ -5,13 +5,14 @@
       <div class="confirm" v-show="visible">
         <div class="confirm-wrapper">
           <div class="confirm-content">
-            <header style="line-height: 30px;text-align: center; font-weight: bold">请从以下方式中选择一个创建</header>
-            <p class="text">上传本地文档: </p>
+            <header style="line-height: 30px;text-align: center; font-weight: bold">请选择创建方式</header>
+            <p class="text">上传本地文档:（不选则默认空白文裆） </p>
             <input type="file" id="keyfile" multiple="multiple" @change="select($event)" style="margin-left: 130px">
-            <p class="text">新建空白文档： </p>
+            <p class="text">文档名： </p>
             <el-input v-model="input" placeholder="文件名" style="width: 100px !important;margin-left: 150px"></el-input>
-            <p class="text">从模板创建： </p>
-            <el-button @click="toTemplate" style="margin-left: 150px">选择模板</el-button>
+<!--            模板创建另写一个大按钮，不再集成到该弹窗-->
+<!--            <p class="text">选择模板创建：（不选则默认空白文裆） </p>-->
+<!--            <el-button @click="toTemplate" style="margin-left: 150px">选择模板</el-button>-->
             <el-button type="primary" style="bottom: 10px; left: 80px; position: absolute" @click="commit"><span>确定</span></el-button>
             <el-button type="primary" style="bottom: 10px; right: 80px; position: absolute" @click="hide"><span>取消</span></el-button>
           </div>
@@ -23,6 +24,7 @@
 
 <script>
 import {ref} from "vue";
+import {ElMessage} from "element-plus";
 
 export default {
   name: "newFile",
@@ -35,39 +37,38 @@ export default {
   data() {
     return {
       visible: false,
-
+      fatherId:Number,
     }
   },
   methods: {
-    toTemplate() {
-      this.hide()
-      this.$router.push({name: "recommendTemplate"})
-    },
     commit () {
       let files = document.getElementById('keyfile').value;
-      //选择了从本地上传，上传操作已经在select完成
-      if (files!=null) {
-        this.hide()
-      }
       //选择了新建空白文档
-      if (this.input !== '') {
-        this.$axios.post("file", this.input).then((response)=>{
-          if (response.status===1){
-            console.log('ok')
-          }
-          else {
-            console.log('failed')
-          }
-        }).catch((err)=>{
-          console.log('err!!!')
-        });
-        this.hide()
-      }
-      //不管从模板创建，因为跳到了模板页
-      else {
-        console.log('err!!!!!')
-      }
-
+      if (this.fatherId===-1) this.fatherId=null
+      this.$axios.post("api/file/create", {
+        "type": 1,
+        "name": this.input,
+        "authority": 3,
+        "creatorId": this.$store.state.userId,
+        "parentId": this.fatherId,
+        "file": files,
+      }).then((response)=>{
+        if (response.status===0){
+          ElMessage('创建成功')
+        }
+        else if (response.status===-1){
+          ElMessage('创建失败')
+        }
+        else if (response.status===1){
+          ElMessage('文件重名,已自动修改')
+        }
+        else{
+          ElMessage('其他错误')
+        }
+      }).catch((err)=>{
+        console.log(err)
+      });
+      this.hide()
     },
     hide () {
       this.visible = false
@@ -89,7 +90,7 @@ export default {
           console.log('other status')
         }
       }).catch((err)=>{
-        console.log('err!!!')
+        console.log(err)
       });
     },
   },
