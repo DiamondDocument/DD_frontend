@@ -18,7 +18,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 /*#app {*/
 /*  font-family: Avenir, Helvetica, Arial, sans-serif;*/
 /*  -webkit-font-smoothing: antialiased;*/
@@ -27,6 +27,8 @@ export default {
 /*  color: #2c3e50;*/
 /*  margin-top: 60px;*/
 /*}*/
-
+html{
+  height: 100%;
+}
 
 </style>

@@ -57,11 +57,13 @@
             </el-menu-item>
          </el-menu>
       </el-aside>
-      <el-main style="padding: 0px;height: 700px;">
-        <el-scrollbar >
-                  <router-view></router-view>
+      <el-main style="padding: 0;margin-bottom: 0;height: 100vh">
+          <div style="height: 670px">
+            <router-view></router-view>
+          </div>
 <!--          <p v-for="item in 100" :key="item" style="line-height: 30px">{{ item }}</p>-->
-        </el-scrollbar>
+<!--                <el-scrollbar style="height: 670px;> -->
+<!--        </el-scrollbar>-->
       </el-main>
     </el-container>
   </el-container>
@@ -70,7 +72,7 @@
 
 </template>
 
-<style>
+<style scoped>
 * {
   padding: 0;
   margin: 0;
