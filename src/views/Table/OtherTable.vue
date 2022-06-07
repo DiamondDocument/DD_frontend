@@ -159,7 +159,7 @@ export default {
   },
   created() {
     this.userId = this.$store.state.loginUser.userId;
-    this.otherId = this.$route.params.info.split(":")[1];
+    this.otherId = this.TeamId = this.$store.state.tableId;
     console.log(this.otherId);
 
     this.$axios.get("/user/information", {

@@ -27,8 +27,6 @@ export default {
   },
 
   created() {
-    this.type = this.$route.params.info.split("-")[0];
-
     document.body.style.backgroundSize = '100%';
     document.body.style.backgroundImage = this.loginBg;
 
@@ -36,6 +34,7 @@ export default {
         "changeTable",
         this.$route.params.info,
     );
+    this.type = this.$store.state.tableType;
   }
 }
 </script>

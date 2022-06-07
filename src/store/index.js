@@ -32,8 +32,8 @@ export default new createStore({
     },
     changeTable(state, info){
       state.tableInfo = info;
-      state.tableId = info.split(":")[1];
-      state.tableType = info.split(":")[0];
+      state.tableId = info.split("-")[1];
+      state.tableType = info.split("-")[0];
       localStorage.setItem('tableInfo', state.tableInfo);
       // if(info.tableId === "my"){
       //   state.tableInfo = "my";
