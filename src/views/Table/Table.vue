@@ -1,70 +1,72 @@
 <template >
+  <div id="all" style="width: 100%;height: 100%;">
 
-  <el-container style="height: 100%">
+  <el-container>
     <el-header class="Header" style="height: 50px">
       <img src="../../assets/logo2.png" style="width: 50px; height: 50px;">
 
       <div>
+<!--        <a href="#" style="padding: 0 10px 0 0">头像</a>-->
+<!--  THR: for test     -->
+<!--        <el-button @click="goInformation">-->
+<!--        头像-->
+<!--      </el-button>-->
         <el-avatar :src="url" style="width: 40px; height: 40px " @click="goInformation"/>
 
         <el-icon @click="this.$router.push({name:'message'})" style=""><MessageBox /></el-icon>
       </div>
     </el-header>
     <el-container>
-      <el-aside class="Aside" style="width: auto;">
-     <el-menu default-active="1-4-1" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" :collapse="isCollapse"
-      style="height: 695px">
-          <el-menu-item index="1">
-            <el-icon v-if="!isCollapse" @click="isCollapse=!isCollapse" style="float: right; "><DArrowLeft /></el-icon>
-            <el-icon v-else @click="isCollapse=!isCollapse" style="float: right;"><DArrowRight /></el-icon>
-          </el-menu-item>
-          <el-menu-item index="2" @click="this.$router.push({name: 'recent'})">
-            <el-icon><clock /></el-icon>
-            <span slot="title">最近浏览</span>
-          </el-menu-item>
-          <el-menu-item index="3" @click="this.$router.push({name: 'space'})">
-            <el-icon><house /></el-icon>
-            <span slot="title">我的空间</span>
-          </el-menu-item>
-          <el-menu-item index="4" @click="this.$router.push({name: 'collection'})">
-            <el-icon><opportunity /></el-icon>
-            <span slot="title">我的收藏</span>
-          </el-menu-item>
-          <el-menu-item index="5" @click="this.$router.push({name: 'teamList'})">
-            <el-icon><user-filled /></el-icon>
-            <span slot="title">我的团队</span>
-          </el-menu-item>
+      <el-aside class="Aside" style="width: auto">
+         <el-menu default-active="1-4-1" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
+            <el-menu-item index="1">
+              <el-icon v-if="!isCollapse" @click="isCollapse=!isCollapse" style="float: right; "><DArrowLeft /></el-icon>
+              <el-icon v-else @click="isCollapse=!isCollapse" style="float: right;"><DArrowRight /></el-icon>
+            </el-menu-item>
+            <el-menu-item index="2" @click="this.$router.push({name: 'recent'})">
+              <el-icon><clock /></el-icon>
+              <span slot="title">最近浏览</span>
+            </el-menu-item>
+            <el-menu-item index="3" @click="this.$router.push({name: 'space'})">
+              <el-icon><house /></el-icon>
+              <span slot="title">我的空间</span>
+            </el-menu-item>
+            <el-menu-item index="4" @click="this.$router.push({name: 'collection'})">
+              <el-icon><opportunity /></el-icon>
+              <span slot="title">我的收藏</span>
+            </el-menu-item>
+            <el-menu-item index="5" @click="this.$router.push({name: 'teamList'})">
+              <el-icon><user-filled /></el-icon>
+              <span slot="title">我的团队</span>
+            </el-menu-item>
 
-          <el-sub-menu index="6" popper-offset="1">
-          <template #title>
-            <el-icon><tickets /></el-icon>
-            <span>模板</span>
-          </template>
-          <el-menu-item-group style="width: 100px">
-            <el-menu-item index="1-1" @click="this.$router.push({name: 'recommendTemplate'})">推荐模板</el-menu-item>
-            <el-menu-item index="1-2" @click="this.$router.push({name: 'myTemplate'})">我的模板</el-menu-item>
-            <el-menu-item index="1-3" @click="this.$router.push({name: 'collectionTemplate'})">收藏模板</el-menu-item>
-          </el-menu-item-group>
-        </el-sub-menu>
-
-          <el-menu-item index="7" @click="this.$router.push({name: 'recycle'})">
-            <el-icon><delete /></el-icon>
-            <span slot="title">回收站</span>
-          </el-menu-item>
-        </el-menu>
+            <el-sub-menu index="6" popper-offset="1">
+              <template #title>
+                <el-icon><tickets /></el-icon>
+                <span>模板</span>
+              </template>
+              <el-menu-item-group style="width: 100px">
+                <el-menu-item index="1-1" @click="this.$router.push({name: 'recommendTemplate'})">推荐模板</el-menu-item>
+                <el-menu-item index="1-2" @click="this.$router.push({name: 'myTemplate'})">我的模板</el-menu-item>
+                <el-menu-item index="1-3" @click="this.$router.push({name: 'collectionTemplate'})">收藏模板</el-menu-item>
+              </el-menu-item-group>
+            </el-sub-menu>
+            <el-menu-item index="7" @click="this.$router.push({name: 'recycle'})">
+              <el-icon><delete /></el-icon>
+              <span slot="title">回收站</span>
+            </el-menu-item>
+         </el-menu>
       </el-aside>
-      <el-main style="padding: 0px">
-        <router-view></router-view>
+      <el-main style="padding: 0px;height: 700px;">
+        <el-scrollbar >
+                  <router-view></router-view>
+<!--          <p v-for="item in 100" :key="item" style="line-height: 30px">{{ item }}</p>-->
+        </el-scrollbar>
       </el-main>
-<!--      <el-main>-->
-<!--        <space></space>-->
-<!--      </el-main>-->
-<!--      <el-main>-->
-<!--        <RecommendTemplate></RecommendTemplate>-->
-<!--      </el-main>-->
     </el-container>
   </el-container>
 
+  </div>
 
 </template>
 
@@ -90,18 +92,22 @@ Aside {
 a {
   text-decoration: none;
 }
-.Main {
+el-main {
   background-color: azure;
 }
+#all{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #FCFCFC;
+  z-index: 1;
+}
 
-
-</style>
-
-<style>
-  .el-menu-vertical-demo:not(.el-menu--collapse) {
-    width: auto;
-    min-height: 400px;
-  }
+.el-menu-vertical-demo:not(.el-menu--collapse) {
+  width: auto;
+  min-height: 400px;
+}
 .el-menu-vertical-demo {
   height: 100vh;
   align-items: center;
