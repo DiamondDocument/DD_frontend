@@ -10,12 +10,13 @@
             :src="temps.url"
             class="image"
             style="position: center"
+            @click="this.$router.push({name: 'templateDetail', params:{templateId:temps.tempId}})"
         />
         <div style="padding: 14px; margin: 0;">
           <p>{{temps.tempName}}</p>
           <div class="bottom">
             <p>作者：{{temps.creatorId}}</p>
-            <el-button text class="button">立即使用</el-button>
+            <el-button type="primary" round>立即使用</el-button>
           </div>
         </div>
       </el-card>
