@@ -13,8 +13,8 @@ export default new createStore({
       // },
       loginUser : localStorage.getItem('loginUser'),
       tableInfo: localStorage.getItem('tableInfo'),
-      tableType: localStorage.getItem('tableInfo').split(":")[0],
-      tableId: localStorage.getItem('tableInfo').split(":")[1],
+      tableType: localStorage.getItem('tableInfo') === null? null: localStorage.getItem('tableInfo').split(":")[0],
+      tableId: localStorage.getItem('tableInfo') === null? null: localStorage.getItem('tableInfo').split(":")[1],
     };
   },
   mutations: {
