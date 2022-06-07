@@ -19,7 +19,14 @@ export default {
     OtherTable,
     TeamTable
   },
+  data(){
+    return{
+      loginBg: 'url(' + require('../../assets/bk.jpg') + ')'
+    };
+  },
   created() {
+    document.body.style.backgroundSize = '100%';
+    document.body.style.backgroundImage = this.loginBg;
     this.$store.commit(
         "changeTable",
         this.$route.params.info,
