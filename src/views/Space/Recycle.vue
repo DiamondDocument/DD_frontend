@@ -19,10 +19,10 @@
           <el-icon v-if="scope.row.fileType===1"><Document /></el-icon>
         </template>
       </el-table-column>
-      <el-table-column prop="fileName" label="文件名" width="400"></el-table-column>
-      <el-table-column prop="createInfo" label="创建时间" width="350"></el-table-column>
-      <el-table-column prop="modifyInfo" label="最后修改" width="350"></el-table-column>
-      <el-table-column prop="size" label="大小" ></el-table-column>
+      <el-table-column sortable prop="fileName" label="文件名" width="400"></el-table-column>
+      <el-table-column sortable prop="createInfo" label="创建时间" width="350"></el-table-column>
+      <el-table-column sortable prop="modifyInfo" label="最后修改" width="350"></el-table-column>
+      <el-table-column sortable prop="size" label="大小" ></el-table-column>
     </el-table>
   </div>
   <index v-if="menuVisible" @foo="foo" ref="contextButton" :spaceType="spaceType"
@@ -48,7 +48,7 @@ export default {
     return {
       spaceType: 3,
       menuVisible: false,
-      loading: false,           //暂时不用
+      loading: true,           //暂时不用
       link:'',                  //分享用的链接
       // curFile: this.tableData.,          //当前鼠标选中的文件
       curFileId: Number,
@@ -115,19 +115,17 @@ export default {
     },
     //跟踪鼠标指向的文件信息
     recordId(row) {
-      this.curFileId = row.id
+      this.curFileId = row.fileId
       this.curFileAth = row.authority
       this.curFileShared = row.shared
     },
     //获得打开的文件夹里面的文件列表
     getFolderData(isback) {
+      this.loading=true
       this.$axios.get('/space/recycle', {
         params: {
           type: "user",
           ownerId: this.$store.state.loginUser.userId,
-          folderId: this.folderId,
-          visitorId: this.$store.state.loginUser.userId,
-          isBack: isback,
         }
       }).then((response) => {
         console.log(response);
@@ -159,36 +157,12 @@ export default {
       }).catch((err) => {
         console.log(err);
       })
+      this.loading=false
     },
-    //暂时不做了
-    // search(){
-    //   //搜索框为空，默认获取全部文件，也能相当于在搜索之后的返回
-    //   if (this.input==='') {
-    //     this.getTableData()
-    //     return
-    //   }
-    //   let that = this;
-    //   this.$axios.post("/search/document", {
-    //     "type": "user",
-    //     "ownerId": this.$store.state.loginUser.userId,
-    //     "visitorId": this.$store.state.loginUser.userId,
-    //     "key": this.input,
-    //   }).then((response) => {
-    //     if (response.status === 0) {
-    //       that.tableData.clear();
-    //       that.tableData=response.data.documents;
-    //     } else if (response.status === 1) {
-    //       ElMessage('获取失败')
-    //     } else{
-    //       ElMessage('其他错误')
-    //     }
-    //   }).catch((err) => {
-    //     console.log(err)
-    //   })
-    // },
     recover() {
       this.$axios.post("/file/recover",
           {
+            "userId": this.$store.state.loginUser.userId,
             "fileId": this.curFileId,
           }
       ).then((response)=>{

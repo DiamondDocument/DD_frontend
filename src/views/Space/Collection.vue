@@ -15,21 +15,16 @@
               highlight-current-row
               @row-dblclick="edit"
               @cell-mouse-enter="recordId">
-      <el-table-column width="50" label="">
-        <template #default="scope">
-          <el-icon v-if="scope.row.fileType===1"><Document /></el-icon>
-        </template>
-      </el-table-column>
-      <el-table-column prop="fileName" label="文件名" width="400"></el-table-column>
-      <el-table-column prop="createInfo" label="创建时间" width="350"></el-table-column>
-      <el-table-column prop="modifyInfo" label="最后修改" width="350"></el-table-column>
-      <el-table-column prop="size" label="大小" ></el-table-column>
+      <el-table-column sortable prop="fileName" label="文件名" width="400"></el-table-column>
+      <el-table-column sortable prop="createInfo" label="创建时间" width="350"></el-table-column>
+      <el-table-column sortable prop="modifyInfo" label="最后修改" width="350"></el-table-column>
+      <el-table-column sortable prop="size" label="大小" ></el-table-column>
     </el-table>
   </div>
   <index v-if="menuVisible" @foo="foo" ref="contextButton" :spaceType="spaceType"
          @_export="_export" @share="showShare('默认文件名')" @edit="edit" @disCollect="disCollect"
          data-popper-placement="top"></index>
-  <share ref="share" :curFileId="curFileId" @altAuthority="altAuthority"></share>
+  <share ref="share" :curFileId="this.curFileId" @altAuthority="altAuthority"></share>
 </template>
 
 <script>
@@ -51,7 +46,7 @@ export default {
     return {
       menuVisible: false,
       spaceType: 2,
-      loading: false,           //暂时不用
+      loading: true,           //暂时不用
       link:'',                  //分享用的链接
       curFileId: Number,
       curFileAth: Number,
@@ -130,13 +125,11 @@ export default {
     },
     //获得打开的文件夹里面的文件列表
     getFolderData(isback) {
+      this.loading=true
       this.$axios.get('/space/collection', {
         params: {
-          type: "user",
-          ownerId: this.$store.state.loginUser.userId,
-          folderId: this.folderId,
+          userId: this.$store.state.loginUser.userId,
           visitorId: this.$store.state.loginUser.userId,
-          isBack: isback,
         }
       }).then((response) => {
         console.log(response);
@@ -168,6 +161,7 @@ export default {
       }).catch((err) => {
         console.log(err);
       })
+      this.loading=false
     },
     edit (row) {
       this.$router.push({

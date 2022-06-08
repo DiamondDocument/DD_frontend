@@ -26,10 +26,10 @@
           <el-icon v-if="scope.row.fileType===2"><Folder /></el-icon>
         </template>
       </el-table-column>
-      <el-table-column prop="fileName" label="文件名" width="400"></el-table-column>
-      <el-table-column prop="createInfo" label="创建时间" width="350"></el-table-column>
-      <el-table-column prop="modifyInfo" label="最后修改" width="350"></el-table-column>
-      <el-table-column prop="size" label="大小" ></el-table-column>
+      <el-table-column sortable prop="fileName" label="文件名" width="400"></el-table-column>
+      <el-table-column sortable prop="createInfo" label="创建时间" width="350"></el-table-column>
+      <el-table-column sortable prop="modifyInfo" label="最后修改" width="350"></el-table-column>
+      <el-table-column sortable prop="size" label="大小" ></el-table-column>
     </el-table>
   </div>
 </template>
@@ -45,7 +45,7 @@ export default {
   data() {
     return {
       menuVisible: false,       //右键菜单不显示
-      loading: false,           //暂时不用
+      loading: true,
       curFileId: Number,
       curFileAth: Number,
       curFileShared: Boolean,
@@ -99,6 +99,7 @@ export default {
   methods: {
     //获得打开的文件夹里面的文件列表
     getFolderData(isback) {
+      this.loading=true
       this.$axios.get('/space', {
         params: {
           type: "user",
@@ -116,6 +117,8 @@ export default {
             let files = response.data.files;
             this.tableData = files;
             for(let i = 0; i < this.tableData.length; i++){
+              if (files[i].fileType===1)
+                this.tableData.remove(i)
               let time =  files[i].createTime;
               time = time.split('+')[0];
               time = time.split('T')[0] + ' ' + time.split('T')[1].slice(0,-7);
@@ -137,10 +140,11 @@ export default {
       }).catch((err) => {
         console.log(err);
       })
+      this.loading=false
     },
     //跟踪鼠标指向的文件信息
     recordId(row) {
-      this.curFileId = row.id
+      this.curFileId = row.fileId
       this.curFileAth = row.authority
       this.curFileShared = row.shared
     },
@@ -149,7 +153,7 @@ export default {
       this.getFolderData(false)
     },
     commit() {
-      this.$emit('commit', this.commitFileId)
+      this.$emit('commit', this.folderId)
     },
     cancel() {
       this.$emit('cancel')

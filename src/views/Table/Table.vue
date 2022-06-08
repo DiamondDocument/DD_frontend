@@ -3,7 +3,7 @@
 
   <el-container>
     <el-header class="Header" style="height: 50px">
-      <img src="../../assets/logo2.png" style="width: 50px; height: 50px;">
+      <img src="../../assets/logo2_2.png" style="width: 150px;">
 
       <div>
 <!--        <a href="#" style="padding: 0 10px 0 0">头像</a>-->
@@ -85,7 +85,7 @@ Aside {
 }
 
 .Header {
-  background-color: #B3C0D1;
+  background-color: #C1D5E0;
   display: flex;
   justify-content: space-between;
   align-items: center;
