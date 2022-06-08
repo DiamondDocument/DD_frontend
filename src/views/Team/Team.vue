@@ -1,11 +1,16 @@
 <template>
   <div>
 
-    <div class="information"
-         style="height:200px;
-                width: 93%;
-                position: absolute;"
-    >
+    <div style="height:200px;
+                width: 80%;
+                margin: 10px auto;
+                background-color: #ddfde8;
+                position: relative;
+                border-style: solid;
+                border-width: 1px;
+                border-color: lightgray;
+                border-radius: 5px;
+    ">
 
       <el-image v-if="userType === 0"
                 @click="changeImg"
@@ -14,7 +19,7 @@
                 fit="fill" />
       <el-image v-else class="teamImg" :src="team_img" fit="fill" />
 
-      <div style="float: left; padding: 10px" v-if="changing === 0">
+      <div class="information" v-if="changing === 0">
         <h2 style="font-size: 35px">
           {{ team_name }}
         </h2>
@@ -23,7 +28,7 @@
         </p>
       </div>
 
-      <div style="float: left; padding: 10px" v-if="changing === 1">
+      <div class="information" v-if="changing === 1">
         <el-input type="text"
                   v-model="team_name"
                   placeholder="请输入团队名称"/>
@@ -35,8 +40,10 @@
 
       <div style="
       height: 200px;
-      float: right;
-      margin-right: 200px;">
+      position: absolute;
+      top: 15px;
+      right: 100px;
+      ">
 
         <div style="margin-top: 20px">
 
@@ -106,7 +113,11 @@
       </div>
 
       <div style="
-           margin-top: 120px;
+           /*margin-top: 120px;*/
+           width: 30%;
+           position: absolute;
+           top: 137px;
+           left: 310px;
       ">
         <el-button v-if="userType === 0 && changing === 0"
                    @click="change">
@@ -130,7 +141,7 @@
     </div>
 
     <div style="margin-top: 10px;
-                position: relative;
+                /*position: relative;*/
                 top:180px;
                 padding: 20px ">
       <el-row v-for="mem in memList" :key="mem.id" class="block">
@@ -138,7 +149,11 @@
              style="
              float: right;
              width: 80%">
-          <el-avatar :src="mem.url" style="float: left; margin-top: 20px"/>
+          <el-avatar :src="mem.url"
+                     style="
+                     margin-left: 20px;
+                     float: left;
+                     margin-top: 20px"/>
           <div style="float: left; margin-left: 25px; margin-top: 25px">
             {{mem.name}}
           </div>
@@ -250,6 +265,7 @@ export default {
 
     changeImg: function (){
       console.log("changeImg is called!");
+      console.log('with userType' + this.userType);
       this.$refs.clearFile.click();
     },
 
@@ -306,8 +322,23 @@ export default {
     },
 
     // 无接口？！！
-    leaveTeam: function (){
+    leaveTeam: function (userId){
       console.log("leaveTeam is called!")
+      this.axios.post("team/leave",{
+        "teamId": this.teamId,
+        "userId": userId,
+      }).then((response)=>{
+        if(response.status === 200){
+          console.log('dropTeam data = ');
+          console.log(response.data);
+          if (response.data.code === 0) {
+            ElMessage("成功离开！");
+            this.$router.push({name: 'table', params:{info: 'my'}});
+          } else ElMessage('系统错误');
+        }else console.log("status is not 200!");
+      }).catch((err)=>{
+        console.log(err);
+      });
     },
 
     accept: function (){
@@ -329,7 +360,6 @@ export default {
       }).catch((err)=>{
         console.log(err);
       });
-
     },
 
     apply: function (){
@@ -413,6 +443,7 @@ export default {
         console.log(res.data);
         if (res.status === 200){
           if (res.data.code === 0) this.userType = res.data.status;
+          // if (res.data.code === 0) this.userType = 0;
           else console.log('code = ' + res.data.code);
         }else console.log('status is not 200!');
       }).catch(err => {
@@ -480,7 +511,6 @@ export default {
     this.teamId = this.$route.params.teamId;
     this.checkUserType();
     this.getTeamInformation();
-
   }
 }
 
@@ -488,12 +518,13 @@ export default {
 
 <style scoped>
 .information {
-
+  position: absolute;
+  top: 20px;
+  left: 257px;
 }
-
 .teamImg {
   float: left;
-  margin: 25px 50px 25px 150px;
+  margin: 25px 50px 25px 50px;
   height: 150px;
   width: 150px;
 }

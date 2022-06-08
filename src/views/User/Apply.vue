@@ -158,7 +158,7 @@ export default {
         console.log(res.data);
         if (res.status === 200){
           this.state = res.data.code;
-          this.state = 0;
+          // this.state = 4;
         }else console.log('status is not 200!');
       }).catch(err => {
         console.log(err);
