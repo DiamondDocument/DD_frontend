@@ -22,11 +22,11 @@
             :row-style="{height: '0'}"
             :cell-style="{padding: '20px'}"
             @row-contextmenu="rowContextmenu">
-    <el-table-column prop="name" label="文件名" width="450"></el-table-column>
-    <el-table-column prop="author" label="创建者" width="300"></el-table-column>
-    <el-table-column prop="altDate" label="修改日期" width="400"></el-table-column>
-    <el-table-column prop="altUser" label="修改人" width="300"></el-table-column>
-    <el-table-column prop="size" label="大小" width="300"></el-table-column>
+    <el-table-column sortable prop="name" label="文件名" width="450"></el-table-column>
+    <el-table-column sortable prop="author" label="创建者" width="300"></el-table-column>
+    <el-table-column sortable prop="altDate" label="修改日期" width="400"></el-table-column>
+    <el-table-column sortable prop="altUser" label="修改人" width="300"></el-table-column>
+    <el-table-column sortable prop="size" label="大小" width="300"></el-table-column>
   </el-table>
   <index v-if="menuVisible" @foo="foo" ref="contextButton" :spaceType="spaceType"
          @collect="collect" @move="move" @remove="remove" @_export="_export"

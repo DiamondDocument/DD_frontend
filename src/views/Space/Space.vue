@@ -38,10 +38,10 @@
           <el-icon v-else><Folder /></el-icon>
         </template>
       </el-table-column>
-      <el-table-column prop="fileName" label="文件名" width="400"></el-table-column>
-      <el-table-column prop="creatorInfo" label="创建时间" width="350"></el-table-column>
-      <el-table-column prop="modifyInfo" label="最后修改" width="350"></el-table-column>
-      <el-table-column prop="size" label="大小" ></el-table-column>
+      <el-table-column sortable prop="fileName" label="文件名" width="400"></el-table-column>
+      <el-table-column sortable prop="creatorInfo" label="创建时间" width="350"></el-table-column>
+      <el-table-column sortable prop="modifyInfo" label="最后修改" width="350"></el-table-column>
+      <el-table-column sortable prop="size" label="大小" ></el-table-column>
     </el-table>
   </div>
   <index v-if="menuVisible" @foo="foo" ref="index" :spaceType="this.spaceType" :authority=this.curFileAth :shared="this.curFileShared"
