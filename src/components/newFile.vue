@@ -5,13 +5,40 @@
       <div class="confirm" v-show="visible">
         <div class="confirm-wrapper">
           <div class="confirm-content">
-            <header style="line-height: 30px;text-align: center; font-weight: bold">请选择创建方式</header>
-            <p class="text">上传本地文档:（不选则默认空白文裆） </p>
-            <input type="file" id="keyfile" multiple="multiple" @change="select($event)" style="margin-left: 130px">
-            <p class="text">文档名： </p>
-            <el-input v-model="input" placeholder="文件名" style="width: 100px !important;margin-left: 150px"></el-input>
-            <el-button type="primary" style="bottom: 10px; left: 80px; position: absolute" @click="commit"><span>确定</span></el-button>
-            <el-button type="primary" style="bottom: 10px; right: 80px; position: absolute" @click="hide"><span>取消</span></el-button>
+            <div style="height: 30px"></div>
+            <header style="line-height: 30px;text-align: center; font-weight: bold;margin-bottom: 20px;">创建新文档</header>
+            <div style="margin-left: 40px;margin-right: 50px;">
+              <el-form  label-width="100px">
+                <el-form-item label="文档名">
+                  <el-input v-model="input" placeholder="文件名" style=" !important;margin-left: 20px;margin-right: 0px;"></el-input>
+                </el-form-item>
+                <el-form-item label="导入本地">
+                  <input type="file" id="keyfile" multiple="multiple" @change="select($event)" style="margin-left: 20px">
+                </el-form-item>
+<!--                <el-form-item label="从模板新建">-->
+<!--                  <el-button type="primary" style="float: right; margin-right: 20px" icon="Plus">-->
+<!--                    <span style="vertical-align: middle" @click="tmpVisible=true" >从模板新建</span>-->
+<!--                  </el-button>-->
+<!--                </el-form-item>-->
+                <el-form-item label="设置权限">
+                  <el-radio-group v-model="radio"  @change="changeAuthority" style="display:table-cell">
+                    <el-radio label="2"  style="">所有人可查看</el-radio>
+                    <el-radio label="3"  style="">所有人可评论</el-radio>
+                    <el-radio label="4"  style="">所有人可编辑</el-radio>
+                  </el-radio-group>
+                </el-form-item>
+              </el-form>
+              <el-button type="primary" style="bottom: 30px; left: 100px; position: absolute" @click="commit"><span>确定</span></el-button>
+              <el-button type="primary" style="bottom: 30px; right: 100px; position: absolute" @click="hide"><span>取消</span></el-button>
+            </div>
+
+<!--            <header style="line-height: 30px;text-align: center; font-weight: bold">请选择创建方式</header>-->
+<!--            <p class="text">上传本地文档:（不选则默认空白文裆） </p>-->
+<!--            <input type="file" id="keyfile" multiple="multiple" @change="select($event)" style="margin-left: 130px">-->
+<!--            <p class="text">文档名： </p>-->
+<!--            <el-input v-model="input" placeholder="文件名" style="width: 100px !important;margin-left: 150px"></el-input>-->
+<!--            <el-button type="primary" style="bottom: 10px; left: 80px; position: absolute" @click="commit"><span>确定</span></el-button>-->
+<!--            <el-button type="primary" style="bottom: 10px; right: 80px; position: absolute" @click="hide"><span>取消</span></el-button>-->
           </div>
         </div>
       </div>
