@@ -18,20 +18,27 @@
     <el-button @click="this.$store.commit('logout')">全局状态登出</el-button>|
     <p>isLogin? {{this.$store.state.isLogin}}, user = {{this.$store.state.loginUser}}</p>
   </nav>
+
+  <user-list :keyword="keyword">
+
+  </user-list>
+
 </template>
 <script>
 // @ is an alias to /src
 import HelloWorld from '@/components/HelloWorld.vue'
-
+import UserList from '@/views/User/userList'
 export default {
   name: 'HomeView',
   components: {
-    HelloWorld
+    HelloWorld,
+    UserList,
   },
   data(){
     return {
       str: "",
       code: -1,
+      keyword: 'admin',
     };
   },
   methods:{

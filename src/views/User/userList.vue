@@ -23,11 +23,10 @@
 import {ElMessage} from "element-plus";
 
 export default {
-  name: "Invite.vue",
-
+  name: "userList.vue",
+  props: ['keyword'],
   data(){
     return {
-      keyword: '',
       userList: [],
     }
   },
@@ -38,14 +37,17 @@ export default {
     },
   },
   created() {
-    this.keyword = this.$route.params.keyword;
-
+    // this.keyword = this.$route.params.keyword;
+    console.log('keyword = ');
+    console.log(this.keyword);
     this.$axios.get("search/user", {
       params:{
         key: this.keyword,
       }
     }).then((response)=>{
       if (response.status === 200){
+        console.log('search data = ');
+        console.log(response.data);
         if (response.data.code === 0){
           this.userList = response.data.users;
         } else ElMessage("系统错误！")

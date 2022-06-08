@@ -311,14 +311,17 @@ export default {
         if(response.status === 200){
           console.log('dropTeam data = ');
           console.log(response.data);
-          if (response.data.code === 0) ElMessage("解散成功！");
+          if (response.data.code === 0) {
+            ElMessage("解散成功！");
+            this.$router.back();
+          }
           else if (response.data.code === 1) ElMessage('你不是队长');
           else ElMessage('系统错误');
         }else console.log("status is not 200!");
       }).catch((err)=>{
         console.log(err);
       });
-      this.$router.push({name: 'table', params:{info: 'my'}});
+      // this.$router.push({name: 'table', params:{info: 'my'}});
     },
 
     // 无接口？！！
