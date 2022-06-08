@@ -216,14 +216,14 @@ export default {
     };
   },
   mounted() {
-    this.myEditor = 'Iamzzy';
-    // this.myEditor = this.$store.state.loginUser.userId
+    // this.myEditor = 'Iamzzy';
+    this.myEditor = this.$store.state.loginUser.userId
     this.myDocId = this.$route.params.documentId;
     this.getDoc();
     this.getComment();
     this.requestEdit();
     setInterval(()=>{
-      this.requestEdit()
+      this.requestEdit();
     }, 20000);
   },
 
