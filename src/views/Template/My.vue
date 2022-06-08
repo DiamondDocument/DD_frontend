@@ -42,7 +42,7 @@
               id="image"
               @click="this.$router.push({name: 'templateDetail', params:{templateId:temps.tempId}})"
           />
-          <p id="name">{{temps.tempName}}</p>
+          <p id="name" @click="useTmp(temps)">{{temps.tempName}}</p>
         </el-card>
 
 <!--        <el-button text style="width: 100%"><p style="margin-left: 0;">{{temps.tempName}}</p></el-button>-->

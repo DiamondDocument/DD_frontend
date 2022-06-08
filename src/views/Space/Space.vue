@@ -20,7 +20,7 @@
       </el-button>
     </el-menu>
   </div>
-  <div style="height: 570px;" v-if="!moving && !tmpVisible">
+  <div style="height: 610px;" v-if="!moving && !tmpVisible">
     <el-table :data="tableData" stripe
               v-loading="loading"
               element-loading-text="少女折寿中"
@@ -32,10 +32,16 @@
               highlight-current-row
               @row-dblclick="edit"
               @cell-mouse-enter="recordId">
-      <el-table-column prop="docName" label="文件名" width="400"></el-table-column>
-      <el-table-column prop="creatorName" label="创建时间" width="350"></el-table-column>
-      <el-table-column prop="modifyTime" label="最后修改" width="350"></el-table-column>
-      <el-table-column prop="modifierName" label="大小" ></el-table-column>
+      <el-table-column width="50" label="">
+        <template #default="scope">
+          <el-icon v-if="scope.row.fileType===1"><Document /></el-icon>
+          <el-icon v-else><Folder /></el-icon>
+        </template>
+      </el-table-column>
+      <el-table-column prop="fileName" label="文件名" width="400"></el-table-column>
+      <el-table-column prop="createInfo" label="创建时间" width="350"></el-table-column>
+      <el-table-column prop="modifyInfo" label="最后修改" width="350"></el-table-column>
+      <el-table-column prop="size" label="大小" ></el-table-column>
     </el-table>
   </div>
   <index v-if="menuVisible" @foo="foo" ref="index" :spaceType="spaceType" :authority=this.curFileAth :shared="this.curFileShared"
@@ -295,28 +301,43 @@ export default {
   methods: {
     //获得打开的文件夹里面的文件列表
     getFolderData(isback) {
-      this.$axios.get('/api/space', {
+      this.$axios.get('/space', {
         params: {
           type: "user",
-          ownerId: this.$store.state.userId,
+          ownerId: this.$store.state.loginUser.userId,
           folderId: this.folderId,
-          visitorId: this.$store.state.userId,
-          isBack: isback,
+          visitorId: this.$store.state.loginUser.userId,
+          isBack: false,
         }
       }).then((response) => {
-        if(response.status===0){
-          this.folderId=response.data.parentId
-          this.tableData.clear()
-          this.tableData = response.data.files
-        }
-        else if (response.status===-1){
-          ElMessage('获取列表失败')
-        }
-        else{
-          ElMessage('其他错误')
+        console.log(response);
+        if(response.status === 200) {
+          if (response.data.code === 0) {
+            if (isback) this.folderId = response.data.parentId;
+
+            let files = response.data.files;
+            this.tableData = files;
+            for(let i = 0; i < this.tableData.length; i++){
+              let time =  files[i].createTime;
+              time = time.split('+')[0];
+              time = time.split('T')[0] + ' ' + time.split('T')[1].slice(0,-7);
+              this.tableData[i].createInfo = time + '  by ' + files[i].creatorName;
+              if(files[i].modifyTime === null) this.tableData[i].modifyInfo = "无修改记录";
+              else{
+                time =  files[i].modifyTime;
+                time = time.split('+')[0];
+                time = time.split('T')[0] + ' ' + time.split('T')[1].slice(0,-7);
+                this.tableData[i].modifyInfo = time + '  by ' + files[i].modifierName;
+              }
+            }
+          } else if (response.data.code === -1) {
+            ElMessage({message: '获取列表失败', type: 'warning'});
+          }
+        }else{
+          ElMessage({ message: "status = " + response.status, type: 'warning'});
         }
       }).catch((err) => {
-        ElMessage(err)
+        console.log(err);
       })
     },
     rowContextmenu(row, column, event) {
@@ -340,7 +361,7 @@ export default {
     },
     //从模板创建
     useTmp(id,name){
-      this.$axios.post("/api/file/create", {
+      this.$axios.post("/file/create", {
         "type": 1,
         "name": name,
         "authority": 3,
@@ -386,7 +407,7 @@ export default {
         return
       }
       let that = this;
-      this.$axios.post("/api/search/document", {
+      this.$axios.post("/search/document", {
         "type": "user",
         "ownerId": this.$store.state.userId,
         "visitorId": this.$store.state.userId,
@@ -405,7 +426,7 @@ export default {
       })
     },
     rename() {
-      this.$axios.post("/api/file/rename", {
+      this.$axios.post("/file/rename", {
         "fileId": this.curFileId,
         "newName": this.reName,
       }).then((response) => {
@@ -422,7 +443,7 @@ export default {
       this.renameVisible = false;
     },
     collect() {
-      this.$axios.post("/api/document/like", {
+      this.$axios.post("/document/like", {
         "userId": this.$store.state.userId,
         "docId": this.curFileId
       }).then((response) => {
@@ -439,7 +460,7 @@ export default {
     },
     altAuthority(ath) {
       ElMessage(ath)
-      this.$axios.post("/api/file/authority", {
+      this.$axios.post("/file/authority", {
         "fileId": this.curFileId,
         "newAuth": ath,
       }).then((response) => {
@@ -455,7 +476,7 @@ export default {
       })
     },
     move(folderId) {
-      this.$axios.post("/api/file/move",
+      this.$axios.post("/file/move",
           {
             "fileId": this.curFileId,
             "newParentId": folderId,
@@ -475,7 +496,7 @@ export default {
       this.moving = false
     },
     remove() {
-      this.$axios.post("/api/file/remove",
+      this.$axios.post("/file/remove",
           {
             "userId": this.$store.state.userId,
             "fileId": this.curFileId,
@@ -525,7 +546,7 @@ export default {
       });
     },
     notShare() {
-      this.$axios.post("/api/document/dis-share",
+      this.$axios.post("/document/dis-share",
           {
             "docId": this.curFileId
           }
