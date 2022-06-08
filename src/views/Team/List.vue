@@ -1,5 +1,5 @@
 <template>
-  <div style="width: 1200px;margin-left: auto;margin-right: auto;margin-top: 30px; ">
+  <div style="width: 1000px;margin-left: auto;margin-right: auto;margin-top: 30px; ">
     <el-card shadow="always" :body-style="{ padding: '0 0 0 0 ',  }">
 
     <div style="padding: 30px;">
@@ -29,6 +29,7 @@
           </el-button>
         </div>
       </div>
+      <el-divider />
       <div style="min-height: 500px">
         <el-row v-for="(team, index) in teamList" :key="team.id"
                 class="block">

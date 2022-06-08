@@ -3,8 +3,14 @@
 
   <el-container>
     <el-header class="Header" style="height: 50px">
-      <img src="../../assets/logo2_2.png" style="width: 150px;">
-
+      <img src="../../assets/logo2_2.png" style="width: 150px;margin-right: 30px">
+      <el-input
+          v-model="userSearchContent"
+          placeholder="搜索用户..."
+          suffix-icon="Search"
+          style="width: 200px;margin-left: 30px;margin-right: auto;"
+          @input="this.$router.push({name: 'userSearch', params:{keyword: this.userSearchContent}})"
+      />
       <div>
 <!--        <a href="#" style="padding: 0 10px 0 0">头像</a>-->
 <!--  THR: for test     -->
@@ -60,6 +66,7 @@
       <el-main style="padding: 0;margin-bottom: 0;height: 100vh">
           <div style="height: 670px;margin-right: auto;margin-left: auto">
             <router-view></router-view>
+<!--            <user-list v-else :keyword="userSearchContent"></user-list>-->
           </div>
 <!--          <p v-for="item in 100" :key="item" style="line-height: 30px">{{ item }}</p>-->
 <!--                <el-scrollbar style="height: 670px;> -->
@@ -122,8 +129,11 @@ import Space from "@/views/Space/Space";
 import Message from "@/views/Message/Message";
 import RecommendTemplate from "@/views/Template/Recommend"
 import {ElMessage} from "element-plus";
-
+import userList from '@/views/User/userList.vue'
 export default {
+  components:{
+    userList
+  },
   name: 'Table',
   data() {
     return {
@@ -131,6 +141,8 @@ export default {
       isCollapse: false,
       userId: '',
       url: '',
+      userSearchContent: '',
+      userSearchComp: false,
     }
   },
   // components: {
@@ -186,6 +198,23 @@ export default {
         console.log(err);
       });
     },
+    searchUser() {
+      this.$axios.get("user/search/user", {
+        params:{
+          userId: this.userId,
+        }
+      }).then((response)=>{
+        console.log('search user: ', response.data);
+        if (response.status === 200){
+          console.log(response.data);
+          if (response.data.code === 0){
+            this.url = response.data.url;
+          }else console.log("用户头像获取错误");
+        }else console.log("请求返回status不为200")
+      }).catch((err)=>{
+        console.log(err);
+      });
+    }
   },
 
   // THR: 测试全局状态

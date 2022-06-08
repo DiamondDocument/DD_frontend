@@ -52,6 +52,11 @@ const userApply = {
   name: 'userApply',
   component:() =>import('../views/User/Apply.vue'),
 };
+const userSearch = {
+  path: 'user/search/:keyword',
+  name: 'userSearch',
+  component: () =>import('../views/User/userList.vue'),
+};
 //空间相关路由
 const space = {
   path: 'space',
@@ -149,6 +154,7 @@ const table = {
     userInvite,
     userInformation,
     userApply,
+    userSearch,
     //团队
     teamList,
     teamInvite,
@@ -207,7 +213,7 @@ const table = {
 const routes = [
   {
     path: '/',
-    redirect: 'welcome',
+    redirect: 'login',
   },
   {
     path: '/welcome',

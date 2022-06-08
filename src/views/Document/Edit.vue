@@ -286,7 +286,7 @@ export default {
     },
     exportFile(){
       this.saveDoc(
-          function() {
+          ()=> {
             // ElMessage("正在导出...");
             ElNotification({
               title: 'Warning',
@@ -300,6 +300,7 @@ export default {
                 docId : this.myDocId,
               }
             }).then((response)=>{
+              console.log("导出请求：" + response.data);
               this.$notify.closeAll();
               if(response.status === 200){
                 if(response.data.code === 0){
@@ -311,6 +312,7 @@ export default {
                     duration: 0,
                   });
                   this.$axios.get(response.data.download, {responseType: 'blob'}).then((response)=>{
+                    this.$notify.closeAll();
                     if(response.status === 200){
                       let fileURL = window.URL.createObjectURL(new Blob([response.data]));
                       let fileLink = document.createElement('a');
@@ -319,7 +321,7 @@ export default {
                       document.body.appendChild(fileLink);
                       console.log();
                       fileLink.click();
-                      this.$notify.closeAll();
+
                       ElNotification({
                         title: 'Warning',
                         message: '导出成功',
