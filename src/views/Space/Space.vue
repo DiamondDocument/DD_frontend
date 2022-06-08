@@ -91,7 +91,7 @@ export default {
     return {
       spaceType: 1,             //空间类型用于区分右键菜单显示内容等
       menuVisible: false,       //右键菜单不显示
-      loading: false,           //暂时不用
+      loading: true,           //暂时不用
       link: '',                 //分享用的链接
       curFileId: Number,
       curFileAth: Number,
@@ -174,7 +174,7 @@ export default {
   methods: {
     //获得打开的文件夹里面的文件列表
     getFolderData(isback) {
-      console.log('get')
+      this.loading=true
       this.$axios.get('/space', {
         params: {
           type: "user",
@@ -198,6 +198,7 @@ export default {
       }).catch((err) => {
         console.log(err);
       })
+      this.loading=false
     },
     rowContextmenu(row, column, event) {
       this.menuVisible = false

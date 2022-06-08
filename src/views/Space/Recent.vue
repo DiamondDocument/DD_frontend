@@ -47,7 +47,7 @@ export default {
     return {
       spaceType: 0,
       menuVisible: false,
-      loading: false,           //暂时不用
+      loading: true,           //暂时不用
       link:'',                  //分享用的链接
       // curFile: this.tableData.,          //当前鼠标选中的文件
       curFileId: Number,
@@ -126,6 +126,7 @@ export default {
     },
     //获得打开的文件夹里面的文件列表
     getFolderData(isback) {
+      this.loading=true
       this.$axios.get('/space/last', {
         params: {
           type: "user",
@@ -164,6 +165,7 @@ export default {
       }).catch((err) => {
         console.log(err);
       })
+      this.loading=false
     },
     edit (row) {
       this.$router.push({

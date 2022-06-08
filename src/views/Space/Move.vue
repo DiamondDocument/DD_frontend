@@ -45,7 +45,7 @@ export default {
   data() {
     return {
       menuVisible: false,       //右键菜单不显示
-      loading: false,           //暂时不用
+      loading: true,
       curFileId: Number,
       curFileAth: Number,
       curFileShared: Boolean,
@@ -99,6 +99,7 @@ export default {
   methods: {
     //获得打开的文件夹里面的文件列表
     getFolderData(isback) {
+      this.loading=true
       this.$axios.get('/space', {
         params: {
           type: "user",
@@ -139,6 +140,7 @@ export default {
       }).catch((err) => {
         console.log(err);
       })
+      this.loading=false
     },
     //跟踪鼠标指向的文件信息
     recordId(row) {
