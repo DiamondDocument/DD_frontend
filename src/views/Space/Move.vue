@@ -116,6 +116,8 @@ export default {
             let files = response.data.files;
             this.tableData = files;
             for(let i = 0; i < this.tableData.length; i++){
+              if (files[i].fileType===1)
+                this.tableData.remove(i)
               let time =  files[i].createTime;
               time = time.split('+')[0];
               time = time.split('T')[0] + ' ' + time.split('T')[1].slice(0,-7);
@@ -140,7 +142,7 @@ export default {
     },
     //跟踪鼠标指向的文件信息
     recordId(row) {
-      this.curFileId = row.id
+      this.curFileId = row.fileId
       this.curFileAth = row.authority
       this.curFileShared = row.shared
     },
@@ -149,7 +151,7 @@ export default {
       this.getFolderData(false)
     },
     commit() {
-      this.$emit('commit', this.commitFileId)
+      this.$emit('commit', this.folderId)
     },
     cancel() {
       this.$emit('cancel')

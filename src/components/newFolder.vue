@@ -5,11 +5,8 @@
       <div class="confirm" v-show="visible">
         <div class="confirm-wrapper">
           <div class="confirm-content">
-            <header style="line-height: 30px;text-align: center; font-weight: bold">请选择创建方式</header>
-            <p class="text">上传本地文档:（不选则默认空白文裆） </p>
-            <input type="file" id="keyfile" multiple="multiple" @change="select($event)" style="margin-left: 130px">
-            <p class="text">文档名： </p>
-            <el-input v-model="input" placeholder="文件名" style="width: 100px !important;margin-left: 150px"></el-input>
+            <p class="text">文件夹名： </p>
+            <el-input v-model="input" placeholder="文件夹名字" style="width: 100px !important;margin-left: 150px"></el-input>
             <el-button type="primary" style="bottom: 10px; left: 80px; position: absolute" @click="commit"><span>确定</span></el-button>
             <el-button type="primary" style="bottom: 10px; right: 80px; position: absolute" @click="hide"><span>取消</span></el-button>
           </div>
@@ -23,7 +20,7 @@
 import {ref} from "vue";
 import {ElMessage} from "element-plus";
 export default {
-  name: "newFile",
+  name: "newFolder",
   props:["fatherId"],
   setup(){
     let input = ref('');
@@ -34,34 +31,31 @@ export default {
   data() {
     return {
       visible: false,
-      file: document,
     }
   },
   methods: {
     commit () {
       let files = document.getElementById('keyfile').value;
-      console.log(this.fatherId)
-      //选择了新建空白文档
-      let form=new FormData()
-      form.append("type", '1')
+
+      console.log(this.input, this.$store.state.loginUser.userId, this.fatherId, files)
+      //选择了新建文件夹
+      let form = new FormData();
+      form.append("type", "2")
       form.append("name", this.input)
       form.append("creatorId", this.$store.state.loginUser.userId)
-      form.append("authority", 4)
-      if (this.fatherId!=null)
-        form.append("parentId", this.fatherId)
-      form.append("file", this.file)
+      form.append("parentId", this.fatherId)
       this.$axios.post("/file/create", form).then((response)=>{
         if(response.status === 200){
           if (response.data.code === 0) {
             ElMessage('创建成功')
           } else if(response.data.code===1){
-            ElMessage('文件重名，已修改')
+            ElMessage('文件夹重名，已修改')
           }else if(response.data.code===2){
             ElMessage('您没有权限')
           }else if(response.data.code===-1){
             ElMessage('创建失败')
           }else{
-            console.log(response.data)
+            ElMessage('其他错误')
           }
         }else{
           ElMessage({ message: "status = " + response.status, type: 'warning'});
@@ -76,9 +70,6 @@ export default {
     },
     show () {
       this.visible = true
-    },
-    select(e){
-      this.file =document.getElementById("files");
     },
   },
 }
@@ -114,7 +105,7 @@ export default {
   z-index: 997;
   .confirm-content {
     width: 400px;
-    height: 400px;
+    height: 200px;
     border-radius: 13px;
     position: relative;
     background: #ffffff;

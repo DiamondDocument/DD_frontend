@@ -192,10 +192,10 @@ export default {
                   }
                   break;
                 case 6:
-                  msg.title = msg.senderName + '评论了你的文档：' + msg.docName
+                  msg.title = msg.senderName + '评论了你的文档：' + msg.msgDocName
                   break;
                 default:
-                  msg.title = msg.senderName + '在文档：' + msg.docName + ' 中提到了你'
+                  msg.title = msg.senderName + '在文档：' + msg.msgDocName + ' 中提到了你'
                   break;
               }
             }

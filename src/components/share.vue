@@ -29,17 +29,18 @@ import {ElMessage} from "element-plus";
 
 export default {
   name: "share",
+  props:["curFileId"],
   data() {
     return {
       radio: Number,
       visible: false,
       authority: Number,
       link:'www.baidu.com',
-      curFileId:Number
     }
   },
   methods: {
     changeAuthority: function(){
+      console.log(this.curFileId)
       this.authority=this.radio;
     },
     copy() {
@@ -59,6 +60,7 @@ export default {
       this.visible = false
     },
     show () {
+      console.log(this.curFileId)
       this.$axios.post("document/share", {
         "docId": this.curFileId,
         "auth": 3,

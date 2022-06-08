@@ -29,7 +29,7 @@
   <index v-if="menuVisible" @foo="foo" ref="contextButton" :spaceType="spaceType"
          @_export="_export" @share="showShare('默认文件名')" @edit="edit" @disCollect="disCollect"
          data-popper-placement="top"></index>
-  <share ref="share" :curFileId="curFileId" @altAuthority="altAuthority"></share>
+  <share ref="share" :curFileId="this.curFileId" @altAuthority="altAuthority"></share>
 </template>
 
 <script>
@@ -132,11 +132,8 @@ export default {
     getFolderData(isback) {
       this.$axios.get('/space/collection', {
         params: {
-          type: "user",
-          ownerId: this.$store.state.loginUser.userId,
-          folderId: this.folderId,
+          userId: this.$store.state.loginUser.userId,
           visitorId: this.$store.state.loginUser.userId,
-          isBack: isback,
         }
       }).then((response) => {
         console.log(response);

@@ -115,7 +115,7 @@ export default {
     },
     //跟踪鼠标指向的文件信息
     recordId(row) {
-      this.curFileId = row.id
+      this.curFileId = row.fileId
       this.curFileAth = row.authority
       this.curFileShared = row.shared
     },
@@ -125,9 +125,6 @@ export default {
         params: {
           type: "user",
           ownerId: this.$store.state.loginUser.userId,
-          folderId: this.folderId,
-          visitorId: this.$store.state.loginUser.userId,
-          isBack: isback,
         }
       }).then((response) => {
         console.log(response);
@@ -160,35 +157,10 @@ export default {
         console.log(err);
       })
     },
-    //暂时不做了
-    // search(){
-    //   //搜索框为空，默认获取全部文件，也能相当于在搜索之后的返回
-    //   if (this.input==='') {
-    //     this.getTableData()
-    //     return
-    //   }
-    //   let that = this;
-    //   this.$axios.post("/search/document", {
-    //     "type": "user",
-    //     "ownerId": this.$store.state.loginUser.userId,
-    //     "visitorId": this.$store.state.loginUser.userId,
-    //     "key": this.input,
-    //   }).then((response) => {
-    //     if (response.status === 0) {
-    //       that.tableData.clear();
-    //       that.tableData=response.data.documents;
-    //     } else if (response.status === 1) {
-    //       ElMessage('获取失败')
-    //     } else{
-    //       ElMessage('其他错误')
-    //     }
-    //   }).catch((err) => {
-    //     console.log(err)
-    //   })
-    // },
     recover() {
       this.$axios.post("/file/recover",
           {
+            "userId": this.$store.state.loginUser.userId,
             "fileId": this.curFileId,
           }
       ).then((response)=>{

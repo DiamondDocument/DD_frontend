@@ -30,7 +30,7 @@
          @collect="collect" @_export="_export"
          @share="showShare('默认文件名')" @edit="edit"
          data-popper-placement="top"></index>
-  <share ref="share" :curFileId="curFileId" @altAuthority="altAuthority"></share>
+  <share ref="share" :curFileId="this.curFileId" @altAuthority="altAuthority"></share>
 </template>
 
 <script>
@@ -125,7 +125,7 @@ export default {
     },
     //跟踪鼠标指向的文件信息
     recordId(row) {
-      this.curFileId = row.id
+      this.curFileId = row.fileId
       this.curFileAth = row.authority
       this.curFileShared = row.shared
     },

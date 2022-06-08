@@ -10,6 +10,9 @@
         <span style="vertical-align: middle;">搜索</span>
       </el-button>
       <el-button type="primary" style="float: right; margin-right: 20px" icon="Plus">
+        <span style="vertical-align: middle" @click="showNewFolder" >新建文件夹</span>
+      </el-button>
+      <el-button type="primary" style="float: right; margin-right: 20px" icon="Plus">
         <span style="vertical-align: middle" @click="showNewFile" >新建文件</span>
       </el-button>
       <el-button type="primary" style="float: right; margin-right: 20px" icon="Plus">
@@ -47,8 +50,9 @@
                   @authority = "showAuthority()" @notShare="notShare"
          data-popper-placement="top"></index>
   <authority ref="authority" @altAuthority="altAuthority"></authority>
-  <share ref="share" :curFileId="curFileId" @altAuthority="altAuthority"></share>
-  <new-file ref="newFile" :fatherId="folderId"></new-file>
+  <share ref="share" :curFileId="this.curFileId" @altAuthority="altAuthority"></share>
+  <new-file ref="newFile" :fatherId="this.folderId"></new-file>
+  <new-folder ref="newFolder" :fatherId="this.folderId"></new-folder>
   <move ref="move" @commit="move" @cancel="this.moving=false" v-if="moving"></move>
   <my ref="My" v-if="tmpVisible" :spaceUsing="true" @useTmp="useTmp" @cancel="tmpVisible=false"></my>
   <el-dialog title="重命名" v-model="renameVisible" width="30%">
@@ -71,12 +75,13 @@ import share from "@/components/share";
 import {ref} from "vue";
 import {ElMessage} from "element-plus";
 import newFile from "@/components/newFile";
+import newFolder from "@/components/newFolder";
 import move from "@/views/Space/Move";
 import My from "@/views/Template/My";
 
 export default {
   name: "Space",
-  components: {Search, index, authority, share, newFile, move, My},
+  components: {Search, index, authority, share, newFile, move, My, newFolder},
   props: {
     spaceType: {
       type: Number,
@@ -100,7 +105,7 @@ export default {
         {
           fileType: 1,
           docId: 0,
-          docName: '看到我说明你没获取到文件列表',
+          fileName: '看到我说明你没获取到文件列表',
           creatorName: '赵老板',
           modifyTime: '1919-08-10',
           modifierName: 'lyh',
@@ -135,7 +140,7 @@ export default {
     const authority = ref()
     const share = ref()
     const newFile = ref()
-
+    const newFolder=ref()
     function showAuthority() {
       authority.value.show()
     }
@@ -147,16 +152,20 @@ export default {
     function showNewFile() {
       newFile.value.show()
     }
-
+    function showNewFolder() {
+      newFolder.value.show()
+    }
     return {
       reName: ref(''),
       input: ref(''),
       showAuthority,
       showShare,
       showNewFile,
+      showNewFolder,
       newFile,
       authority,
       share,
+      newFolder,
     }
   },
   mounted() {
@@ -165,6 +174,7 @@ export default {
   methods: {
     //获得打开的文件夹里面的文件列表
     getFolderData(isback) {
+      console.log('get')
       this.$axios.get('/space', {
         params: {
           type: "user",
@@ -219,9 +229,10 @@ export default {
     },
     //跟踪鼠标指向的文件信息
     recordId(row) {
-      this.curFileId = row.id
+      this.curFileId = row.fileId
       this.curFileAth = row.authority
       this.curFileShared = row.shared
+      console.log(row.fileId, row.authority)
     },
     //从模板创建
     useTmp(id,name){
@@ -261,7 +272,7 @@ export default {
       else {
         this.$router.push({
           name: "documentEdit",
-          params: {documentId: row.id}
+          params: {documentId: row.fileId}
         })
       }
     },
@@ -293,6 +304,7 @@ export default {
       })
     },
     rename() {
+      console.log(this.curFileId, this.reName)
       this.$axios.post("/file/rename", {
         "fileId": this.curFileId,
         "newName": this.reName,
@@ -337,7 +349,6 @@ export default {
       })
     },
     altAuthority(ath) {
-      ElMessage(ath)
       this.$axios.post("/file/authority", {
         "fileId": this.curFileId,
         "newAuth": ath,

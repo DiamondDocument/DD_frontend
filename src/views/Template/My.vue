@@ -99,9 +99,9 @@ export default {
   methods:{
     useTmp(tmp){
       if (this.spaceUsing)
+        this.selectPos=true
+        this.curTmpId=tmp.tempId
         this.$emit('useTmp', tmp.tempId, tmp.tempName)
-      this.selectPos=true
-      this.curTmpId=tmp.tempId
     },
     commit(id){
       this.$axios.post("/file/create", {
