@@ -267,11 +267,13 @@ export default {
         this.getFolderData(false)
         return
       }
-      this.$axios.post("/search/document", {
-        "type": "user",
-        "ownerId": this.$store.state.loginUser.userId,
-        "visitorId": this.$store.state.loginUser.userId,
-        "key": this.input,
+      this.$axios.get("/search/document", {
+        params:{
+          type: "user",
+          ownerId: this.$store.state.loginUser.userId,
+          visitorId: this.$store.state.loginUser.userId,
+          key: this.input,
+        }
       }).then((response) => {
         if(response.status === 200){
           if (response.data.code === 0) {
