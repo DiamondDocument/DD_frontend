@@ -59,16 +59,26 @@ export default {
       this.visible = false
     },
     show () {
-      this.$axios.get("/share", {
-        params:{
-          curFileId: this.curFileId
-        }
+      this.$axios.post("document/share", {
+        "docId": this.curFileId,
+        "auth": 3,
       }).then((response)=> {
-        this.link = response.data.link
-      }).catch((err)=>{
-        console.log(err)
+        if(response.status === 200){
+          if (response.data.code === 0) {
+            this.link='document/share/'+ this.curFileId
+            this.visible = true
+          } else if(response.data.code===-1){
+            ElMessage('分享失败')
+          }else{
+            ElMessage('其他错误')
+          }
+        }else{
+          ElMessage({ message: "status = " + response.status, type: 'warning'});
+        }
+      }).catch((err) => {
+        console.log(err);
       })
-      this.visible = true
+
     }
   },
 }

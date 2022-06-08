@@ -1,6 +1,6 @@
 <template>
 <!--  space调用的时候才会显示的一个div-->
-  <div style="margin: 15px 0 5px 0;border-bottom: 1px solid #e8e8e8;padding-bottom: 10px" v-if="spaceUsing">
+  <div v-if="spaceUsing">
     <el-menu default-active="'/' +this.$route.path.split('/')[1]" >
       <el-button type="primary" style="float: right; margin-right: 20px">
         <span style="vertical-align: middle" @click="this.$emit('cancel')">取消</span>
