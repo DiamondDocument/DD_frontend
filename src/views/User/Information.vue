@@ -10,7 +10,7 @@
                      ref="clearFile"
                      style="display:none"
                      @change="upload($event)"/>
-              <el-avatar :size="200"   v-if="avatarUpdater" style="float: left; " @click="changeImg">
+              <el-avatar :size="200" style="float: left; " @click="changeImg">
                 <template #default>
                   <el-avatar :size="195" :src="url"/>
                 </template>
@@ -150,18 +150,24 @@
       </div>
 
       <div v-if="isOwner === false">
-        <div style="float: left; margin-left: 20px; margin-right: 50px; margin-top: 20px;">
-          <el-avatar :size="200" :src="url" />
-        </div>
 
-        <div style="float:left">
+        <div style="width: 80%; margin: 60px auto">
+          <input type="file"
+                 ref="clearFile"
+                 style="display:none"
+                 @change="upload($event)"/>
+          <el-avatar :size="200" style="float: left;" >
+            <template #default>
+              <el-avatar :size="195" :src="url"/>
+            </template>
+          </el-avatar>
           <el-form
               label-position="Right"
               label-width="100px"
               style="
               max-width: 100%;
               margin: 20px;
-        ">
+            ">
             <el-form-item label="用户名：">
               {{ userId }}
             </el-form-item>
@@ -179,11 +185,10 @@
             </el-form-item>
           </el-form>
 
-          <el-button type="success" @click="goTable" style="margin-left: 50px">
+          <el-button type="success" @click="goTable" style="margin-left: 300px">
             进入TA的工作台
           </el-button>
         </div>
-
       </div>
     </el-card>
 
@@ -445,7 +450,14 @@ export default {
 
     this.getInformation();
     this.getAvatar();
-  }
+  },
+  updated() {
+    this.isOwner = (this.$route.params.userId === this.$store.state.loginUser.userId);
+    this.userId = this.$route.params.userId;
+
+    this.getInformation();
+    this.getAvatar();
+  },
 }
 </script>
 
