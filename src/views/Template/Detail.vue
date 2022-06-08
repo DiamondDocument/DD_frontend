@@ -11,14 +11,16 @@
           <h2>{{name}}</h2>
         </el-header>
         <el-main style="padding: 0 100px 0 0">
-          <h3 style="padding-left: 80px; font-family: 新宋体,sans-serif">
+          <h3 class="author" style="padding-left: 80px; font-family: 新宋体,sans-serif;"
+              @click="this.$router.push({name: 'userInformation', params: {userId: creatorId}})"
+              >
             <img :src="url2" style="width: 30px;">
             {{creatorId}}>
             </h3> <br>
           <h3 style="padding-left: 80px; font-family: 'Adobe 宋体 Std L',serif">简介:{{intro}}</h3> <br>
           <el-divider />
-          <el-icon v-if="like === 0" style="width: 80px; position: center" @click="like=1"><Star /></el-icon>
-          <el-icon v-else style="width: 80px; position: center" @click="like=0"><StarFilled /></el-icon>
+          <el-icon v-if="like === 0" style="cursor: hand; width: 80px; position: center" @click="like=1"><Star /></el-icon>
+          <el-icon v-else style="cursor: hand; width: 80px; position: center" @click="like=0"><StarFilled /></el-icon>
           <el-button type="primary" round style="float: right" >立即使用</el-button>
         </el-main>
       </el-container>
@@ -103,5 +105,7 @@ export default {
 </script>
 
 <style scoped>
-
+  .author:hover {
+    cursor: hand;
+  }
 </style>

@@ -5,15 +5,14 @@
     <el-header class="Header" style="height: 50px">
       <img src="../../assets/logo2.png" style="width: 50px; height: 50px;">
 
-      <div>
+      <div style="display: flex; justify-content: space-between; align-items: center; width: 80px">
 <!--        <a href="#" style="padding: 0 10px 0 0">头像</a>-->
 <!--  THR: for test     -->
 <!--        <el-button @click="goInformation">-->
 <!--        头像-->
 <!--      </el-button>-->
         <el-avatar :src="url" style="width: 40px; height: 40px " @click="goInformation"/>
-
-        <el-icon @click="this.$router.push({name:'message'})" style=""><MessageBox /></el-icon>
+        <el-icon @click="this.$router.push({name:'message'})" ><Bell /></el-icon>
       </div>
     </el-header>
     <el-container>

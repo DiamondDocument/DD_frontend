@@ -3,9 +3,9 @@
     <el-header class="Header" style="height: 50px">
       <img src="../../assets/logo2.png" style="width: 50px; height: 50px;">
 
-      <div>
+      <div style="display: flex; justify-content: space-between; align-items: center; width: 80px">
         <el-avatar :src="avatar" style="width: 40px; height: 40px; "/>
-        <el-icon @click="toMessage" ><MessageBox /></el-icon>
+        <el-icon @click="toMessage" ><Bell /></el-icon>
 
       </div>
     </el-header>
