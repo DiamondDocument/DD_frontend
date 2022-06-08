@@ -10,6 +10,9 @@
         <span style="vertical-align: middle;">搜索</span>
       </el-button>
       <el-button type="primary" style="float: right; margin-right: 20px" icon="Plus">
+        <span style="vertical-align: middle" @click="showNewFolder" >新建文件夹</span>
+      </el-button>
+      <el-button type="primary" style="float: right; margin-right: 20px" icon="Plus">
         <span style="vertical-align: middle" @click="showNewFile" >新建文件</span>
       </el-button>
       <el-button type="primary" style="float: right; margin-right: 20px" icon="Plus">
@@ -35,20 +38,21 @@
           <el-icon v-else><Folder /></el-icon>
         </template>
       </el-table-column>
-      <el-table-column prop="fileName" label="文件名" width="400"></el-table-column>
-      <el-table-column prop="createInfo" label="创建时间" width="350"></el-table-column>
-      <el-table-column prop="modifyInfo" label="最后修改" width="350"></el-table-column>
-      <el-table-column prop="size" label="大小" ></el-table-column>
+      <el-table-column sortable prop="fileName" label="文件名" width="400"></el-table-column>
+      <el-table-column sortable prop="creatorInfo" label="创建时间" width="350"></el-table-column>
+      <el-table-column sortable prop="modifyInfo" label="最后修改" width="350"></el-table-column>
+      <el-table-column sortable prop="size" label="大小" ></el-table-column>
     </el-table>
   </div>
-  <index v-if="menuVisible" @foo="foo" ref="index" :spaceType="spaceType" :authority=this.curFileAth :shared="this.curFileShared"
+  <index v-if="menuVisible" @foo="foo" ref="index" :spaceType="this.spaceType" :authority=this.curFileAth :shared="this.curFileShared"
                   @collect="collect" @move="this.moving=true" @remove="remove" @_export="_export"
                   @share="showShare()" @rename="renameVisible=true"
                   @authority = "showAuthority()" @notShare="notShare"
          data-popper-placement="top"></index>
   <authority ref="authority" @altAuthority="altAuthority"></authority>
-  <share ref="share" :curFileId="curFileId" @altAuthority="altAuthority"></share>
-  <new-file ref="newFile" :fatherId="folderId"></new-file>
+  <share ref="share" :curFileId="this.curFileId" @altAuthority="altAuthority"></share>
+  <new-file ref="newFile" :fatherId="this.folderId"></new-file>
+  <new-folder ref="newFolder" :fatherId="this.folderId"></new-folder>
   <move ref="move" @commit="move" @cancel="this.moving=false" v-if="moving"></move>
   <my ref="My" v-if="tmpVisible" :spaceUsing="true" @useTmp="useTmp" @cancel="tmpVisible=false"></my>
   <el-dialog title="重命名" v-model="renameVisible" width="30%">
@@ -71,12 +75,13 @@ import share from "@/components/share";
 import {ref} from "vue";
 import {ElMessage} from "element-plus";
 import newFile from "@/components/newFile";
+import newFolder from "@/components/newFolder";
 import move from "@/views/Space/Move";
 import My from "@/views/Template/My";
 
 export default {
   name: "Space",
-  components: {Search, index, authority, share, newFile, move, My},
+  components: {Search, index, authority, share, newFile, move, My, newFolder},
   props: {
     spaceType: {
       type: Number,
@@ -86,11 +91,11 @@ export default {
     return {
       spaceType: 1,             //空间类型用于区分右键菜单显示内容等
       menuVisible: false,       //右键菜单不显示
-      loading: false,           //暂时不用
+      loading: true,           //暂时不用
       link: '',                 //分享用的链接
       curFileId: Number,
       curFileAth: Number,
-      curFileShared: Boolean,
+      curFileShared: Number,
       exportLink: '',           //下载文件的链接
       moving: false,            //是否在移动文件，决定文件系统如何显示
       folderId: null,           //当前处在的文件夹的id，null为根目录
@@ -100,7 +105,7 @@ export default {
         {
           fileType: 1,
           docId: 0,
-          docName: '看到我说明你没获取到文件列表',
+          fileName: '看到我说明你没获取到文件列表',
           creatorName: '赵老板',
           modifyTime: '1919-08-10',
           modifierName: 'lyh',
@@ -135,7 +140,7 @@ export default {
     const authority = ref()
     const share = ref()
     const newFile = ref()
-
+    const newFolder=ref()
     function showAuthority() {
       authority.value.show()
     }
@@ -147,16 +152,20 @@ export default {
     function showNewFile() {
       newFile.value.show()
     }
-
+    function showNewFolder() {
+      newFolder.value.show()
+    }
     return {
       reName: ref(''),
       input: ref(''),
       showAuthority,
       showShare,
       showNewFile,
+      showNewFolder,
       newFile,
       authority,
       share,
+      newFolder,
     }
   },
   mounted() {
@@ -165,6 +174,7 @@ export default {
   methods: {
     //获得打开的文件夹里面的文件列表
     getFolderData(isback) {
+      this.loading=true
       this.$axios.get('/space', {
         params: {
           type: "user",
@@ -178,22 +188,7 @@ export default {
         if(response.status === 200) {
           if (response.data.code === 0) {
             if (isback) this.folderId = response.data.parentId;
-
-            let files = response.data.files;
-            this.tableData = files;
-            for(let i = 0; i < this.tableData.length; i++){
-              let time =  files[i].createTime;
-              time = time.split('+')[0];
-              time = time.split('T')[0] + ' ' + time.split('T')[1].slice(0,-7);
-              this.tableData[i].createInfo = time + '  by ' + files[i].creatorName;
-              if(files[i].modifyTime === null) this.tableData[i].modifyInfo = "无修改记录";
-              else{
-                time =  files[i].modifyTime;
-                time = time.split('+')[0];
-                time = time.split('T')[0] + ' ' + time.split('T')[1].slice(0,-7);
-                this.tableData[i].modifyInfo = time + '  by ' + files[i].modifierName;
-              }
-            }
+            this.tableData = response.data.files;
           } else if (response.data.code === -1) {
             ElMessage({message: '获取列表失败', type: 'warning'});
           }
@@ -203,6 +198,7 @@ export default {
       }).catch((err) => {
         console.log(err);
       })
+      this.loading=false
     },
     rowContextmenu(row, column, event) {
       this.menuVisible = false
@@ -219,9 +215,10 @@ export default {
     },
     //跟踪鼠标指向的文件信息
     recordId(row) {
-      this.curFileId = row.id
+      this.curFileId = row.fileId
       this.curFileAth = row.authority
       this.curFileShared = row.shared
+      console.log(row.fileId, row.authority, row.shared)
     },
     //从模板创建
     useTmp(id,name){
@@ -261,7 +258,7 @@ export default {
       else {
         this.$router.push({
           name: "documentEdit",
-          params: {documentId: row.id}
+          params: {documentId: row.fileId}
         })
       }
     },
@@ -271,11 +268,13 @@ export default {
         this.getFolderData(false)
         return
       }
-      this.$axios.post("/search/document", {
-        "type": "user",
-        "ownerId": this.$store.state.loginUser.userId,
-        "visitorId": this.$store.state.loginUser.userId,
-        "key": this.input,
+      this.$axios.get("/search/document", {
+        params:{
+          type: "user",
+          ownerId: this.$store.state.loginUser.userId,
+          visitorId: this.$store.state.loginUser.userId,
+          key: this.input,
+        }
       }).then((response) => {
         if(response.status === 200){
           if (response.data.code === 0) {
@@ -293,6 +292,7 @@ export default {
       })
     },
     rename() {
+      console.log(this.curFileId, this.reName)
       this.$axios.post("/file/rename", {
         "fileId": this.curFileId,
         "newName": this.reName,
@@ -337,7 +337,6 @@ export default {
       })
     },
     altAuthority(ath) {
-      ElMessage(ath)
       this.$axios.post("/file/authority", {
         "fileId": this.curFileId,
         "newAuth": ath,

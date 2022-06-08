@@ -6,14 +6,11 @@
         <div class="confirm-wrapper">
           <div class="confirm-content">
             <div style="height: 30px"></div>
-            <header style="line-height: 30px;text-align: center; font-weight: bold;margin-bottom: 20px;">创建新文档</header>
+            <header style="line-height: 30px;text-align: center; font-weight: bold;margin-bottom: 20px;">创建文件夹</header>
             <div style="margin-left: 40px;margin-right: 50px;">
               <el-form  label-width="100px">
-                <el-form-item label="文档名">
+                <el-form-item label="文件夹名称">
                   <el-input v-model="input" placeholder="文件名" style=" !important;margin-left: 20px;margin-right: 0;"></el-input>
-                </el-form-item>
-                <el-form-item label="导入本地">
-                  <input type="file" id="keyfile" multiple="multiple" @change="select($event)" style="margin-left: 20px">
                 </el-form-item>
                 <el-form-item label="设置权限">
                   <el-radio-group v-model="radio"  @change="change" style="display:table-cell">
@@ -37,8 +34,8 @@
 import {ref} from "vue";
 import {ElMessage} from "element-plus";
 export default {
-  name: "newFile",
-  props:["fatherId"],
+  name: "newFolder",
+  props:{fatherId:{fatherId: Number}},
   setup(){
     let input = ref('');
     return {
@@ -49,32 +46,34 @@ export default {
     return {
       radio: Number,
       visible: false,
-      file: document,
       authority: 4,
     }
   },
   methods: {
     commit () {
-      let form=new FormData()
-      form.append("type", '1')
+      let files = document.getElementById('keyfile').value;
+
+      console.log(this.input, this.$store.state.loginUser.userId, this.fatherId, files)
+
+      let form = new FormData();
+      form.append("type", '2')
       form.append("name", this.input)
       form.append("creatorId", this.$store.state.loginUser.userId)
-      form.append("authority", this.authority)
       if (this.fatherId!=null)
         form.append("parentId", this.fatherId)
-      form.append("file", this.file)
+      form.append("authority", this.authority)
       this.$axios.post("/file/create", form).then((response)=>{
         if(response.status === 200){
           if (response.data.code === 0) {
             ElMessage('创建成功')
           } else if(response.data.code===1){
-            ElMessage('文件重名，已修改')
+            ElMessage('文件夹重名，已修改')
           }else if(response.data.code===2){
             ElMessage('您没有权限')
           }else if(response.data.code===-1){
             ElMessage('创建失败')
           }else{
-            console.log(response.data)
+            ElMessage('其他错误')
           }
         }else{
           ElMessage({ message: "status = " + response.status, type: 'warning'});
@@ -89,24 +88,6 @@ export default {
     },
     show () {
       this.visible = true
-    },
-    //当上面的input得到文件后，该函数被调用
-    select(e){
-      console.log(e.currentTarget.files);//所有文件，返回的是一个数组
-      console.log(e.currentTarget.files[0].name)//文件名
-      let form = new FormData();
-      form.append("file",e.currentTarget.files[0]);
-      this.file=e.currentTarget.files[0]
-      this.axios.post("file",form).then((response)=>{
-        if(response.status === 200){
-          console.log(response.data);
-        }else{
-          ElMessage('发生错误')
-        }
-      }).catch((err)=>{
-        console.log(err)
-      })
-      // }
     },
     change: function(val){
       this.authority=val

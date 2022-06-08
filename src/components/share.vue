@@ -5,12 +5,15 @@
       <div class="confirm" v-show="visible">
         <div class="confirm-wrapper">
           <div class="confirm-content">
+
             <p class="text">谁可以查看/编辑文档: </p>
-            <el-radio-group v-model="radio" @change="changeAuthority" style="display:table-cell">
-              <el-radio label="2" border style="margin-left: 35px">所有人可查看</el-radio>
-              <el-radio label="3" border style="margin-left: 35px">所有人可评论</el-radio>
-              <el-radio label="4" border style="margin-left: 35px">所有人可编辑</el-radio>
-            </el-radio-group>
+            <div style="width: 100px;margin-right: auto;margin-left: 100px;">
+              <el-radio-group v-model="radio"  @change="changeAuthority" style="display:table-cell">
+                <el-radio label="2"  style="">所有人可查看</el-radio>
+                <el-radio label="3"  style="">所有人可评论</el-radio>
+                <el-radio label="4"  style="">所有人可编辑</el-radio>
+              </el-radio-group>
+            </div>
             <p class="text">已生成该文档的链接：</p>
             <el-link id='lk' herf=link target="_blank" style="left: 30px">{{ link }}</el-link>
             <input id="input" value="这是幕后黑手" style="opacity:0;position:absolute" />
@@ -29,17 +32,18 @@ import {ElMessage} from "element-plus";
 
 export default {
   name: "share",
+  props:["curFileId"],
   data() {
     return {
       radio: Number,
       visible: false,
       authority: Number,
       link:'www.baidu.com',
-      curFileId:Number
     }
   },
   methods: {
     changeAuthority: function(){
+      console.log(this.curFileId)
       this.authority=this.radio;
     },
     copy() {
@@ -59,6 +63,7 @@ export default {
       this.visible = false
     },
     show () {
+      console.log(this.curFileId)
       this.$axios.post("document/share", {
         "docId": this.curFileId,
         "auth": 3,
