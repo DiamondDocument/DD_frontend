@@ -15,13 +15,8 @@
                 <el-form-item label="导入本地">
                   <input type="file" id="keyfile" multiple="multiple" @change="select($event)" style="margin-left: 20px">
                 </el-form-item>
-<!--                <el-form-item label="从模板新建">-->
-<!--                  <el-button type="primary" style="float: right; margin-right: 20px" icon="Plus">-->
-<!--                    <span style="vertical-align: middle" @click="tmpVisible=true" >从模板新建</span>-->
-<!--                  </el-button>-->
-<!--                </el-form-item>-->
                 <el-form-item label="设置权限">
-                  <el-radio-group v-model="radio"  @change="changeAuthority" style="display:table-cell">
+                  <el-radio-group v-model="radio"  @change="altAuthority" style="display:table-cell">
                     <el-radio label="2"  style="">所有人可查看</el-radio>
                     <el-radio label="3"  style="">所有人可评论</el-radio>
                     <el-radio label="4"  style="">所有人可编辑</el-radio>
@@ -31,14 +26,6 @@
               <el-button type="primary" style="bottom: 30px; left: 100px; position: absolute" @click="commit"><span>确定</span></el-button>
               <el-button type="primary" style="bottom: 30px; right: 100px; position: absolute" @click="hide"><span>取消</span></el-button>
             </div>
-
-<!--            <header style="line-height: 30px;text-align: center; font-weight: bold">请选择创建方式</header>-->
-<!--            <p class="text">上传本地文档:（不选则默认空白文裆） </p>-->
-<!--            <input type="file" id="keyfile" multiple="multiple" @change="select($event)" style="margin-left: 130px">-->
-<!--            <p class="text">文档名： </p>-->
-<!--            <el-input v-model="input" placeholder="文件名" style="width: 100px !important;margin-left: 150px"></el-input>-->
-<!--            <el-button type="primary" style="bottom: 10px; left: 80px; position: absolute" @click="commit"><span>确定</span></el-button>-->
-<!--            <el-button type="primary" style="bottom: 10px; right: 80px; position: absolute" @click="hide"><span>取消</span></el-button>-->
           </div>
         </div>
       </div>
@@ -60,6 +47,7 @@ export default {
   },
   data() {
     return {
+      radio: Number,
       visible: false,
       file: document,
     }
@@ -104,8 +92,22 @@ export default {
     show () {
       this.visible = true
     },
+    //当上面的input得到文件后，该函数被调用
     select(e){
-      this.file =document.getElementById("files");
+      console.log(e.currentTarget.files);//所有文件，返回的是一个数组
+      console.log(e.currentTarget.files[0].name)//文件名
+      let form = new FormData();
+      form.append("file",e.currentTarget.files[0]);
+      this.axios.post("file",form).then((response)=>{
+        if(response.status === 200){
+          console.log(response.data);
+        }else{
+          //http没有返回200
+        }
+      }).catch((err)=>{
+        //报错
+      })
+      // }
     },
   },
 }

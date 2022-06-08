@@ -123,7 +123,7 @@ export default {
   z-index: 997;
   .confirm-content {
     width: 400px;
-    height: 200px;
+    height: 400px;
     border-radius: 13px;
     position: relative;
     background: #ffffff;
