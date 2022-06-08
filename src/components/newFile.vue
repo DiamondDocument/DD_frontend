@@ -16,7 +16,7 @@
                   <input type="file" id="keyfile" multiple="multiple" @change="select($event)" style="margin-left: 20px">
                 </el-form-item>
                 <el-form-item label="设置权限">
-                  <el-radio-group v-model="radio"  @change="altAuthority" style="display:table-cell">
+                  <el-radio-group v-model="radio"  @change="change" style="display:table-cell">
                     <el-radio label="2"  style="">所有人可查看</el-radio>
                     <el-radio label="3"  style="">所有人可评论</el-radio>
                     <el-radio label="4"  style="">所有人可编辑</el-radio>
@@ -50,18 +50,18 @@ export default {
       radio: Number,
       visible: false,
       file: document,
+      authority: 4,
     }
   },
   methods: {
     commit () {
       let files = document.getElementById('keyfile').value;
       console.log(this.fatherId)
-      //选择了新建空白文档
       let form=new FormData()
       form.append("type", '1')
       form.append("name", this.input)
       form.append("creatorId", this.$store.state.loginUser.userId)
-      form.append("authority", 4)
+      form.append("authority", this.authority)
       if (this.fatherId!=null)
         form.append("parentId", this.fatherId)
       form.append("file", this.file)
@@ -108,6 +108,9 @@ export default {
         //报错
       })
       // }
+    },
+    change: function(val){
+      this.authority=val
     },
   },
 }

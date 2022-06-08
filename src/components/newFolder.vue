@@ -10,10 +10,10 @@
             <div style="margin-left: 40px;margin-right: 50px;">
               <el-form  label-width="100px">
                 <el-form-item label="文件夹名称">
-                  <el-input v-model="input" placeholder="文件名" style=" !important;margin-left: 20px;margin-right: 0px;"></el-input>
+                  <el-input v-model="input" placeholder="文件名" style=" !important;margin-left: 20px;margin-right: 0;"></el-input>
                 </el-form-item>
                 <el-form-item label="设置权限">
-                  <el-radio-group v-model="radio"  @change="changeAuthority" style="display:table-cell">
+                  <el-radio-group v-model="radio"  @change="change" style="display:table-cell">
                     <el-radio label="2"  style="">所有人可查看</el-radio>
                     <el-radio label="3"  style="">所有人可评论</el-radio>
                     <el-radio label="4"  style="">所有人可编辑</el-radio>
@@ -23,10 +23,6 @@
               <el-button type="primary" style="bottom: 30px; left: 100px; position: absolute" @click="commit"><span>确定</span></el-button>
               <el-button type="primary" style="bottom: 30px; right: 100px; position: absolute" @click="hide"><span>取消</span></el-button>
             </div>
-<!--            <p class="text">文件夹名： </p>-->
-<!--            <el-input v-model="input" placeholder="文件夹名字" style="width: 100px !important;margin-left: 150px"></el-input>-->
-<!--            <el-button type="primary" style="bottom: 10px; left: 80px; position: absolute" @click="commit"><span>确定</span></el-button>-->
-<!--            <el-button type="primary" style="bottom: 10px; right: 80px; position: absolute" @click="hide"><span>取消</span></el-button>-->
           </div>
         </div>
       </div>
@@ -39,7 +35,7 @@ import {ref} from "vue";
 import {ElMessage} from "element-plus";
 export default {
   name: "newFolder",
-  props:["fatherId"],
+  props:{fatherId:{fatherId: Number}},
   setup(){
     let input = ref('');
     return {
@@ -48,7 +44,9 @@ export default {
   },
   data() {
     return {
+      radio: Number,
       visible: false,
+      authority: 4,
     }
   },
   methods: {
@@ -56,12 +54,14 @@ export default {
       let files = document.getElementById('keyfile').value;
 
       console.log(this.input, this.$store.state.loginUser.userId, this.fatherId, files)
-      //选择了新建文件夹
+
       let form = new FormData();
-      form.append("type", "2")
+      form.append("type", '2')
       form.append("name", this.input)
       form.append("creatorId", this.$store.state.loginUser.userId)
-      form.append("parentId", this.fatherId)
+      if (this.fatherId!=null)
+        form.append("parentId", this.fatherId)
+      form.append("authority", this.authority)
       this.$axios.post("/file/create", form).then((response)=>{
         if(response.status === 200){
           if (response.data.code === 0) {
@@ -88,6 +88,9 @@ export default {
     },
     show () {
       this.visible = true
+    },
+    change: function(val){
+      this.authority=val
     },
   },
 }

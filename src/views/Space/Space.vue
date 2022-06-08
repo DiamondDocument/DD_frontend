@@ -188,22 +188,7 @@ export default {
         if(response.status === 200) {
           if (response.data.code === 0) {
             if (isback) this.folderId = response.data.parentId;
-
-            let files = response.data.files;
-            this.tableData = files;
-            // for(let i = 0; i < this.tableData.length; i++){
-            //   let time =  files[i].createTime;
-            //   time = time.split('+')[0];
-            //   time = time.split('T')[0] + ' ' + time.split('T')[1].slice(0,-7);
-            //   this.tableData[i].createInfo = time + '  by ' + files[i].creatorName;
-            //   if(files[i].modifyTime === null) this.tableData[i].modifyInfo = "无修改记录";
-            //   else{
-            //     time =  files[i].modifyTime;
-            //     time = time.split('+')[0];
-            //     time = time.split('T')[0] + ' ' + time.split('T')[1].slice(0,-7);
-            //     this.tableData[i].modifyInfo = time + '  by ' + files[i].modifierName;
-            //   }
-            // }
+            this.tableData = response.data.files;
           } else if (response.data.code === -1) {
             ElMessage({message: '获取列表失败', type: 'warning'});
           }
