@@ -9,7 +9,7 @@
         <span>{{messages[i-1].title}}</span>
 <!--        仅申请和邀请有可能打开详情，即跳转到对应的团队详情页和个人信息页，另外还有文档被评论-->
         <el-button type="text" v-if="messages[i-1].msgType===2 || messages[i-1].msgType===4 || messages[i-1].msgType===6"
-                   @click="showConfirm(messages[i-1].msgType, messages[i-1].content)">详情</el-button>
+                   @click="showConfirm(messages[i-1].msgType, messages[i-1].content, messages[i-1].msgDocId)">详情</el-button>
         <el-button type="text" v-if="messages[i-1].isRead===false" @click="read(i-1)">标记已读</el-button>
         <el-tag type="success" v-else style="width: 100px; height: 30px">已读</el-tag>
       </div>
@@ -38,7 +38,7 @@ export default {
     const fileComment = ref()
     const joinRequest = ref()
     const requestResult = ref()
-    function showConfirm (type, s) {
+    function showConfirm (type, s, fileId) {
       switch (type) {
         case 2:
           ElMessage('跳到个人信息页')
@@ -47,10 +47,13 @@ export default {
           ElMessage('跳转到团队详情页')
           break;
         case 6:
-          fileComment.value.show(s)
+          fileComment.value.show(s, fileId)
           break;
         case 7:
-          ElMessage('跳到文档页')
+          this.$router.push({
+            name: "documentEdit",
+            params: {documentId: fileId}
+          })
           break;
         default:
           ElMessage('未知邮件类型！！！！')
@@ -58,10 +61,6 @@ export default {
       }
     }
     // 事件处理
-    function toFile () {
-      ElMessage('跳转到该文档')
-      fileComment.value.hide()
-    }
     function agree() {
       confirm('你居然同意了')
       joinRequest.value.hide()
@@ -75,7 +74,6 @@ export default {
       joinRequest: joinRequest,
       requestResult: requestResult,
       showConfirm,
-      toFile,
       agree,
       refuse,
     }
@@ -146,7 +144,8 @@ export default {
           title: '',
           isRead: false
         }
-      ]
+      ],
+      curFileId: Number,      //...
     }
   },
   methods: {
@@ -245,6 +244,13 @@ export default {
         this.read(i)
         i++;
       }
+    },
+    toFile (fileId) {
+      this.$router.push({
+        name: "documentEdit",
+        params: {documentId: fileId}
+      })
+      fileComment.value.hide()
     }
   }
 }

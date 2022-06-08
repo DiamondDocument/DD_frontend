@@ -23,6 +23,7 @@ export default {
     return {
       detail: '',
       visible: false,
+      fileId: Number,
     }
   },
   emits: ['toFile', 'cancel'],
@@ -30,7 +31,7 @@ export default {
     // 确认
     toFile () {
       this.hide()
-      this.$emit('toFile')
+      this.$emit('toFile', this.fileId)
     },
     // 取消
     cancel () {
@@ -40,8 +41,9 @@ export default {
     hide () {
       this.visible = false
     },
-    show (s) {
+    show (s, fileId) {
       this.detail = s
+      this.fileId=fileId
       this.visible = true
     }
   },
