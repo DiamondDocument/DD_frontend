@@ -5,7 +5,7 @@
     <div class = "top-ele" style="margin-left: 20px;margin-right: 20px">
       <el-button  icon="House"  @click = "$router.push({name:'table',params:{info: $store.state.tableInfo}})" />
     </div>
-    <div class = "top-ele" style="text-align: center;min-width: 100px;margin-right: auto  ">{{ title }}</div>
+    <div class = "top-ele" style="text-align: center;min-width: 100px;margin-right: auto  ">{{ myDocName }}</div>
     <!--  <div class = "top-ele" style="margin-right: 20px;"><el-avatar size="small" shape="square"></el-avatar></div>-->
 <!--    <div class = "top-ele"><el-button @click = "$router.push({name:'table',params:{info: $store.state.tableInfo}})"> 分享 </el-button></div>-->
 <!--    <div class = "top-ele"><el-button @click = "saveDoc"> 保存 </el-button></div>-->
@@ -45,7 +45,7 @@
 <div id="content">
   <div id="editor-container">
     <div id="title-container">
-      <input v-model="title">
+      <input v-model="myDocName">
     </div>
     <Editor
         id = "editor-text-area"
@@ -61,8 +61,8 @@
 </div>
 <el-drawer v-model="drawerDisplay" :show-close="false">
   <template #title>
-    <h4 >{{myDocName}}}文档的评论</h4>
-    <el-button  @click = "displayNewComment = true" text><el-icon size="20px"><CirclePlus /></el-icon></el-button>
+    <h4 >{{myDocName}}文档的评论</h4>
+    <el-button  @click = "displayNewComment = true" :disabled="myAuthority < 3" text><el-icon size="20px"><CirclePlus /></el-icon></el-button>
   </template>
   <div id="comment-area" v-if="displayNewComment">
     <el-input
@@ -78,7 +78,8 @@
     </div>
   </div>
   <div id="comment-list" style="margin-top: 30px">
-    <el-collapse v-model="activeNames" @change="handleChange">
+<!--    <el-collapse v-model="activeNames" @change="handleChange">-->
+    <el-collapse >
       <el-collapse-item  v-for="comment in myComments">
         <template #title>
           <el-avatar :size="30" :src="comment.url"/><div style="margin-left: 20px">{{comment.userName}}</div>
@@ -106,7 +107,7 @@ import '@wangeditor/editor/dist/css/style.css' // 引入 css
 import { onBeforeUnmount, ref, shallowRef, onMounted } from 'vue'
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 import axios from "axios";
-import {ElMessage} from "element-plus";
+import {ElMessage, ElNotification} from "element-plus";
 import share from "@/components/share";
 export default {
   components: { Editor, Toolbar, share },
@@ -121,6 +122,10 @@ export default {
       displayNewComment : false,
       myDocId: '',
       myEditor: '',
+      myAuthority: 2 ,
+      myModifyTime: '',
+      editIntervalId: 0,
+      myTitle: '',
       myComments: [
         {
           "commentId" : "1",
@@ -139,12 +144,6 @@ export default {
     const editorRef = shallowRef()
     // 内容 HTML,创建一个ref
     // const valueHtml = ref('<h1>123</h1>')
-    // 模拟 ajax 异步获取内容
-    // onMounted(() => {
-    //   setTimeout(() => {
-    //     valueHtml.value = '<p>模拟 Ajax 异步设置内容</p>'
-    //   }, 1500)
-    // })
     // 组件销毁时，也及时销毁编辑器
     onBeforeUnmount(() => {
       const editor = editorRef.value
@@ -157,6 +156,7 @@ export default {
     }
     const editorConfig = {
       scroll: false, // 禁止编辑器滚动
+      readonly: true,
       MENU_CONF: {
         uploadImage: {
           // server: 'http://localhost/api/document/img',
@@ -198,7 +198,9 @@ export default {
       }
     }
     const handleCreated = (editor) => {
+      console.log("编辑器创建成功");
       editorRef.value = editor // 记录 editor 实例，重要！
+
     }
     const share=ref()
     function showShare() {
@@ -221,12 +223,16 @@ export default {
     this.myDocId = this.$route.params.documentId;
     this.getDoc();
     this.getComment();
+    this.updateBrowse();
     this.requestEdit();
-    setInterval(()=>{
+    this.editIntervalId = setInterval(()=>{
       this.requestEdit();
     }, 20000);
+    // setTimeout(this.authorityChanged,3000);
   },
-
+  unmounted() {
+    setInterval(this.editIntervalId);
+  },
   methods: {
     getDoc(){
       console.log("发送获取文档请求...");
@@ -239,7 +245,11 @@ export default {
         console.log("请求完毕");
         if(response.status === 200){
           if(response.data.code === 0){
+            console.log(response.data);
             this.$data.valueHtml = response.data.content;
+            this.myDocName = response.data.name;
+            this.myAuthority = response.data.authority;
+            this.myModifyTime = response.data.modifyTime;
           }else if(response.data.code === 1){
             ElMessage({ message: "你没有该文档的查看权限！", type: 'warning'});
           }
@@ -250,7 +260,7 @@ export default {
         console.log("请求错误");
       });
     },
-    saveDoc(){
+    saveDoc(fun){
       console.log("保存" + this.valueHtml);
       this.$axios.post("document/save",{
         "content" : this.valueHtml,
@@ -260,10 +270,10 @@ export default {
         if(response.status === 200){
           if(response.data.code === 0){
             ElMessage({ message: "保存成功", type: 'success'});
+            fun();
           }else{
             console.log("请求错误");
           }
-          //保存成功
         }else{
           console.log("请求错误");
         }
@@ -275,36 +285,60 @@ export default {
       console.log('onchange!');
     },
     exportFile(){
-      ElMessage("正在导出...");
-      console.log("发送导出文档请求...");
-      this.$axios.get("/document/export",{
-        params:{
-          docId : this.myDocId,
-        }
-      }).then((response)=>{
-        if(response.status === 200){
-          if(response.data.code === 0){
-            ElMessage({ message: "导出成功", type: 'success'});
-            this.$axios.get(response.data.download, {responseType: 'blob'}).then((response)=>{
-              if(response.status === 200){
-                let fileURL = window.URL.createObjectURL(new Blob([response.data]));
-                let fileLink = document.createElement('a');
-                fileLink.href = fileURL;
-                fileLink.setAttribute('download', response.headers['content-disposition'].split('filename=')[1]);
-                document.body.appendChild(fileLink);
-                console.log();
-                fileLink.click();
-              }else console.log("请求错误status");
-            }).catch((err) => {
-              console.log("请求错误");
+      this.saveDoc(
+          function() {
+            // ElMessage("正在导出...");
+            ElNotification({
+              title: 'Warning',
+              message: '正在导出...',
+              type: 'warning',
+              duration: 0,
             });
-          }else{
-            ElMessage({ message: "导出失败", type: 'warning'});
+            console.log("发送导出文档请求...");
+            this.$axios.get("/document/export",{
+              params:{
+                docId : this.myDocId,
+              }
+            }).then((response)=>{
+              this.$notify.closeAll();
+              if(response.status === 200){
+                if(response.data.code === 0){
+                  // ElMessage({ message: "导出成功", type: 'success'});
+                  ElNotification({
+                    title: 'Warning',
+                    message: '导出成功，正在请求下载...',
+                    type: 'warning',
+                    duration: 0,
+                  });
+                  this.$axios.get(response.data.download, {responseType: 'blob'}).then((response)=>{
+                    if(response.status === 200){
+                      let fileURL = window.URL.createObjectURL(new Blob([response.data]));
+                      let fileLink = document.createElement('a');
+                      fileLink.href = fileURL;
+                      fileLink.setAttribute('download', response.headers['content-disposition'].split('filename=')[1]);
+                      document.body.appendChild(fileLink);
+                      console.log();
+                      fileLink.click();
+                      this.$notify.closeAll();
+                      ElNotification({
+                        title: 'Warning',
+                        message: '导出成功',
+                        type: 'success',
+                      });
+                    }else console.log("请求错误status");
+                  }).catch((err) => {
+                    console.log("请求错误");
+                  });
+                }else{
+                  ElMessage({ message: "导出失败", type: 'warning'});
+                }
+              }else{
+                ElMessage({ message: "导出失败", type: 'warning'});
+              }
+            });
           }
-        }else{
-          ElMessage({ message: "导出失败", type: 'warning'});
-        }
-      });
+      );
+
     },
     getComment(){
       this.$axios.get("comment/list",{
@@ -314,7 +348,7 @@ export default {
       }).then((response)=>{
         if(response.status === 200){
           if(response.data.code === 0){
-            console.log(response.data);
+            console.log('评论请求',response.data);
             this.myComments = response.data.comments;
           }else{
             ElMessage("查看评论失败");
@@ -329,7 +363,7 @@ export default {
         "content" : this.commentContent,
         "docId" : this.$route.params.documentId,
         // "userId" : this.$store.state.loginUser.userId,
-        "userId" : 'Iamzzy',
+        "userId" : this.myEditor,
       }).then((response)=>{
         if(response.status === 200){
           if(response.data.code === 0){
@@ -379,11 +413,11 @@ export default {
             ElMessage({ message: "其他人正在编辑", type: 'warning'});
           }else if(response.data.code === 2){
             ElMessage({ message: "你没有编辑权限!", type: 'warning'});
-            this.editorRef.value.disable();
+            this.editorRef.disable();
             this.myDocName += " (仅查看)";
           }else{
             ElMessage({ message: "申请编辑失败", type: 'warning'});
-            this.editorRef.value.disable();
+            this.editorRef.disable();
             this.myDocName += " (仅查看)";
           }
         }else{
@@ -392,22 +426,59 @@ export default {
       });
     },
     altAuthority(ath){
-      this.$axios.post("document/share",{
-        params:{
+      this.$axios.post("document/share",
+        {
           authority: ath,
           docId: this.myDocId,
-        },
-      }).then((response)=>{
+        }
+      ).then((response)=>{
         if (response.status===1){
-          ElMessage('修改成功')
+          ElMessage('修改成功');
         }
         else{
-          ElMessage('修改失败')
+          ElMessage('修改失败');
         }
       }).catch((err)=>{
         console.log(err)
       })
     },
+    authorityChanged(auth) {
+      console.log('权限发生变化:' ,auth);
+      let editor = this.editorRef;
+      console.log(this.editorRef);
+      if(editor === undefined){
+        setTimeout(()=>{this.authorityChanged(auth)}, 200);
+        return;
+      }
+      if(auth < 4){
+        console.log("文档只读！");
+        editor.disable();
+        this.myTitile = this.myDocName + " (仅查看)";
+      }else{
+        editor.enable();
+        this.myTitle = this.myDocName;
+      }
+    },
+    updateBrowse() {
+      this.$axios.post("document/update-browse",{
+        docId : this.myDocId,
+        userId: this.myEditor,
+      }).then((response)=>{
+        if (response.status===200 && response.data.code === 0){
+          console.log('更新浏览时间成功');
+        }
+        else{
+          console.log('更新浏览时间失败');
+        }
+      }).catch((err)=>{
+        console.log(err)
+      })
+    }
+  },
+  watch: {
+    myAuthority(val) {
+      this.authorityChanged(val);
+    }
   },
 
 
