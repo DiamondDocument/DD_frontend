@@ -10,7 +10,7 @@
             <div style="margin-left: 40px;margin-right: 50px;">
               <el-form  label-width="100px">
                 <el-form-item label="文档名">
-                  <el-input v-model="input" placeholder="文件名" style=" !important;margin-left: 20px;margin-right: 0px;"></el-input>
+                  <el-input v-model="input" placeholder="文件名" style=" !important;margin-left: 20px;margin-right: 0;"></el-input>
                 </el-form-item>
                 <el-form-item label="导入本地">
                   <input type="file" id="keyfile" multiple="multiple" @change="select($event)" style="margin-left: 20px">
@@ -55,8 +55,6 @@ export default {
   },
   methods: {
     commit () {
-      let files = document.getElementById('keyfile').value;
-      console.log(this.fatherId)
       let form=new FormData()
       form.append("type", '1')
       form.append("name", this.input)
@@ -98,14 +96,15 @@ export default {
       console.log(e.currentTarget.files[0].name)//文件名
       let form = new FormData();
       form.append("file",e.currentTarget.files[0]);
+      this.file=e.currentTarget.files[0]
       this.axios.post("file",form).then((response)=>{
         if(response.status === 200){
           console.log(response.data);
         }else{
-          //http没有返回200
+          ElMessage('发生错误')
         }
       }).catch((err)=>{
-        //报错
+        console.log(err)
       })
       // }
     },
