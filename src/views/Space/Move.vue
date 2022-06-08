@@ -1,32 +1,37 @@
 <template>
-
-  <el-menu default-active="'/' +this.$route.path.split('/')[1]">
-    <el-button style="float: right; margin-right: 20px">
-      <span style="vertical-align: middle" @click="getFolderData(1)">后退</span>
-    </el-button>
-    <el-button type="primary" style="float: right; margin-right: 20px">
-      <span style="vertical-align: middle" @click="cancel">取消</span>
-    </el-button>
-    <el-button type="primary" style="float: right; margin-right: 20px">
-      <span style="vertical-align: middle" @click="commit">移动到此处</span>
-    </el-button>
-  </el-menu>
-  <el-table :data="tableData" stripe
-            v-loading="loading"
-            element-loading-text="少女折寿中"
-            height="800"
-            style="width:100%;margin-top: 0"
-            :row-style="{height: '0'}"
-            :cell-style="{padding: '20px'}"
-            highlight-current-row
-            @row-dblclick="commit"
-            @cell-mouse-enter="recordId">
-    <el-table-column prop="docName" label="文件名" width="450"></el-table-column>
-    <el-table-column prop="creatorName" label="创建者" width="300"></el-table-column>
-    <el-table-column prop="modifyTime" label="修改日期" width="400"></el-table-column>
-    <el-table-column prop="modifierName" label="修改人" width="300"></el-table-column>
-    <el-table-column prop="size" label="大小" width="300"></el-table-column>
-  </el-table>
+  <div style="margin: 15px 0 5px 0;border-bottom: 1px solid #e8e8e8;padding-bottom: 10px">
+    <el-menu default-active="'/' +this.$route.path.split('/')[1]" >
+      <el-button type="primary" icon="ArrowLeft" text @click="getFolderData(true)">返回上一级</el-button>
+      <el-button type="primary" style="float: right; margin-right: 20px">
+        <span style="vertical-align: middle" @click="cancel">取消</span>
+      </el-button>
+      <el-button type="primary" style="float: right; margin-right: 20px">
+        <span style="vertical-align: middle" @click="commit">移动到此处</span>
+      </el-button>
+    </el-menu>
+  </div>
+  <div style="height: 610px;">
+    <el-table :data="tableData" stripe
+              v-loading="loading"
+              element-loading-text="少女折寿中"
+              style="width:100%;margin-top: 0;"
+              height="100%"
+              :row-style="{height: '0'}"
+              :cell-style="{padding: '20px'}"
+              highlight-current-row
+              @row-dblclick="edit"
+              @cell-mouse-enter="recordId">
+      <el-table-column width="50" label="">
+        <template #default="scope">
+          <el-icon v-if="scope.row.fileType===2"><Folder /></el-icon>
+        </template>
+      </el-table-column>
+      <el-table-column prop="fileName" label="文件名" width="400"></el-table-column>
+      <el-table-column prop="createInfo" label="创建时间" width="350"></el-table-column>
+      <el-table-column prop="modifyInfo" label="最后修改" width="350"></el-table-column>
+      <el-table-column prop="size" label="大小" ></el-table-column>
+    </el-table>
+  </div>
 </template>
 
 <script>
@@ -89,38 +94,48 @@ export default {
   },
 
   mounted() {
-    this.getFolderData(0)
+    this.getFolderData(false)
   },
   methods: {
     //获得打开的文件夹里面的文件列表
     getFolderData(isback) {
-      this.$axios.get('/api/space', {
+      this.$axios.get('/space', {
         params: {
           type: "user",
-          ownerId: this.$store.state.userId,
+          ownerId: this.$store.state.loginUser.userId,
           folderId: this.folderId,
-          visitorId: this.$store.state.userId,
+          visitorId: this.$store.state.loginUser.userId,
           isBack: isback,
         }
       }).then((response) => {
-        if(response.status===0){
-          this.folderId=response.data.parentId
-          this.tableData.clear()
-          this.tableData = response.data.files
-          //去掉文档，保留文件夹
-          for (let i = 0; i < this.tableData.length; i++) {
-            if (this.tableData[i].fileType===1)
-              this.tableData.remove(this.tableData[i])
+        console.log(response);
+        if(response.status === 200) {
+          if (response.data.code === 0) {
+            if (isback) this.folderId = response.data.parentId;
+
+            let files = response.data.files;
+            this.tableData = files;
+            for(let i = 0; i < this.tableData.length; i++){
+              let time =  files[i].createTime;
+              time = time.split('+')[0];
+              time = time.split('T')[0] + ' ' + time.split('T')[1].slice(0,-7);
+              this.tableData[i].createInfo = time + '  by ' + files[i].creatorName;
+              if(files[i].modifyTime === null) this.tableData[i].modifyInfo = "无修改记录";
+              else{
+                time =  files[i].modifyTime;
+                time = time.split('+')[0];
+                time = time.split('T')[0] + ' ' + time.split('T')[1].slice(0,-7);
+                this.tableData[i].modifyInfo = time + '  by ' + files[i].modifierName;
+              }
+            }
+          } else if (response.data.code === -1) {
+            ElMessage({message: '获取列表失败', type: 'warning'});
           }
-        }
-        else if (response.status===-1){
-          ElMessage('获取列表失败')
-        }
-        else{
-          ElMessage('其他错误')
+        }else{
+          ElMessage({ message: "status = " + response.status, type: 'warning'});
         }
       }).catch((err) => {
-        ElMessage(err)
+        console.log(err);
       })
     },
     //跟踪鼠标指向的文件信息
@@ -131,7 +146,7 @@ export default {
     },
     edit() {
       this.folderId=this.curFileId
-      this.getFolderData(0)
+      this.getFolderData(false)
     },
     commit() {
       this.$emit('commit', this.commitFileId)

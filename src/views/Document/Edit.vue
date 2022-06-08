@@ -405,7 +405,7 @@ export default {
           ElMessage('修改失败')
         }
       }).catch((err)=>{
-        ElMessage(err)
+        console.log(err)
       })
     },
   },

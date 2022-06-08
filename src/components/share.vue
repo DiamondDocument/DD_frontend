@@ -66,7 +66,7 @@ export default {
       }).then((response)=> {
         this.link = response.data.link
       }).catch((err)=>{
-        ElMessage(err)
+        console.log(err)
       })
       this.visible = true
     }

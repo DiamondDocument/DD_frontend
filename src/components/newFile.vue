@@ -45,29 +45,30 @@ export default {
       let files = document.getElementById('keyfile').value;
       //选择了新建空白文档
       if (this.fatherId===-1) this.fatherId=null
-      this.$axios.post("/api/file/create", {
+      this.$axios.post("/file/create", {
         "type": 1,
         "name": this.input,
         "authority": 3,
-        "creatorId": this.$store.state.userId,
+        "creatorId": this.$store.state.loginUser.userId,
         "parentId": this.fatherId,
         "file": files,
       }).then((response)=>{
-        if (response.status===0){
-          ElMessage('创建成功')
+        if(response.status === 200){
+          if (response.data.code === 0) {
+            ElMessage('创建成功')
+          } else if(response.data.code===1){
+            ElMessage('文件重名，已修改')
+          }else if(response.data.code===2){
+            ElMessage('您没有权限')
+          }else{
+            ElMessage('其他错误')
+          }
+        }else{
+          ElMessage({ message: "status = " + response.status, type: 'warning'});
         }
-        else if (response.status===-1){
-          ElMessage('创建失败')
-        }
-        else if (response.status===1){
-          ElMessage('文件重名,已自动修改')
-        }
-        else{
-          ElMessage('其他错误')
-        }
-      }).catch((err)=>{
-        console.log(err)
-      });
+      }).catch((err) => {
+        console.log(err);
+      })
       this.hide()
     },
     hide () {

@@ -152,81 +152,86 @@ export default {
   methods: {
     //获取消息列表
     getMessage() {
-      console.log("getmsg")
       this.$axios.get('/message/list', {
         params: {
-          userId: this.$store.state.userId,
+          userId: this.$store.state.loginUser.userId,
         }
       }).then((response) => {
-        if(response.status===0) {
-          console.log("in code===0")
-          this.messages.clear()
-          this.messages = response.data.msg
-          this.messageNum = this.messages.length
+        if(response.status===200) {
+          if(response.data.code===0) {
+            this.messages = response.data.msg
+            this.messageNum = this.messages.length
 
-          //获取未读数量，根据msgType生成格式化摘要信息
-          for (let i = 0; i < this.messageNum; i++) {
-            let msg = this.messages[i]
-            if (!msg.isRead)
-              this.messageNotRead++;
-            switch (msg.msgType) {
-              case 1:
-                msg.title = '系统通知您' + msg.content
-                break;
-              case 2:
-                msg.title = msg.senderName + '申请加入' + '团队：' + msg.teamName
-                break;
-              case 3:
-                if (msg.isAgree) {
-                  msg.title = msg.senderName + '同意你加入团队：' + msg.teamName
-                }else{
-                  msg.title = msg.senderName + '拒绝你加入团队：' + msg.teamName
-                }
-                break;
-              case 4:
-                msg.title = msg.senderName + '邀请你加入团队：' + msg.teamName
-                break;
-              case 5:
-                if (msg.isAgree) {
-                  msg.title = msg.senderName + '同意加入你的团队：' + msg.teamName
-                }else{
-                  msg.title = msg.senderName + '拒绝加入你的团队：' + msg.teamName
-                }
-                break;
-              case 6:
-                msg.title = msg.senderName + '评论了你的文档：' + msg.docName
-                break;
-              default:
-                msg.title = msg.senderName + '在文档：' + msg.docName + ' 中提到了你'
-                break;
+            //获取未读数量，根据msgType生成格式化摘要信息
+            for (let i = 0; i < this.messageNum; i++) {
+              let msg = this.messages[i]
+              if (!msg.isRead)
+                this.messageNotRead++;
+              switch (msg.msgType) {
+                case 1:
+                  msg.title = '系统通知您' + msg.content
+                  break;
+                case 2:
+                  msg.title = msg.senderName + '申请加入' + '团队：' + msg.teamName
+                  break;
+                case 3:
+                  if (msg.isAgree) {
+                    msg.title = msg.senderName + '同意你加入团队：' + msg.teamName
+                  } else {
+                    msg.title = msg.senderName + '拒绝你加入团队：' + msg.teamName
+                  }
+                  break;
+                case 4:
+                  msg.title = msg.senderName + '邀请你加入团队：' + msg.teamName
+                  break;
+                case 5:
+                  if (msg.isAgree) {
+                    msg.title = msg.senderName + '同意加入你的团队：' + msg.teamName
+                  } else {
+                    msg.title = msg.senderName + '拒绝加入你的团队：' + msg.teamName
+                  }
+                  break;
+                case 6:
+                  msg.title = msg.senderName + '评论了你的文档：' + msg.docName
+                  break;
+                default:
+                  msg.title = msg.senderName + '在文档：' + msg.docName + ' 中提到了你'
+                  break;
+              }
             }
+          }else if (response.data.code===-1){
+            ElMessage('列表获取失败')
+          }else{
+            ElMessage('其他错误')
           }
-        }
-        else if (response.status===-1){
-          ElMessage('获取列表失败')
-        }
-        else{
-          ElMessage('其他错误')
+        }else{
+          ElMessage({ message: "status = " + response.status, type: 'warning'});
         }
       }).catch((err) => {
-        ElMessage(err)
+        console.log(err)
       })
     },
     read(i) {
       this.messages[i].isRead=true;
-      this.$axios.post("/api/message/mark",
+      this.$axios.post("/message/mark",
           {
             "msgId": this.messages[i].msgId
           }
       ).then((response)=>{
-        if(response.status === 0){
-          console.log(response.data);
+        if(response.status === 200){
+          if (response.data.code === 0) {
+            console.log('已读')
+          } else if(response.data.code===-1){
+            ElMessage('无法已读')
+          }else{
+            ElMessage('其他错误')
+          }
         }else{
-          console.log('其他错误')
+          ElMessage({ message: "status = " + response.status, type: 'warning'});
         }
-      }).catch((err)=>{
-        console.log(err)
-      });
+      }).catch((err) => {
+        console.log(err);
+      })
       this.messageNotRead--;
     },
     allRead() {

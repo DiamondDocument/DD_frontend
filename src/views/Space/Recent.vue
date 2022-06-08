@@ -1,23 +1,31 @@
 <template>
-  <el-menu default-active="'/' +this.$route.path.split('/')[1]">
-    <el-select v-model="value" placeholder="排序方式" style="float: right; margin-right: 20px">
-      <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
-    </el-select>
-  </el-menu>
-  <el-table :data="tableData" stripe
-            height="800"
-            style="width:100%;margin-top: 0"
-            :row-style="{height: '0'}"
-            :cell-style="{padding: '20px'}"
-            @row-contextmenu="rowContextmenu"
-            highlight-current-row
-            @row-dblclick="edit">
-    <el-table-column prop="docName" label="文件名" width="450"></el-table-column>
-    <el-table-column prop="creatorName" label="创建者" width="300"></el-table-column>
-    <el-table-column prop="modifyTime" label="修改日期" width="400"></el-table-column>
-    <el-table-column prop="modifierName" label="修改人" width="300"></el-table-column>
-    <el-table-column prop="size" label="大小" width="300"></el-table-column>
-  </el-table>
+  <div style="margin: 15px 0 5px 0;border-bottom: 1px solid #e8e8e8;padding-bottom: 10px">
+    <el-menu default-active="'/' +this.$route.path.split('/')[1]" >
+    </el-menu>
+  </div>
+  <div style="height: 610px;">
+    <el-table :data="tableData" stripe
+              v-loading="loading"
+              element-loading-text="少女折寿中"
+              style="width:100%;margin-top: 0;"
+              height="100%"
+              :row-style="{height: '0'}"
+              :cell-style="{padding: '20px'}"
+              @row-contextmenu="rowContextmenu"
+              highlight-current-row
+              @row-dblclick="edit"
+              @cell-mouse-enter="recordId">
+      <el-table-column width="50" label="">
+        <template #default="scope">
+          <el-icon v-if="scope.row.fileType===1"><Document /></el-icon>
+        </template>
+      </el-table-column>
+      <el-table-column prop="fileName" label="文件名" width="400"></el-table-column>
+      <el-table-column prop="createInfo" label="创建时间" width="350"></el-table-column>
+      <el-table-column prop="modifyInfo" label="最后修改" width="350"></el-table-column>
+      <el-table-column prop="size" label="大小" ></el-table-column>
+    </el-table>
+  </div>
   <index v-if="menuVisible" @foo="foo" ref="contextButton" :spaceType="spaceType"
          @collect="collect" @_export="_export"
          @share="showShare('默认文件名')" @edit="edit"
@@ -98,7 +106,7 @@ export default {
     }
   },
   mounted() {
-    this.getFolderData(0)
+    this.getFolderData(false)
   },
   methods: {
     rowContextmenu (row, column, event) {
@@ -115,25 +123,51 @@ export default {
       this.menuVisible = false;
       document.removeEventListener('click', this.foo);
     },
+    //跟踪鼠标指向的文件信息
+    recordId(row) {
+      this.curFileId = row.id
+      this.curFileAth = row.authority
+      this.curFileShared = row.shared
+    },
     //获得打开的文件夹里面的文件列表
-    getFolderData() {
-      this.$axios.get('/api/space/last', {
+    getFolderData(isback) {
+      this.$axios.get('/space/last', {
         params: {
-          userId: this.$store.state.userId,
+          type: "user",
+          ownerId: this.$store.state.loginUser.userId,
+          folderId: this.folderId,
+          visitorId: this.$store.state.loginUser.userId,
+          isBack: isback,
         }
       }).then((response) => {
-        if(response.status===0){
-          this.tableData.clear()
-          this.tableData = response.data.files
-        }
-        else if (response.status===-1){
-          ElMessage('获取列表失败')
-        }
-        else{
-          ElMessage('其他错误')
+        console.log(response);
+        if(response.status === 200) {
+          if (response.data.code === 0) {
+            if (isback) this.folderId = response.data.parentId;
+
+            let files = response.data.files;
+            this.tableData = files;
+            for(let i = 0; i < this.tableData.length; i++){
+              let time =  files[i].createTime;
+              time = time.split('+')[0];
+              time = time.split('T')[0] + ' ' + time.split('T')[1].slice(0,-7);
+              this.tableData[i].createInfo = time + '  by ' + files[i].creatorName;
+              if(files[i].modifyTime === null) this.tableData[i].modifyInfo = "无修改记录";
+              else{
+                time =  files[i].modifyTime;
+                time = time.split('+')[0];
+                time = time.split('T')[0] + ' ' + time.split('T')[1].slice(0,-7);
+                this.tableData[i].modifyInfo = time + '  by ' + files[i].modifierName;
+              }
+            }
+          } else if (response.data.code === -1) {
+            ElMessage({message: '获取列表失败', type: 'warning'});
+          }
+        }else{
+          ElMessage({ message: "status = " + response.status, type: 'warning'});
         }
       }).catch((err) => {
-        ElMessage(err)
+        console.log(err);
       })
     },
     edit (row) {
@@ -143,21 +177,23 @@ export default {
       })
     },
     collect () {
-      this.$axios.post("/api/document/like", {
-        "userId": this.$store.state.userId,
+      this.$axios.post("/document/like", {
+        "userId": this.$store.state.loginUser.userId,
         "docId": this.curFileId
       }).then((response) => {
-        if (response.status===0) {
-          ElMessage("收藏成功/已经被收藏")
+        if(response.status === 200){
+          if (response.data.code === 0) {
+            ElMessage('收藏成功')
+          } else if(response.data.code===-1){
+            ElMessage('收藏失败')
+          }else{
+            ElMessage('其他错误')
+          }
+        }else{
+          ElMessage({ message: "status = " + response.status, type: 'warning'});
         }
-        else if(response.status===1){
-          ElMessage('收藏夹已经存在该文件')
-        }
-        else{
-          ElMessage('您没有权限')
-        }
-      }).catch((err)=>{
-        ElMessage(err)
+      }).catch((err) => {
+        console.log(err);
       })
     },
     altAuthority(ath) {
@@ -168,13 +204,19 @@ export default {
           fileId: this.curFileId,
         },
       }).then((response) => {
-        if (response.status === 1) {
-          ElMessage('修改成功')
-        } else {
-          ElMessage('修改失败')
+        if(response.status === 200){
+          if (response.data.code === 0) {
+            ElMessage('修改成功')
+          } else if(response.data.code===-1){
+            ElMessage('修改失败')
+          }else{
+            ElMessage('其他错误')
+          }
+        }else{
+          ElMessage({ message: "status = " + response.status, type: 'warning'});
         }
       }).catch((err) => {
-        ElMessage(err)
+        console.log(err);
       })
     },
     _export (){
@@ -212,41 +254,26 @@ export default {
       });
     },
     notShare(){
-      this.$axios.post("/api/document/dis-share",
+      this.$axios.post("/document/dis-share",
           {
             "docId": this.curFileId
           }
       ).then((response)=>{
-        if(response.status === 0){
-          console.log(response.data);
-          ElMessage("取消分享")
+        if(response.status === 200){
+          if (response.data.code === 0) {
+            ElMessage('取消分享成功')
+          } else if(response.data.code===-1){
+            ElMessage('取消分享失败')
+          }else{
+            ElMessage('其他错误')
+          }
         }else{
-          console.log('failed')
-          ElMessage('操作失败')
+          ElMessage({ message: "status = " + response.status, type: 'warning'});
         }
-      }).catch((err)=>{
-        console.log(err)
-      });
+      }).catch((err) => {
+        console.log(err);
+      })
     },
-    //暂时不在其他空间设置取消收藏的操作
-    // disCollect() {
-    //   this.$axios.post("/notCollect",
-    //       {
-    //         params:{
-    //           fileId: this.curFileId
-    //         }
-    //       }
-    //   ).then((response)=>{
-    //     if(response.status === 200){
-    //       console.log(response.data);
-    //       ElMessage("取消收藏")
-    //     }else{
-    //       console.log('failed')
-    //     }
-    //   }).catch((err)=>{
-    //     console.log('err!!!')
-    //   });
-    // },
   }
 }
 </script>

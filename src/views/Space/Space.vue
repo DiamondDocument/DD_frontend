@@ -1,7 +1,7 @@
 <template>
   <div style="margin: 15px 0 5px 0;border-bottom: 1px solid #e8e8e8;padding-bottom: 10px" v-if="!moving && !tmpVisible">
     <el-menu default-active="'/' +this.$route.path.split('/')[1]" >
-      <el-button type="primary" icon="ArrowLeft" text>返回上一级</el-button>
+      <el-button type="primary" icon="ArrowLeft" text @click="getFolderData(true)">返回上一级</el-button>
       <el-input v-model="input" placeholder="空间内搜索文件" style="width: 20%"></el-input>
       <el-button type="primary" style="margin-left: 10px"  @click="search">
         <el-icon style="vertical-align: middle;">
@@ -54,7 +54,6 @@
   <new-file ref="newFile" :fatherId="folderId"></new-file>
   <move ref="move" @commit="move" @cancel="this.moving=false" v-if="moving"></move>
   <my ref="My" v-if="tmpVisible" :spaceUsing="true" @useTmp="useTmp" @cancel="tmpVisible=false"></my>
-<!--  重命名懒得再写组件了，space臃肿就臃肿一点吧……-->
   <el-dialog title="重命名" v-model="renameVisible" width="30%">
     <span>请输入文件名：</span>
     <el-input v-model="reName" style="width: 20%"></el-input>
@@ -77,6 +76,7 @@ import {ElMessage} from "element-plus";
 import newFile from "@/components/newFile";
 import move from "@/views/Space/Move";
 import My from "@/views/Template/My";
+
 export default {
   name: "Space",
   components: {Search, index, authority, share, newFile, move, My},
@@ -98,7 +98,7 @@ export default {
       moving: false,            //是否在移动文件，决定文件系统如何显示
       folderId: null,           //当前处在的文件夹的id，null为根目录
       renameVisible: false,     //控制重命名对话框显示
-      tmpVisible: false,
+      tmpVisible: false,        //控制选择模板的显示
       tableData: [
         {
           fileType: 1,
@@ -112,139 +112,6 @@ export default {
           shared: false,
           isFolder: false,
         },
-        {
-          fileType: 1,
-          docId: 0,
-          docName: '看到我说明你没获取到文件列表',
-          creatorName: '赵老板',
-          modifyTime: '1919-08-10',
-          modifierName: 'lyh',
-          authority: 1,
-          size: '20K',
-          shared: false,
-          isFolder: false,
-        },
-        {
-          fileType: 1,
-          docId: 0,
-          docName: '看到我说明你没获取到文件列表',
-          creatorName: '赵老板',
-          modifyTime: '1919-08-10',
-          modifierName: 'lyh',
-          authority: 1,
-          size: '20K',
-          shared: false,
-          isFolder: false,
-        },
-        {
-          fileType: 1,
-          docId: 0,
-          docName: '看到我说明你没获取到文件列表',
-          creatorName: '赵老板',
-          modifyTime: '1919-08-10',
-          modifierName: 'lyh',
-          authority: 1,
-          size: '20K',
-          shared: false,
-          isFolder: false,
-        },{
-          fileType: 1,
-          docId: 0,
-          docName: '看到我说明你没获取到文件列表',
-          creatorName: '赵老板',
-          modifyTime: '1919-08-10',
-          modifierName: 'lyh',
-          authority: 1,
-          size: '20K',
-          shared: false,
-          isFolder: false,
-        },{
-          fileType: 1,
-          docId: 0,
-          docName: '看到我说明你没获取到文件列表',
-          creatorName: '赵老板',
-          modifyTime: '1919-08-10',
-          modifierName: 'lyh',
-          authority: 1,
-          size: '20K',
-          shared: false,
-          isFolder: false,
-        },{
-          fileType: 1,
-          docId: 0,
-          docName: '看到我说明你没获取到文件列表',
-          creatorName: '赵老板',
-          modifyTime: '1919-08-10',
-          modifierName: 'lyh',
-          authority: 1,
-          size: '20K',
-          shared: false,
-          isFolder: false,
-        },{
-          fileType: 1,
-          docId: 0,
-          docName: '看到我说明你没获取到文件列表',
-          creatorName: '赵老板',
-          modifyTime: '1919-08-10',
-          modifierName: 'lyh',
-          authority: 1,
-          size: '20K',
-          shared: false,
-          isFolder: false,
-        },{
-          fileType: 1,
-          docId: 0,
-          docName: '看到我说明你没获取到文件列表',
-          creatorName: '赵老板',
-          modifyTime: '1919-08-10',
-          modifierName: 'lyh',
-          authority: 1,
-          size: '20K',
-          shared: false,
-          isFolder: false,
-        },{
-          fileType: 1,
-          docId: 0,
-          docName: '看到我说明你没获取到文件列表',
-          creatorName: '赵老板',
-          modifyTime: '1919-08-10',
-          modifierName: 'lyh',
-          authority: 1,
-          size: '20K',
-          shared: false,
-          isFolder: false,
-        },{
-          fileType: 1,
-          docId: 0,
-          docName: '看到我说明你没获取到文件列表',
-          creatorName: '赵老板',
-          modifyTime: '1919-08-10',
-          modifierName: 'lyh',
-          authority: 1,
-          size: '20K',
-          shared: false,
-          isFolder: false,
-        },{
-          fileType: 1,
-          docId: 0,
-          docName: '看到我说明你没获取到文件列表',
-          creatorName: '赵老板',
-          modifyTime: '1919-08-10',
-          modifierName: 'lyh',
-          authority: 1,
-          size: '20K',
-          shared: false,
-          isFolder: false,
-        },
-
-
-
-
-
-
-
-
-
       ],
       options: [
         {
@@ -296,7 +163,7 @@ export default {
     }
   },
   mounted() {
-    this.getFolderData(0)
+    this.getFolderData(false)
   },
   methods: {
     //获得打开的文件夹里面的文件列表
@@ -307,7 +174,7 @@ export default {
           ownerId: this.$store.state.loginUser.userId,
           folderId: this.folderId,
           visitorId: this.$store.state.loginUser.userId,
-          isBack: false,
+          isBack: isback,
         }
       }).then((response) => {
         console.log(response);
@@ -365,33 +232,34 @@ export default {
         "type": 1,
         "name": name,
         "authority": 3,
-        "creatorId": this.$store.state.userId,
+        "creatorId": this.$store.state.loginUser.userId,
         "parentId": this.folderId,
         "templateId": id,
       }).then((response)=>{
-        if (response.status===0){
-          ElMessage('创建成功')
+        if(response.status === 200){
+          if (response.data.code === 0) {
+            ElMessage('创建成功')
+            this.getFolderData(false)
+          } else if(response.data.code===-1){
+            ElMessage('创建失败')
+          }else if (response.data.code===1){
+            ElMessage('文件重名，已修改')
+          }else{
+            ElMessage('其他错误')
+          }
+        }else{
+          ElMessage({ message: "status = " + response.status, type: 'warning'});
         }
-        else if (response.status===-1){
-          ElMessage('创建失败')
-        }
-        else if (response.status===1){
-          ElMessage('文件重名,已自动修改')
-        }
-        else{
-          ElMessage('其他错误')
-        }
-      }).catch((err)=>{
-        console.log(err)
-      });
+      }).catch((err) => {
+        console.log(err);
+      })
       this.tmpVisible=false
-      this.getFolderData(0)
     },
     //打开文档或文件夹
     edit(row) {
       if (row.fileType===2) {
         this.folderId = this.curFileId
-        this.getFolderData(0)
+        this.getFolderData(false)
       }
       else {
         this.$router.push({
@@ -403,26 +271,28 @@ export default {
     search(){
       //搜索框为空，默认获取全部文件，也能相当于在搜索之后的返回
       if (this.input==='') {
-        this.getFolderData(0)
+        this.getFolderData(false)
         return
       }
-      let that = this;
       this.$axios.post("/search/document", {
         "type": "user",
-        "ownerId": this.$store.state.userId,
-        "visitorId": this.$store.state.userId,
+        "ownerId": this.$store.state.loginUser.userId,
+        "visitorId": this.$store.state.loginUser.userId,
         "key": this.input,
       }).then((response) => {
-        if (response.status === 0) {
-          that.tableData.clear();
-          that.tableData=response.data.documents;
-        } else if (response.status === 1) {
-          ElMessage('获取失败')
-        } else{
-          ElMessage('其他错误')
+        if(response.status === 200){
+          if (response.data.code === 0) {
+            this.tableData = response.data.documents
+          } else if(response.data.code===-1){
+            ElMessage('操作失败')
+          }else{
+            ElMessage('其他错误')
+          }
+        }else{
+          ElMessage({ message: "status = " + response.status, type: 'warning'});
         }
       }).catch((err) => {
-        ElMessage(err)
+        console.log(err);
       })
     },
     rename() {
@@ -430,32 +300,43 @@ export default {
         "fileId": this.curFileId,
         "newName": this.reName,
       }).then((response) => {
-        if (response.status === 0) {
-          ElMessage('修改成功')
-        } else if (response.status === 1) {
-          ElMessage('文件重名，已自动修改')
-        } else {
-          ElMessage('其他错误')
+        if(response.status === 200){
+          if (response.data.code === 0) {
+            ElMessage('重命名成功')
+            this.getFolderData(false)
+          } else if(response.data.code===-1){
+            ElMessage('重命名失败')
+          }else{
+            ElMessage('其他错误')
+          }
+        }else{
+          ElMessage({ message: "status = " + response.status, type: 'warning'});
         }
       }).catch((err) => {
-        ElMessage(err)
+        console.log(err);
       })
       this.renameVisible = false;
     },
     collect() {
       this.$axios.post("/document/like", {
-        "userId": this.$store.state.userId,
+        "userId": this.$store.state.loginUser.userId,
         "docId": this.curFileId
       }).then((response) => {
-        if (response.status === 0) {
-          ElMessage("收藏成功/已经被收藏")
-        } else if (response.status === 1) {
-          ElMessage('收藏夹已经存在该文件')
-        } else {
-          ElMessage('您没有权限')
+        if(response.status === 200){
+          if (response.data.code === 0) {
+            ElMessage('收藏成功')
+          } else if(response.data.code===1){
+            ElMessage('收藏夹存在该文件')
+          }else if(response.data.code===2){
+            ElMessage('您没有权限')
+          }else{
+            ElMessage('其他错误')
+          }
+        }else{
+          ElMessage({ message: "status = " + response.status, type: 'warning'});
         }
       }).catch((err) => {
-        ElMessage(err)
+        console.log(err);
       })
     },
     altAuthority(ath) {
@@ -464,15 +345,19 @@ export default {
         "fileId": this.curFileId,
         "newAuth": ath,
       }).then((response) => {
-        if (response.status === 0) {
-          ElMessage('修改成功')
-        } else if(response.status===-1){
-          ElMessage('修改失败')
+        if(response.status === 200){
+          if (response.data.code === 0) {
+            ElMessage('修改成功')
+          } else if(response.data.code===-1){
+            ElMessage('修改失败')
+          }else{
+            ElMessage('其他错误')
+          }
         }else{
-          ElMessage('其他错误')
+          ElMessage({ message: "status = " + response.status, type: 'warning'});
         }
       }).catch((err) => {
-        ElMessage(err)
+        console.log(err);
       })
     },
     move(folderId) {
@@ -482,34 +367,47 @@ export default {
             "newParentId": folderId,
           }
       ).then((response) => {
-        if (response.status === 0) {
-          console.log(response.data);
-          ElMessage("移动成功")
-        } else if (response.status === 1) {
-          ElMessage('有重名文件，已自动修改')
-        } else {
-          ElMessage('其他错误')
+        if(response.status === 200){
+          if (response.data.code === 0) {
+            ElMessage('移动成功')
+            this.getFolderData(false)
+          } else if(response.data.code===1){
+            ElMessage('文件重名，已修改')
+          }else if(response.data.code===-1){
+            ElMessage('移动失败')
+          }else{
+            ElMessage('其他错误')
+          }
+        }else{
+          ElMessage({ message: "status = " + response.status, type: 'warning'});
         }
       }).catch((err) => {
-        console.log(err)
-      });
+        console.log(err);
+      })
       this.moving = false
     },
     remove() {
       this.$axios.post("/file/remove",
           {
-            "userId": this.$store.state.userId,
+            "userId": this.$store.state.loginUser.userId,
             "fileId": this.curFileId,
           }
       ).then((response) => {
-        if (response.status === 0) {
-          ElMessage("删除成功")
-        } else {
-          console.log('其他错误')
-        }
-      }).catch((err) => {
-        console.log(err)
-      });
+        if(response.status === 200){
+          if (response.data.code === 0) {
+            ElMessage('删除成功')
+            this.getFolderData(false)
+          } else if(response.data.code===-1){
+            ElMessage('删除失败')
+          }else{
+            ElMessage('其他错误')
+          }
+        }else{
+          ElMessage({ message: "status = " + response.status, type: 'warning'});
+      }
+    }).catch((err) => {
+  console.log(err);
+})
     },
     _export() {
       console.log("发送导出文档请求...");
@@ -545,42 +443,27 @@ export default {
         console.log(err);
       });
     },
-    notShare() {
+    notShare(){
       this.$axios.post("/document/dis-share",
           {
             "docId": this.curFileId
           }
-      ).then((response) => {
-        if (response.status === 0) {
-          console.log(response.data);
-          ElMessage("取消分享")
-        } else {
-          console.log('failed')
-          ElMessage('操作失败')
+      ).then((response)=>{
+        if(response.status === 200){
+          if (response.data.code === 0) {
+            ElMessage('取消分享成功')
+          } else if(response.data.code===-1){
+            ElMessage('取消分享失败')
+          }else{
+            ElMessage('其他错误')
+          }
+        }else{
+          ElMessage({ message: "status = " + response.status, type: 'warning'});
         }
       }).catch((err) => {
-        console.log(err)
-      });
+        console.log(err);
+      })
     },
-    //暂时不在其他空间设置取消收藏的操作
-    // disCollect() {
-    //   this.$axios.post("/notCollect",
-    //       {
-    //         params:{
-    //           fileId: this.curFileId
-    //         }
-    //       }
-    //   ).then((response)=>{
-    //     if(response.status === 200){
-    //       console.log(response.data);
-    //       ElMessage("取消收藏")
-    //     }else{
-    //       console.log('failed')
-    //     }
-    //   }).catch((err)=>{
-    //     console.log('err!!!')
-    //   });
-    // },
   },
 }
 </script>
