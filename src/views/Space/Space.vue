@@ -32,19 +32,19 @@
               highlight-current-row
               @row-dblclick="edit"
               @cell-mouse-enter="recordId">
-      <el-table-column width="55" label="">
+      <el-table-column width="50" label="">
         <template #default="scope">
           <el-icon v-if="scope.row.fileType===1"><Document /></el-icon>
           <el-icon v-else><Folder /></el-icon>
         </template>
       </el-table-column>
       <el-table-column prop="fileName" label="文件名" width="400"></el-table-column>
-      <el-table-column prop="createInfo" label="创建时间" width="350"></el-table-column>
+      <el-table-column prop="creatorInfo" label="创建时间" width="350"></el-table-column>
       <el-table-column prop="modifyInfo" label="最后修改" width="350"></el-table-column>
       <el-table-column prop="size" label="大小" ></el-table-column>
     </el-table>
   </div>
-  <index v-if="menuVisible" @foo="foo" ref="index" :spaceType="spaceType" :authority=this.curFileAth :shared="this.curFileShared"
+  <index v-if="menuVisible" @foo="foo" ref="index" :spaceType="this.spaceType" :authority=this.curFileAth :shared="this.curFileShared"
                   @collect="collect" @move="this.moving=true" @remove="remove" @_export="_export"
                   @share="showShare()" @rename="renameVisible=true"
                   @authority = "showAuthority()" @notShare="notShare"
@@ -95,7 +95,7 @@ export default {
       link: '',                 //分享用的链接
       curFileId: Number,
       curFileAth: Number,
-      curFileShared: Boolean,
+      curFileShared: Number,
       exportLink: '',           //下载文件的链接
       moving: false,            //是否在移动文件，决定文件系统如何显示
       folderId: null,           //当前处在的文件夹的id，null为根目录
@@ -191,19 +191,19 @@ export default {
 
             let files = response.data.files;
             this.tableData = files;
-            for(let i = 0; i < this.tableData.length; i++){
-              let time =  files[i].createTime;
-              time = time.split('+')[0];
-              time = time.split('T')[0] + ' ' + time.split('T')[1].slice(0,-7);
-              this.tableData[i].createInfo = time + '  by ' + files[i].creatorName;
-              if(files[i].modifyTime === null) this.tableData[i].modifyInfo = "无修改记录";
-              else{
-                time =  files[i].modifyTime;
-                time = time.split('+')[0];
-                time = time.split('T')[0] + ' ' + time.split('T')[1].slice(0,-7);
-                this.tableData[i].modifyInfo = time + '  by ' + files[i].modifierName;
-              }
-            }
+            // for(let i = 0; i < this.tableData.length; i++){
+            //   let time =  files[i].createTime;
+            //   time = time.split('+')[0];
+            //   time = time.split('T')[0] + ' ' + time.split('T')[1].slice(0,-7);
+            //   this.tableData[i].createInfo = time + '  by ' + files[i].creatorName;
+            //   if(files[i].modifyTime === null) this.tableData[i].modifyInfo = "无修改记录";
+            //   else{
+            //     time =  files[i].modifyTime;
+            //     time = time.split('+')[0];
+            //     time = time.split('T')[0] + ' ' + time.split('T')[1].slice(0,-7);
+            //     this.tableData[i].modifyInfo = time + '  by ' + files[i].modifierName;
+            //   }
+            // }
           } else if (response.data.code === -1) {
             ElMessage({message: '获取列表失败', type: 'warning'});
           }
@@ -232,7 +232,7 @@ export default {
       this.curFileId = row.fileId
       this.curFileAth = row.authority
       this.curFileShared = row.shared
-      console.log(row.fileId, row.authority)
+      console.log(row.fileId, row.authority, row.shared)
     },
     //从模板创建
     useTmp(id,name){

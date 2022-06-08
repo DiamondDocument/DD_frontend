@@ -15,11 +15,6 @@
               highlight-current-row
               @row-dblclick="edit"
               @cell-mouse-enter="recordId">
-      <el-table-column width="50" label="">
-        <template #default="scope">
-          <el-icon v-if="scope.row.fileType===1"><Document /></el-icon>
-        </template>
-      </el-table-column>
       <el-table-column prop="fileName" label="文件名" width="400"></el-table-column>
       <el-table-column prop="createInfo" label="创建时间" width="350"></el-table-column>
       <el-table-column prop="modifyInfo" label="最后修改" width="350"></el-table-column>
