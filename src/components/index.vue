@@ -1,25 +1,25 @@
 <template>
   <div id="contextmenu" class="contextmenu">
+    <div v-if="spaceType===1" class="contextmenu__item" @click="rename()"><el-icon style="margin: auto 10px auto 0 "><ScaleToOriginal /></el-icon><div>重命名</div></div>
     <div v-if="spaceType===1 || spaceType===0" class="contextmenu__item" @click="collect()"><el-icon style="margin: auto 10px auto 0 "><CollectionTag /></el-icon>收藏</div>
-    <div v-if="spaceType===1" class="contextmenu__item" @click="move()"><el-icon style="margin: auto 10px auto 0 "><Ticket /></el-icon><div>移动</div></div>
+    <div v-if="spaceType===1" class="contextmenu__item" @click="move()"><el-icon style="margin: auto 10px auto 0 "><Right /></el-icon><div>移动</div></div>
     <div v-if="spaceType===1" class="contextmenu__item" @click="authority()"><el-icon style="margin: auto 10px auto 0 "><Key /></el-icon><div>设置权限</div></div>
-    <div v-if="spaceType===1" class="contextmenu__item" @click="rename()"><el-icon style="margin: auto 10px auto 0 "><Ticket /></el-icon><div>重命名</div></div>
     <div v-if="spaceType===1" class="contextmenu__item" @click="remove()"><el-icon style="margin: auto 10px auto 0 "><Remove /></el-icon><div>删除</div></div>
     <div v-if="spaceType===1 || spaceType===2 || spaceType===0" class="contextmenu__item" @click="_export()"><el-icon style="margin: auto 10px auto 0 "><Ticket /></el-icon><div>导出</div></div>
     <div v-if="(spaceType===1 || spaceType===2 || spaceType===0) && !shared" class="contextmenu__item" @click="share()"><el-icon style="margin: auto 10px auto 0 "><Share /></el-icon><div>分享</div></div>
     <div v-if="(spaceType===1 || spaceType===2 || spaceType===0) && shared" class="contextmenu__item" @click="notShare()"><el-icon style="margin: auto 10px auto 0 "><Lock /></el-icon><div>取消分享</div></div>
-    <div v-if="spaceType===2" class="contextmenu__item" @click="disCollect()">取消收藏</div>
-    <div v-if="spaceType===3" class="contextmenu__item" @click="recover()">恢复文件</div>
-    <div v-if="spaceType===3" class="contextmenu__item" @click="del()">彻底删除</div>
+    <div v-if="spaceType===2" class="contextmenu__item" @click="disCollect()"><el-icon style="margin: auto 10px auto 0 "><RemoveFilled /></el-icon><div>取消收藏</div></div>
+    <div v-if="spaceType===3" class="contextmenu__item" @click="recover()"><el-icon style="margin: auto 10px auto 0 "><Refresh /></el-icon><div>恢复文件</div></div>
+    <div v-if="spaceType===3" class="contextmenu__item" @click="del()"><el-icon style="margin: auto 10px auto 0 "><Remove /></el-icon><div>彻底删除</div></div>
   </div>
 </template>
 
 
 <script>
-import {Ticket} from "@element-plus/icons-vue";
+import {RemoveFilled, Ticket} from "@element-plus/icons-vue";
 export default {
   name: "index",
-  components: {Ticket},
+  components: {RemoveFilled, Ticket},
   props: {
     spaceType: {
       type: Number,
