@@ -32,7 +32,7 @@
               highlight-current-row
               @row-dblclick="edit"
               @cell-mouse-enter="recordId">
-      <el-table-column width="50" label="">
+      <el-table-column width="55" label="">
         <template #default="scope">
           <el-icon v-if="scope.row.fileType===1"><Document /></el-icon>
           <el-icon v-else><Folder /></el-icon>

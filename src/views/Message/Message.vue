@@ -232,7 +232,8 @@ export default {
       }).catch((err) => {
         console.log(err);
       })
-      this.messageNotRead--;
+      if (this.messageNotRead>0)
+        this.messageNotRead--;
     },
     allRead() {
       let i = 0;
