@@ -1,14 +1,11 @@
 <template>
-  <div style="
-      background-color: white;
-      text-align: center;
-      border-style: solid;
-      border-width: 1px;
-      border-color: lightgray;
-      border-radius: 5px;
-      margin: 20px auto;
-      width: 300px;">
 
+
+  <div style="width: 400px;
+              margin-left: auto;margin-right:auto;
+              margin-top: 30px;
+              text-align: center;">
+    <el-card shadow="always" :body-style="{ padding: '40px 20 20 0 ',backgroundColor: '#F7F7F7'  }" >
       <el-avatar
           style="margin-top: 30px;"
           :size="150"
@@ -36,22 +33,23 @@
           {{ introduction }}
         </el-form-item>
       </el-form>
-    <el-divider/>
+      <el-divider/>
       <span>
         是否邀请该用户?
       </span>
-    <el-divider/>
+      <el-divider/>
 
-    <div style="width: 250px;
+      <div style="width: 250px;
     height: 50px;
     text-align: center;
     margin: 0 auto">
-      <el-button type="success" @click="invite">
-        发送邀请
-      </el-button>
-    </div>
-
+        <el-button type="success" @click="invite">
+          发送邀请
+        </el-button>
+      </div>
+    </el-card>
   </div>
+
 </template>
 
 

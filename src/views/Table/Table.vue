@@ -63,6 +63,7 @@
       <el-main style="padding: 0;margin-bottom: 0;height: 100vh">
           <div style="height: 670px;margin-right: auto;margin-left: auto">
             <router-view></router-view>
+            <el-scrollbar style="height: 100%"></el-scrollbar>
           </div>
       </el-main>
     </el-container>
