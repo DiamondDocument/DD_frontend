@@ -125,60 +125,62 @@
         <el-page-header style="margin-left: 20px;" icon="Avatar" content="团队成员" title="        " />
         <el-divider />
 
-        <div style="">
-          <el-row v-for="mem in memList" :key="mem.id" class="block" style="width: 80%;height: 70px;">
-            <div @click="goUser(mem.userId)"
-                 style="
-             float: right;
-             width: 80%">
-              <el-avatar :src="mem.url"
-                         style="
-                     margin-left: 20px;
-                     float: left;
-                     margin-top: 20px"/>
-              <div style="float: left; margin-left: 25px; margin-top: 25px">
-                {{mem.name}}
-              </div>
+        <div v-for="mem in memList" :key="mem.id"
+             @click="goUser(mem.userId)"
+             style="
+              margin: 10px auto;
+              border-style: solid;
+              border-width: 1px;
+              border-color: lightgray;
+              border-radius: 5px;
+              height: 100px;
+              width: 80%;
+              display: flex;">
+          <div style=";margin: auto 20px;">
+            <el-avatar :size="50"  class="teamImg" >
+              <template #default>
+                <el-avatar :size="48" :src="mem.url" fit="cover"/>
+              </template>
+            </el-avatar>
+          </div>
+          <div style="height: 100px" >
+            <div style="display: flex;height: 40px">
+              <div style="font-size: 20px;line-height: 20px;margin: auto 10px 0 0;">{{mem.name}}</div>
+              <p style="font-size: 15px;line-height: 20px;margin: auto 0 0 0;color: #4d4d4d">{{mem.userId}}</p>
             </div>
-            <div v-if="userType === 0 && mem.userId !== this.$store.state.loginUser.userId"
-                 style="
-             height: 80px;
-              position: absolute;
-              right: 15px;
-              float: right;">
+<!--            <p style="margin-bottom: 20px">{{mem.intro}}</p>-->
+          </div>
+          <div v-if="userType === 0 && mem.userId !== this.$store.state.loginUser.userId"
+               style="margin: auto 20px auto auto">
+            <el-popconfirm
+                confirm-button-text="确认"
+                cancel-button-text="取消"
+                title="确认将该成员移除团队吗?"
+                @confirm="removeMem(mem.userId)"
+            >
+              <template #reference>
+                <el-button  type="danger" style="margin: 5px">
+                  移除成员
+                </el-button>
+              </template>
+            </el-popconfirm>
 
-              <el-popconfirm
-                  confirm-button-text="确认"
-                  cancel-button-text="取消"
-                  title="确认将该成员移除团队吗?"
-                  @confirm="removeMem(mem.userId)"
-              >
-                <template #reference>
-                  <el-button  type="danger" style="margin: 5px">
-                    移除成员
-                  </el-button>
-                </template>
-              </el-popconfirm>
-
-              <br>
-
-              <el-popconfirm
-                  confirm-button-text="确认"
-                  cancel-button-text="取消"
-                  title="确认要将队长权限转让给该成员吗?"
-                  @confirm="transPri(mem.userId)"
-              >
-                <template #reference>
-                  <el-button style="margin: 5px">
-                    转让权限
-                  </el-button>
-                </template>
-              </el-popconfirm>
-
-            </div>
-
-          </el-row>
+            <el-popconfirm
+                confirm-button-text="确认"
+                cancel-button-text="取消"
+                title="确认要将队长权限转让给该成员吗?"
+                @confirm="transPri(mem.userId)"
+            >
+              <template #reference>
+                <el-button style="margin: 5px">
+                  转让权限
+                </el-button>
+              </template>
+            </el-popconfirm>
+            <!--            <el-button type="primary" @click="goUser(user.userId)">查看信息</el-button>-->
+          </div>
         </div>
+
 
       </div>
     </el-card>
@@ -512,12 +514,12 @@ export default {
   /*top: 20px;*/
   /*left: 257px;*/
 }
-.teamImg {
-  float: left;
-  margin: 25px 50px 25px 50px;
-  height: 150px;
-  width: 150px;
-}
+/*.teamImg {*/
+/*  float: left;*/
+/*  margin: 25px 50px 25px 50px;*/
+/*  height: 150px;*/
+/*  width: 150px;*/
+/*}*/
 .block {
   margin: 10px auto;
   /*padding: 10px;*/

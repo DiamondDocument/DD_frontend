@@ -1,78 +1,91 @@
 <template>
-  <div style="
-      background-color: white;
-      text-align: center;
-      border-style: solid;
-      border-width: 1px;
-      border-color: lightgray;
-      border-radius: 5px;
-      margin: 20px auto;
-      width: 300px;">
 
-    <el-avatar
-        style="margin-top: 30px;"
-        :size="150"
-        :src="url"/>
 
-    <el-form
-        label-position="Right"
-        label-width="100px"
-        style="
-              max-width: 300px;
-              margin: 20px;
-        ">
-      <el-form-item label="用户名：">
-        {{ userId }}
-      </el-form-item>
+  <div style="width: 400px;
+              margin-left: auto;
+              margin-right:auto;
+              margin-top: 30px;
+              text-align: center;">
+    <el-card shadow="always" :body-style="{ padding: '40px 20 20 0 ',backgroundColor: '#F7F7F7'  }" >
+        <div>
+<!--          <div style="-->
+<!--                background-color: white;-->
+<!--                -->
+<!--                border-style: solid;-->
+<!--                border-width: 1px;-->
+<!--                border-color: lightgray;-->
+<!--                border-radius: 5px;-->
+<!--                margin: 20px auto;-->
+<!--                width: 300px;">-->
+          <el-avatar
+              style="margin-top: 30px;"
+              :size="150"
+              :src="url"/>
 
-      <el-form-item label="用户昵称：">
-        {{ nickName }}
-      </el-form-item>
+          <el-form
+              label-position="Right"
+              label-width="100px"
+              style="
+                max-width: 300px;
+                margin: 20px;
+          ">
+            <el-form-item label="用户名：">
+              {{ userId }}
+            </el-form-item>
 
-      <el-form-item label="邮箱：">
-        {{ email }}
-      </el-form-item>
+            <el-form-item label="用户昵称：">
+              {{ nickName }}
+            </el-form-item>
 
-      <el-form-item label="用户简介：">
-        {{ introduction }}
-      </el-form-item>
-    </el-form>
+            <el-form-item label="邮箱：">
+              {{ email }}
+            </el-form-item>
 
-    <el-divider/>
+            <el-form-item label="用户简介：">
+              {{ introduction }}
+            </el-form-item>
+          </el-form>
 
-    <span v-if="state === 0">
-      是否同意该用户申请?
-    </span>
-    <span v-else-if="state === 1">
-      该用户已在团队中
-    </span>
-    <span v-else-if="state === 2">
-      已经拒绝该用户申请
-    </span>
-    <span v-else-if="state === 3">
-      该用户未提交申请
-    </span>
-    <span v-else>
-      other error!
-    </span>
+          <el-divider/>
 
-    <el-divider/>
+          <span v-if="state === 0">
+            是否同意该用户申请?
+          </span>
+              <span v-else-if="state === 1">
+            该用户已在团队中
+          </span>
+              <span v-else-if="state === 2">
+            已经拒绝该用户申请
+          </span>
+              <span v-else-if="state === 3">
+            该用户未提交申请
+          </span>
+              <span v-else>
+            other error!
+          </span>
 
-    <div v-if="state === 0">
-      <div style="width: 250px;
-      height: 50px;
-      text-align: center;
-      margin: 0 auto">
-        <el-button type="success" @click="deal(1)">
-          同意
-        </el-button>
-        <el-button type="danger" @click="deal(0)">
-          拒绝
-        </el-button>
+          <el-divider/>
+
+          <div v-if="state === 0">
+            <div style="width: 250px;
+                  height: 50px;
+                  text-align: center;
+                  margin: 0 auto">
+              <el-button type="success" @click="deal(1)">
+                同意
+              </el-button>
+              <el-button type="danger" @click="deal(0)">
+                拒绝
+              </el-button>
+            </div>
+<!--          </div>-->
+
+        </div>
       </div>
-    </div>
-
+    </el-card>
   </div>
+
+
 
 </template>
 

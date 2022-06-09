@@ -56,6 +56,7 @@ export default {
       creatorName: '',
       url: '',
       url2: '',
+<<<<<<< HEAD
       urls: [
 
       ],
@@ -63,6 +64,12 @@ export default {
       info: [
 
       ]
+=======
+      urls: [],
+      selectPos: false,     //是否在选择创建位置
+      info: [
+      ],
+>>>>>>> 15d8d2b57c77c3aec45fa40b9cd85448792dde3b
     }
   },
 
@@ -72,7 +79,10 @@ export default {
     this.tempName=this.$route.params.templateName;
     this.spaceUsing=this.$route.params.spaceUsing;
     console.log(this.tempId, this.tempName, this.spaceUsing)
+<<<<<<< HEAD
 
+=======
+>>>>>>> 15d8d2b57c77c3aec45fa40b9cd85448792dde3b
 
     this.$axios.get("/template/image", {
       params: {
@@ -92,8 +102,12 @@ export default {
     this.$axios.get("/template", {
       params: {
         tempId: this.tempId,
+<<<<<<< HEAD
         userId: this.userId,
 
+=======
+        userId: this.$store.state.loginUser.userId
+>>>>>>> 15d8d2b57c77c3aec45fa40b9cd85448792dde3b
       }
     }).then((response) => {
       if (response.status === 200) {

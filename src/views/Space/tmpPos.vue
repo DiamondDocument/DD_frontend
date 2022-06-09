@@ -2,7 +2,7 @@
 
   <div style="margin: 15px 0 5px 0;border-bottom: 1px solid #e8e8e8;padding-bottom: 10px">
     <el-menu default-active="'/' +this.$route.path.split('/')[1]" >
-      <el-button type="primary" icon="ArrowLeft" text @click="getFolderData(true)">返回上一级</el-button>
+      <el-button type="primary" icon="ArrowLeft" text @click="getFolderData(true)" v-if="this.folderId!=null">返回上一级</el-button>
       <el-button type="primary" style="float: right; margin-right: 20px">
         <span style="vertical-align: middle" @click="cancel">取消</span>
       </el-button>
@@ -51,7 +51,7 @@ export default {
       curFileAth: Number,
       curFileShared: Boolean,
       exportLink: '',           //下载文件的链接
-      folderId: '',
+      folderId: null,
       tableData: [
         {
           fileType: 1,

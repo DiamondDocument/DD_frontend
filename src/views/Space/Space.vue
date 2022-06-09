@@ -1,7 +1,7 @@
 <template>
   <div style="margin: 15px 0 5px 0;border-bottom: 1px solid #e8e8e8;padding-bottom: 10px" v-if="!moving && !tmpVisible">
     <el-menu default-active="'/' +this.$route.path.split('/')[1]" >
-      <el-button type="primary" icon="ArrowLeft" text @click="getFolderData(true)">返回上一级</el-button>
+      <el-button type="primary" icon="ArrowLeft" text @click="getFolderData(true)" v-if="this.folderId!=null">返回上一级</el-button>
       <el-input v-model="input" placeholder="空间内搜索文件" style="width: 20%"></el-input>
       <el-button type="primary" style="margin-left: 10px"  @click="search">
         <el-icon style="vertical-align: middle;">
@@ -51,8 +51,8 @@
          data-popper-placement="top"></index>
   <authority ref="authority" @altAuthority="altAuthority"></authority>
   <share ref="share" :curFileId="this.curFileId" @altAuthority="altAuthority"></share>
-  <new-file ref="newFile" :fatherId="this.folderId"></new-file>
-  <new-folder ref="newFolder" :fatherId="this.folderId"></new-folder>
+  <new-file ref="newFile" :fatherId="this.folderId" :teamId="this.$route.params.teamId"></new-file>
+  <new-folder ref="newFolder" :fatherId="this.folderId" :teamId="this.$route.params.teamId"></new-folder>
   <move ref="move" @commit="move" @cancel="this.moving=false" v-if="moving"></move>
   <my ref="My" v-if="tmpVisible" :spaceUsing="true" :parentId="this.folderId" @useTmp="useTmp" @cancel="tmpVisible=false"></my>
   <el-dialog title="重命名" v-model="renameVisible" width="30%">
@@ -175,10 +175,17 @@ export default {
     //获得打开的文件夹里面的文件列表
     getFolderData(isback) {
       this.loading=true
+      let spaceType='user'
+      let ownerId=this.$store.state.loginUser.userId
+      if (this.$route.params.teamId!=null) {
+        spaceType = 'team'
+        ownerId=this.$route.params.teamId
+      }
+
       this.$axios.get('/space', {
         params: {
-          type: "user",
-          ownerId: this.$store.state.loginUser.userId,
+          type: spaceType,
+          ownerId: ownerId,
           folderId: this.folderId,
           visitorId: this.$store.state.loginUser.userId,
           isBack: isback,
@@ -234,7 +241,6 @@ export default {
         if(response.status === 200){
           if (response.data.code === 0) {
             ElMessage('创建成功')
-            this.getFolderData(false)
           } else if(response.data.code===-1){
             ElMessage('创建失败')
           }else if (response.data.code===1){

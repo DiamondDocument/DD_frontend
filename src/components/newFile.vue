@@ -38,7 +38,7 @@ import {ref} from "vue";
 import {ElMessage} from "element-plus";
 export default {
   name: "newFile",
-  props:["fatherId"],
+  props:["fatherId","teamId"],
   setup(){
     let input = ref('');
     return {
@@ -55,6 +55,7 @@ export default {
   },
   methods: {
     commit () {
+      console.log(this.teamId)
       let form=new FormData()
       form.append("type", '1')
       form.append("name", this.input)
@@ -62,6 +63,8 @@ export default {
       form.append("authority", this.authority)
       if (this.fatherId!=null)
         form.append("parentId", this.fatherId)
+      if(this.teamId!=null)
+        form.append("teamId", this.teamId)
       form.append("file", this.file)
       this.$axios.post("/file/create", form).then((response)=>{
         if(response.status === 200){
