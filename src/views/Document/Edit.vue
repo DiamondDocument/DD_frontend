@@ -5,7 +5,12 @@
     <div class = "top-ele" style="margin-left: 20px;margin-right: 20px">
       <el-button  icon="House"  @click = "$router.push({name:'table',params:{info: $store.state.tableInfo}})" />
     </div>
-    <div class = "top-ele" style="text-align: center;min-width: 100px;margin-right: auto  ">{{ myDocName }}</div>
+    <div class = "top-ele" style="text-align: center;min-width: 100px;  ">{{ myTitle }}</div>
+    <div class = "top-ele" style="margin-left: 20px;">
+      <el-divider style="margin: 0 0;height: 40px" direction="vertical" />
+
+    </div>
+    <div class = "top-ele" style="margin-left: 30px;margin-right: auto;"> 该文档最后修改于 {{myModifyTime}}</div>
     <!--  <div class = "top-ele" style="margin-right: 20px;"><el-avatar size="small" shape="square"></el-avatar></div>-->
 <!--    <div class = "top-ele"><el-button @click = "$router.push({name:'table',params:{info: $store.state.tableInfo}})"> 分享 </el-button></div>-->
 <!--    <div class = "top-ele"><el-button @click = "saveDoc"> 保存 </el-button></div>-->
@@ -26,26 +31,26 @@
   </div>
 </div>
 <div id="function" >
-  <el-affix offset="120" style="margin-left: 100px;">
+  <el-affix offset="220" style="margin-left: 100px;">
     <el-button type="primary" icon="DocumentChecked" circle size="large" @click="saveDoc"/>
   </el-affix>
-  <el-affix offset="170" style="margin-left: 100px;">
+  <el-affix offset="270" style="margin-left: 100px;">
     <el-button type="primary" icon="CollectionTag" circle size="large"/>
   </el-affix>
-  <el-affix offset="220" style="margin-left: 100px;">
+  <el-affix offset="320" style="margin-left: 100px;">
     <el-button @click="drawerDisplay=true" type="primary" icon="Comment" circle size="large"/>
   </el-affix>
-  <el-affix offset="270" style="margin-left: 100px;">
+  <el-affix offset="370" style="margin-left: 100px;">
     <el-button type="primary" icon="Share" circle size="large" @click="showShare"/>
   </el-affix>
-  <el-affix offset="320" style="margin-left: 100px;">
+  <el-affix offset="420" style="margin-left: 100px;">
     <el-button type="primary" icon="TopRight" @click="exportFile" circle size="large"/>
   </el-affix>
 </div>
 <div id="content">
   <div id="editor-container">
     <div id="title-container">
-      <input v-model="myDocName">
+      <input v-model="myTitle">
     </div>
     <Editor
         id = "editor-text-area"
@@ -201,7 +206,7 @@ export default {
       console.log("编辑器创建成功");
       editorRef.value = editor // 记录 editor 实例，重要！
 
-    }
+    };
     const share=ref()
     function showShare() {
       share.value.show()
@@ -217,7 +222,7 @@ export default {
       handleCreated
     };
   },
-  mounted() {
+  created() {
     // this.myEditor = 'Iamzzy';
     this.myEditor = this.$store.state.loginUser.userId
     this.myDocId = this.$route.params.documentId;
@@ -228,7 +233,8 @@ export default {
     this.editIntervalId = setInterval(()=>{
       this.requestEdit();
     }, 20000);
-    // setTimeout(this.authorityChanged,3000);
+    this.authorityChanged();
+    // setTimeout(this.authorityChanged,1000);
   },
   unmounted() {
     setInterval(this.editIntervalId);
@@ -415,12 +421,12 @@ export default {
             ElMessage({ message: "其他人正在编辑", type: 'warning'});
           }else if(response.data.code === 2){
             ElMessage({ message: "你没有编辑权限!", type: 'warning'});
-            this.editorRef.disable();
-            this.myDocName += " (仅查看)";
+            // this.editorRef.disable();
+            // this.myDocName += " (仅查看)";
           }else{
             ElMessage({ message: "申请编辑失败", type: 'warning'});
-            this.editorRef.disable();
-            this.myDocName += " (仅查看)";
+            // this.editorRef.disable();
+            // this.myDocName += " (仅查看)";
           }
         }else{
           ElMessage({ message: "申请编辑失败", type: 'warning'});
@@ -444,21 +450,21 @@ export default {
         console.log(err)
       })
     },
-    authorityChanged(auth) {
-      console.log('权限发生变化:' ,auth);
+    authorityChanged() {
+      console.log('权限发生变化:' ,this.myAuthority);
       let editor = this.editorRef;
       console.log(this.editorRef);
       if(editor === undefined){
-        setTimeout(()=>{this.authorityChanged(auth)}, 200);
+        setTimeout(()=>{this.authorityChanged(this.myAuthority)}, 200);
         return;
       }
-      if(auth < 4){
+      if(this.myAuthority < 4){
         console.log("文档只读！");
+        this.myTitle = this.myDocName + " (仅查看)";
         editor.disable();
-        this.myTitile = this.myDocName + " (仅查看)";
       }else{
-        editor.enable();
         this.myTitle = this.myDocName;
+        editor.enable();
       }
     },
     updateBrowse() {
@@ -479,7 +485,7 @@ export default {
   },
   watch: {
     myAuthority(val) {
-      this.authorityChanged(val);
+      this.authorityChanged();
     }
   },
 
@@ -514,7 +520,7 @@ body {
   display: flex;
   border-bottom: 1px solid #e8e8e8;
   padding-left: 0px;
-  height: 40px;
+  height: 50px;
 }
 
 #editor-toolbar {

@@ -6,7 +6,7 @@
       <div class="common-layout" style="height: 500px;">
         <el-container>
           <el-aside style="height: 500px; width: 700px;padding: 20px;background-color: #F7F7F7">
-            <img v-for="oneUrl in this.urls" :src="oneUrl" alt="">
+            <img v-for="oneUrl in this.urls" :src="oneUrl" alt="" style="width: 100%">
           </el-aside>
           <el-main>
             <el-form
