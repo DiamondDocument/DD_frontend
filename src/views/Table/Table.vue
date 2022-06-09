@@ -63,11 +63,7 @@
       <el-main style="padding: 0;margin-bottom: 0;height: 100vh">
           <div style="height: 670px;margin-right: auto;margin-left: auto">
             <router-view></router-view>
-<!--            <user-list v-else :keyword="userSearchContent"></user-list>-->
           </div>
-<!--          <p v-for="item in 100" :key="item" style="line-height: 30px">{{ item }}</p>-->
-<!--                <el-scrollbar style="height: 670px;> -->
-<!--        </el-scrollbar>-->
       </el-main>
     </el-container>
   </el-container>

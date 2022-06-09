@@ -54,8 +54,10 @@
 
         </el-menu>
       </el-aside>
-      <el-main style="padding: 0px">
-        <router-view></router-view>
+      <el-main style="padding: 0;margin-bottom: 0;height: 100vh">
+        <div style="height: 670px;margin-right: auto;margin-left: auto">
+          <router-view></router-view>
+        </div>
       </el-main>
 <!--      <el-main class="Main" width="100%" v-if="type==='recent'" style="padding: 0; height: 100%">-->
 <!--        <space :spaceType="0"></space>-->

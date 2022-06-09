@@ -54,9 +54,11 @@
 
         </el-menu>
       </el-aside>
-        <el-main style="height: 695px">
+      <el-main style="padding: 0;margin-bottom: 0;height: 100vh">
+        <div style="height: 670px;margin-right: auto;margin-left: auto">
           <router-view></router-view>
-        </el-main>
+        </div>
+      </el-main>
     </el-container>
   </el-container>
 

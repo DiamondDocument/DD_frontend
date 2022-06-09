@@ -1,12 +1,10 @@
 <template>
 <!--  space调用的时候才会显示的一个div-->
-  <div v-if="spaceUsing">
-    <el-menu default-active="'/' +this.$route.path.split('/')[1]" >
+    <el-menu default-active="'/' +this.$route.path.split('/')[1]" v-if="spaceUsing">
       <el-button type="primary" style="float: right; margin-right: 20px;">
         <span style="vertical-align: middle" @click="this.$emit('cancel')">取消</span>
       </el-button>
     </el-menu>
-  </div>
 <!--  <el-row v-if="!selectPos">-->
 <!--    <el-col-->
 <!--        v-for="(temps, i) in templates"-->
@@ -30,7 +28,7 @@
 <!--      </el-card>-->
 <!--    </el-col>-->
 <!--  </el-row>-->
-  <div style="width: 1043px;margin-left: auto;margin-right: auto;margin-top: 30px; ">
+  <div style="width: 1043px;margin-left: auto;margin-right: auto;margin-top: 30px; " v-if="!this.selectPos">
     <el-card shadow="always" :body-style="{ padding: '40px 20 20 0 ',backgroundColor: '#F7F7F7'  }" >
       <div style="height: 30px"></div>
       <el-page-header style="margin-left: 20px" icon="PictureFilled" content="我的模板" title="        " />
@@ -46,7 +44,15 @@
               />
               <div id="information" style="padding: 5px;padding-left: 25px;background-color:  #F7F7F7">
                 <div>
-                  <el-link id="name" @click="this.$router.push({name: 'templateDetail', params:{templateId:temps.tempId}})" target="_blank">{{temps.tempName}}</el-link>
+                  <el-link id="name"
+                           @click="this.$router.push({name: 'templateDetail',
+                                    params:{
+                                    templateId:temps.tempId,
+                                    templateName:temps.tempName,
+                                    spaceUsing:this.spaceUsing,
+                                    parentId:this.parentId,
+                                     }})"
+                           target="_blank">{{temps.tempName}}</el-link>
                 </div>
                 <div style="display: flex">
                   <el-link @click="$router.push({name:'userInformation', params: {userId : 'visitor'}})" target="_blank">作者：{{temps.creatorName}}</el-link>
@@ -68,8 +74,7 @@
       </el-scrollbar>
     </el-card>
   </div>
-  <tmp-pos ref="tmpPos" v-if="selectPos" @commit="commit" @cancel="selectPos=false"></tmp-pos>
-
+  <tmp-pos ref="tmpPos" v-if="this.selectPos" @commit="commit" @cancel="selectPos=false"></tmp-pos>
 
 
 
@@ -77,23 +82,18 @@
 
 <script>
 import {ElMessage} from "element-plus";
-import tmpPos from "@/views/Space/tmpPos";
 
 export default {
   name: "MyTemplate.vue",
-  components:{tmpPos},
+  props: {
+    "spaceUsing": false,
+    "parentId": null,
+  },
   data() {
     return {
       userId: '',
-      spaceUsing: false,    //是否正在被space调用
-      selectPos: false,     //是否在选择创建位置
-      curTmpId: Number,     //当前选中的id
-      curTmpName: '',       //当前选中的name
-      templates: [
-        {
-          tempName: 'for space test'
-        }
-      ]
+      selectPos: false,
+      templates: []
     }
   },
 
@@ -149,27 +149,38 @@ export default {
       });
     },
     useTmp(tmp){
-      if (this.spaceUsing)
-        this.selectPos=true
-        this.curTmpId=tmp.tempId
+      console.log("in and spaceusing is", this.spaceUsing)
+      if(this.spaceUsing){
         this.$emit('useTmp', tmp.tempId, tmp.tempName)
+      }
+      else{
+        this.$router.push({name: 'templateDetail',
+          params:{templateId:tmp.tempId,
+            templateName:tmp.tempName,
+            spaceUsing:this.spaceUsing,
+            parentId:this.parentId}})
+      }
     },
-    commit(id){
-      this.$axios.post("/file/create", {
-        "type": 1,
-        "name": this.curTmpName,
-        "templateId": this.curTmpId,
-        "authority": 3,
-        "creatorId": this.$store.state.loginUser.userId,
-        "parentId": id,
-      }).then((response)=>{
+    commit(tmp, id){
+      console.log("parent:",id)
+      let f = new FormData()
+      f.append("type", '1')
+      f.append("name", tempName)
+      f.append("authority", '3')
+      f.append("creatorId", this.$store.state.loginUser.userId)
+      f.append("templateId", tempId)
+      if (this.folderId!=null){
+        f.append("parentId", this.folderId)
+      }
+      this.$axios.post("/file/create", f).then((response)=>{
         if(response.status === 200){
           if (response.data.code === 0) {
             ElMessage('创建成功')
-          } else if(response.data.code===1){
+            this.getFolderData(false)
+          } else if(response.data.code===-1){
+            ElMessage('创建失败')
+          }else if (response.data.code===1){
             ElMessage('文件重名，已修改')
-          }else if(response.data.code===2){
-            ElMessage('您没有权限')
           }else{
             ElMessage('其他错误')
           }
