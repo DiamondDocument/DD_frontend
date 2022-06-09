@@ -1,12 +1,10 @@
 <template>
 <!--  space调用的时候才会显示的一个div-->
-<!--  <div v-if="this.spaceUsing==='true'">-->
-<!--    <el-menu default-active="'/' +this.$route.path.split('/')[1]" >-->
-<!--      <el-button type="primary" style="float: right; margin-right: 20px;">-->
-<!--        <span style="vertical-align: middle" @click="this.$emit('cancel')">取消</span>-->
-<!--      </el-button>-->
-<!--    </el-menu>-->
-<!--  </div>-->
+    <el-menu default-active="'/' +this.$route.path.split('/')[1]" v-if="spaceUsing">
+      <el-button type="primary" style="float: right; margin-right: 20px;">
+        <span style="vertical-align: middle" @click="this.$emit('cancel')">取消</span>
+      </el-button>
+    </el-menu>
 <!--  <el-row v-if="!selectPos">-->
 <!--    <el-col-->
 <!--        v-for="(temps, i) in templates"-->
@@ -30,7 +28,7 @@
 <!--      </el-card>-->
 <!--    </el-col>-->
 <!--  </el-row>-->
-  <div style="width: 1043px;margin-left: auto;margin-right: auto;margin-top: 30px; " v-if="!selectPos">
+  <div style="width: 1043px;margin-left: auto;margin-right: auto;margin-top: 30px; " v-if="!this.selectPos">
     <el-card shadow="always" :body-style="{ padding: '40px 20 20 0 ',backgroundColor: '#F7F7F7'  }" >
       <div style="height: 30px"></div>
       <el-page-header style="margin-left: 20px" icon="PictureFilled" content="我的模板" title="        " />
@@ -73,7 +71,7 @@
       </el-scrollbar>
     </el-card>
   </div>
-  <tmp-pos ref="tmpPos" v-if="selectPos" @commit="commit" @cancel="selectPos=false"></tmp-pos>
+  <tmp-pos ref="tmpPos" v-if="this.selectPos" @commit="commit" @cancel="selectPos=false"></tmp-pos>
 
 
 
@@ -84,10 +82,10 @@ import {ElMessage} from "element-plus";
 
 export default {
   name: "MyTemplate.vue",
-  props: [
-    "spaceUsing",
-    "parentId",
-  ],
+  props: {
+    "spaceUsing": false,
+    "parentId": null,
+  },
   data() {
     return {
       userId: '',

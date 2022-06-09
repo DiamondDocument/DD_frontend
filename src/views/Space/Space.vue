@@ -225,7 +225,6 @@ export default {
       let f = new FormData()
       f.append("type", '1')
       f.append("name", tempName)
-      f.append("authority", '3')
       f.append("creatorId", this.$store.state.loginUser.userId)
       f.append("templateId", tempId)
       if (this.folderId!=null){
