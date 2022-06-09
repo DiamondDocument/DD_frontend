@@ -5,7 +5,7 @@
 
     <el-header class="Header" style="height: 50px; display: flex; justify-content: space-between; align-items: center;">
 
-      <img src="../../assets/logo2_2.png" style="width: 150px;margin-right: 30px; margin-left: 10px">
+      <img src="../../assets/logo2_2.png" style="width: 150px;margin-right: 30px; margin-left: 10px" @click="this.$router.push({name: 'login'})">
       <el-input
           v-model="userSearchContent"
           placeholder="搜索用户..."
@@ -47,7 +47,19 @@
             <span slot="title" @click="this.$router.push({name: 'team', params: {teamId: this.TeamId}})">团队详情</span>
           </el-menu-item>
 
-          <el-menu-item index="6" @click="this.$router.push({name: 'recycle'})">
+          <el-sub-menu  v-if="belong === true" index="6" popper-offset="1" >
+            <template #title style="padding-right: 10px">
+              <el-icon><tickets /></el-icon>
+              <span>模板</span>
+            </template>
+            <el-menu-item-group style="width: 100px">
+              <el-menu-item index="1-1" @click="this.$router.push({name: 'recommendTemplate'})">推荐模板</el-menu-item>
+              <el-menu-item index="1-2" @click="this.$router.push({name: 'myTemplate'})">我的模板</el-menu-item>
+              <el-menu-item index="1-3" @click="this.$router.push({name: 'collectionTemplate'})">收藏模板</el-menu-item>
+            </el-menu-item-group>
+          </el-sub-menu>
+
+          <el-menu-item index="7" @click="this.$router.push({name: 'recycle',params:{teamId: this.TeamId}})">
             <el-icon><delete /></el-icon>
             <span slot="title">回收站</span>
           </el-menu-item>
@@ -57,7 +69,6 @@
       <el-main style="padding: 0;margin-bottom: 0;height: 100vh">
         <div style="height: 670px;margin-right: auto;margin-left: auto">
           <router-view></router-view>
-          <el-scrollbar style="height: 100%"></el-scrollbar>
         </div>
       </el-main>
     </el-container>
@@ -140,6 +151,7 @@ export default {
   name: 'TeamTable',
   data() {
     return {
+      belong: false,
       type: 'recent',
       isCollapse: false,
       userId: '',
@@ -148,6 +160,9 @@ export default {
       avatar: '',
       userSearchContent: '',
       userSearchComp: false,
+      teams: [
+
+      ]
     }
   },
   components: {
@@ -155,6 +170,24 @@ export default {
     Message
   },
   methods: {
+    isBelong() {
+      this.$axios.get("/team/team-status", {
+        params:{
+          teamId: this.TeamId,
+          userId: this.userId
+        }
+      }).then((response)=>{
+        if (response.status === 200){
+          if (response.data.code === 0){
+            this.belong = (response.data.status === 0 || response.data.status === 1);
+          }else console.log("团队信息获取错误");
+        }else console.log("请求返回status不为200")
+      }).catch((err)=>{
+        console.log(err);
+      });
+
+      console.log("belong " + this.belong)
+    },
     toMessage() {
       this.type = 'message';
     },
@@ -208,6 +241,22 @@ export default {
     }).catch((err)=>{
       console.log(err);
     });
+
+    this.$axios.get("/user/team", {
+      params:{
+        userId: this.userId,
+      }
+    }).then((response)=>{
+      if (response.status === 200){
+        if (response.data.code === 0){
+          this.teams = response.data.teams;
+        }else console.log("头像获取错误");
+      }else console.log("请求返回status不为200")
+    }).catch((err)=>{
+      console.log(err);
+    });
+
+    this.isBelong();
   }
 }
 

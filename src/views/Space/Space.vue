@@ -51,8 +51,8 @@
          data-popper-placement="top"></index>
   <authority ref="authority" @altAuthority="altAuthority"></authority>
   <share ref="share" :curFileId="this.curFileId" @altAuthority="altAuthority"></share>
-  <new-file ref="newFile" :fatherId="this.folderId"></new-file>
-  <new-folder ref="newFolder" :fatherId="this.folderId"></new-folder>
+  <new-file ref="newFile" :fatherId="this.folderId" :teamId="this.$route.params.teamId"></new-file>
+  <new-folder ref="newFolder" :fatherId="this.folderId" :teamId="this.$route.params.teamId"></new-folder>
   <move ref="move" @commit="move" @cancel="this.moving=false" v-if="moving"></move>
   <my ref="My" v-if="tmpVisible" :spaceUsing="true" :parentId="this.folderId" @useTmp="useTmp" @cancel="tmpVisible=false"></my>
   <el-dialog title="重命名" v-model="renameVisible" width="30%">
@@ -175,10 +175,17 @@ export default {
     //获得打开的文件夹里面的文件列表
     getFolderData(isback) {
       this.loading=true
+      let spaceType="user"
+      let ownerId=this.$store.state.loginUser.userId
+      if (this.$route.params.teamId!=null) {
+        spaceType = "team"
+        ownerId=this.$route.params.teamId
+      }
+      console.log(spaceType, ownerId, this.folderId, this.$store.state.loginUser.userId)
       this.$axios.get('/space', {
         params: {
-          type: "user",
-          ownerId: this.$store.state.loginUser.userId,
+          type: spaceType,
+          ownerId: ownerId,
           folderId: this.folderId,
           visitorId: this.$store.state.loginUser.userId,
           isBack: isback,

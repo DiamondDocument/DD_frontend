@@ -35,7 +35,7 @@ import {ref} from "vue";
 import {ElMessage} from "element-plus";
 export default {
   name: "newFolder",
-  props:{fatherId:{fatherId: Number}},
+  props:["fatherId","teamId"],
   setup(){
     let input = ref('');
     return {
@@ -61,6 +61,8 @@ export default {
       form.append("creatorId", this.$store.state.loginUser.userId)
       if (this.fatherId!=null)
         form.append("parentId", this.fatherId)
+      if(this.teamId!=null)
+        form.append("teamId", this.teamId)
       form.append("authority", this.authority)
       this.$axios.post("/file/create", form).then((response)=>{
         if(response.status === 200){
