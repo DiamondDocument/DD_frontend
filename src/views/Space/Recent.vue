@@ -23,6 +23,7 @@
         </template>
       </el-table-column>
       <el-table-column sortable prop="fileName" label="文件名" width="400"></el-table-column>
+      <el-table-column sortable prop="browserTime" label="浏览时间" width="350"></el-table-column>
       <el-table-column sortable prop="creatorInfo" label="创建时间" width="350"></el-table-column>
       <el-table-column sortable prop="modifyInfo" label="最后修改" width="350"></el-table-column>
       <el-table-column sortable prop="size" label="大小" ></el-table-column>

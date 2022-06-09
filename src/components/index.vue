@@ -11,6 +11,7 @@
     <div v-if="spaceType===2" class="contextmenu__item" @click="disCollect()"><el-icon style="margin: auto 10px auto 0 "><RemoveFilled /></el-icon><div>取消收藏</div></div>
     <div v-if="spaceType===3" class="contextmenu__item" @click="recover()"><el-icon style="margin: auto 10px auto 0 "><Refresh /></el-icon><div>恢复文件</div></div>
     <div v-if="spaceType===3" class="contextmenu__item" @click="del()"><el-icon style="margin: auto 10px auto 0 "><Remove /></el-icon><div>彻底删除</div></div>
+    <div v-if="spaceType===1" class="contextmenu__item" @click="createTmp()"><el-icon style="margin: auto 10px auto 0 "><Right /></el-icon><div>创建为模板</div></div>
   </div>
 </template>
 
@@ -81,6 +82,9 @@ export default {
     },
     authority() {
       this.$emit('authority')
+    },
+    createTmp(){
+      this.$emit('createTmp')
     }
   }
 }

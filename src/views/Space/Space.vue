@@ -47,13 +47,14 @@
   </div>
   <index v-if="menuVisible" @foo="foo" ref="index" :spaceType="this.spaceType" :authority=this.curFileAth :shared="this.curFileShared"
                   @collect="collect" @move="this.moving=true" @remove="remove" @_export="_export"
-                  @share="showShare()" @rename="renameVisible=true"
+                  @share="showShare()" @rename="renameVisible=true" @createTmp="showNewTmp()"
                   @authority = "showAuthority()" @notShare="notShare"
          data-popper-placement="top"></index>
   <authority ref="authority" @altAuthority="altAuthority"></authority>
   <share ref="share" :curFileId="this.curFileId" @altAuthority="altAuthority"></share>
   <new-file ref="newFile" :fatherId="this.folderId" :teamId="this.$route.params.teamId"></new-file>
   <new-folder ref="newFolder" :fatherId="this.folderId" :teamId="this.$route.params.teamId"></new-folder>
+  <new-tmp ref="newTmp" :fileId="this.curFileId"></new-tmp>
   <move ref="move" @commit="move" @cancel="this.moving=false" v-if="moving"></move>
   <my ref="My" v-if="tmpVisible" :spaceUsing="true" :parentId="this.folderId" @useTmp="useTmp" @cancel="tmpVisible=false"></my>
   <el-dialog title="重命名" v-model="renameVisible" width="30%">
@@ -79,10 +80,11 @@ import newFile from "@/components/newFile";
 import newFolder from "@/components/newFolder";
 import move from "@/views/Space/Move";
 import My from "@/views/Template/My";
+import newTmp from "@/components/newTmp";
 
 export default {
   name: "Space",
-  components: {Search, index, authority, share, newFile, move, My, newFolder},
+  components: {Search, index, authority, share, newFile, move, My, newFolder, newTmp},
   props: {
     spaceType: {
       type: Number,
@@ -142,6 +144,7 @@ export default {
     const share = ref()
     const newFile = ref()
     const newFolder=ref()
+    const newTmp=ref()
     function showAuthority() {
       authority.value.show()
     }
@@ -154,6 +157,9 @@ export default {
     function showNewFolder() {
       newFolder.value.show()
     }
+    function showNewTmp() {
+      newTmp.value.show()
+    }
     return {
       reName: ref(''),
       input: ref(''),
@@ -161,6 +167,8 @@ export default {
       showShare,
       showNewFile,
       showNewFolder,
+      showNewTmp,
+      newTmp,
       newFile,
       authority,
       share,
