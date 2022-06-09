@@ -31,6 +31,7 @@
               @row-contextmenu="rowContextmenu"
               highlight-current-row
               @row-dblclick="edit"
+              :key="altTable"
               @cell-mouse-enter="recordId">
       <el-table-column width="50" label="">
         <template #default="scope">
@@ -51,8 +52,8 @@
          data-popper-placement="top"></index>
   <authority ref="authority" @altAuthority="altAuthority"></authority>
   <share ref="share" :curFileId="this.curFileId" @altAuthority="altAuthority"></share>
-  <new-file ref="newFile" :fatherId="this.folderId" :teamId="this.$route.params.teamId"></new-file>
-  <new-folder ref="newFolder" :fatherId="this.folderId" :teamId="this.$route.params.teamId"></new-folder>
+  <new-file ref="newFile" :fatherId="this.folderId" :teamId="this.$route.params.teamId" @end="afterNew"></new-file>
+  <new-folder ref="newFolder" :fatherId="this.folderId" :teamId="this.$route.params.teamId" @end="afterNew"></new-folder>
   <new-tmp ref="newTmp" :fileId="this.curFileId"></new-tmp>
   <move ref="move" @commit="move" @cancel="this.moving=false" v-if="moving"></move>
   <my ref="My" v-if="tmpVisible" :spaceUsing="true" :parentId="this.folderId" @useTmp="useTmp" @cancel="tmpVisible=false"></my>
@@ -103,6 +104,7 @@ export default {
       folderId: null,           //当前处在的文件夹的id，null为根目录
       renameVisible: false,     //控制重命名对话框显示
       tmpVisible: false,        //控制选择模板的显示
+      altTable: Math.random(),
       tableData: [
         {
           fileType: 1,
@@ -232,6 +234,10 @@ export default {
       this.curFileAth = row.authority
       this.curFileShared = row.shared
       console.log(row.fileId, row.authority, row.shared)
+    },
+    //处理自动更新事件
+    afterNew(){
+      console.log('in');this.getFolderData(false);this.altTable=Math.random()
     },
     //从模板创建
     useTmp(tempId,tempName){

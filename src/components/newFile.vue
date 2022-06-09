@@ -86,6 +86,7 @@ export default {
         console.log(err);
       })
       this.hide()
+      this.$emit('end')
     },
     hide () {
       this.visible = false
