@@ -21,6 +21,7 @@
               :cell-style="{padding: '20px'}"
               highlight-current-row
               @row-dblclick="edit"
+              :key="Math.random()"
               @cell-mouse-enter="recordId">
       <el-table-column width="50" label="">
         <template #default="scope">

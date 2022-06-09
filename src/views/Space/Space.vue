@@ -31,6 +31,7 @@
               @row-contextmenu="rowContextmenu"
               highlight-current-row
               @row-dblclick="edit"
+              :key="Math.random()"
               @cell-mouse-enter="recordId">
       <el-table-column width="50" label="">
         <template #default="scope">
@@ -144,11 +145,9 @@ export default {
     function showAuthority() {
       authority.value.show()
     }
-
     function showShare() {
       share.value.show()
     }
-
     function showNewFile() {
       newFile.value.show()
     }
@@ -255,6 +254,7 @@ export default {
         console.log(err);
       })
       this.tmpVisible=false
+      this.getFolderData(false)
     },
     //打开文档或文件夹
     edit(row) {
@@ -320,6 +320,7 @@ export default {
         console.log(err);
       })
       this.renameVisible = false;
+      this.getFolderData(false)
     },
     collect() {
       this.$axios.post("/document/like", {
@@ -362,6 +363,7 @@ export default {
       }).catch((err) => {
         console.log(err);
       })
+      this.getFolderData(false)
     },
     move(folderId) {
       this.$axios.post("/file/move",
@@ -388,6 +390,7 @@ export default {
         console.log(err);
       })
       this.moving = false
+      this.getFolderData(false)
     },
     remove() {
       this.$axios.post("/file/remove",
@@ -409,8 +412,9 @@ export default {
           ElMessage({ message: "status = " + response.status, type: 'warning'});
       }
     }).catch((err) => {
-  console.log(err);
-})
+      console.log(err);
+    })
+      this.getFolderData(false)
     },
     _export() {
       console.log("发送导出文档请求...");
@@ -466,6 +470,7 @@ export default {
       }).catch((err) => {
         console.log(err);
       })
+      this.getFolderData(false)
     },
   },
 }
