@@ -1,6 +1,12 @@
 <template>
   <div style="margin: 15px 0 5px 0;border-bottom: 1px solid #e8e8e8;padding-bottom: 10px">
     <el-menu default-active="'/' +this.$route.path.split('/')[1]" >
+      <el-button type="primary" style="float: right; margin-right: 20px" >
+        <span style="vertical-align: middle" @click="allDel" >清空回收站</span>
+      </el-button>
+      <el-button type="primary" style="float: right; margin-right: 20px" >
+        <span style="vertical-align: middle" @click="allRecover" >全部恢复</span>
+      </el-button>
     </el-menu>
   </div>
   <div style="height: 610px;">
@@ -151,6 +157,12 @@ export default {
       })
       this.loading=false
     },
+    allRecover(){
+      for (let i = 0; i < this.tableData.length; i++) {
+        this.curFileId=this.tableData[i].fileId
+        this.recover()
+      }
+    },
     recover() {
       this.$axios.post("/file/recover",
           {
@@ -174,6 +186,12 @@ export default {
         console.log(err);
       })
       this.getFolderData(false)
+    },
+    allDel(){
+      for (let i = 0; i < this.tableData.length; i++) {
+        this.curFileId=this.tableData[i].fileId
+        this.del()
+      }
     },
     del() {
       this.$axios.post("/file/complete-remove",

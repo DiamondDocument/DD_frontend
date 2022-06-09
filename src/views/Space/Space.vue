@@ -336,7 +336,7 @@ export default {
         console.log(err);
       })
       this.renameVisible = false;
-      this.getFolderData(false)
+      this.afterNew()
     },
     collect() {
       this.$axios.post("/document/like", {
@@ -406,7 +406,7 @@ export default {
         console.log(err);
       })
       this.moving = false
-      this.getFolderData(false)
+      this.afterNew()
     },
     remove() {
       this.$axios.post("/file/remove",
@@ -430,7 +430,7 @@ export default {
     }).catch((err) => {
       console.log(err);
     })
-      this.getFolderData(false)
+      this.afterNew()
     },
     _export() {
       console.log("发送导出文档请求...");
