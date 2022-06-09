@@ -27,7 +27,7 @@
       </el-table-column>
       <el-table-column sortable prop="fileName" label="文件名" width="400"></el-table-column>
       <el-table-column sortable prop="createInfo" label="创建时间" width="350"></el-table-column>
-      <el-table-column sortable prop="modifyInfo" label="最后修改" width="350"></el-table-column>
+      <el-table-column sortable prop="deleteInfo" label="删除时间" width="350"></el-table-column>
       <el-table-column sortable prop="size" label="大小" ></el-table-column>
     </el-table>
   </div>
@@ -145,7 +145,20 @@ export default {
           if (response.data.code === 0) {
             if (isback) this.folderId = response.data.parentId;
 
-            this.tableData = response.data.files;
+            let files = response.data.files;
+            this.tableData = files;
+            for(let i = 0; i < this.tableData.length; i++){
+              if (files[i].fileType===2)
+                this.tableData.remove(i)
+              let time =  files[i].deleteTime;
+              time = time.split('+')[0];
+              time = time.split('T')[0] + ' ' + time.split('T')[1].slice(0,-7);
+              this.tableData[i].deleteInfo = time + '  by ' + files[i].deleterName;
+              time =  files[i].createTime;
+              time = time.split('+')[0];
+              time = time.split('T')[0] + ' ' + time.split('T')[1].slice(0,-7);
+              this.tableData[i].createInfo = time + '  by ' + files[i].creatorName;
+            }
           } else if (response.data.code === -1) {
             ElMessage({message: '获取列表失败', type: 'warning'});
           }
