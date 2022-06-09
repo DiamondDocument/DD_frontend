@@ -5,7 +5,7 @@
 
     <el-header class="Header" style="height: 50px; display: flex; justify-content: space-between; align-items: center;">
 
-      <img src="../../assets/logo2_2.png" style="width: 150px;margin-right: 30px; margin-left: 10px">
+      <img src="../../assets/logo2_2.png" style="width: 150px;margin-right: 30px; margin-left: 10px" @click="this.$router.push({name: 'login'})">
       <el-input
           v-model="userSearchContent"
           placeholder="搜索用户..."

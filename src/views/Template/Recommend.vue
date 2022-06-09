@@ -20,7 +20,7 @@
                 </div>
                 <div style="display: flex">
                   <el-link @click="$router.push({name:'userInformation', params: {userId : 'visitor'}})" target="_blank">作者：{{temps.creatorName}}</el-link>
-                  <el-icon v-if="temps.iscollection === 'true'" @click="DisCol(i)"
+                  <el-icon v-if="temps.iscollection === true" @click="DisCol(i)"
                            style="margin-right: 30px;margin-left: auto;" size="large"><StarFilled /></el-icon>
                   <el-icon v-else @click="Col(i)"
                            style="margin-right: 30px;margin-left: auto;" size="large"><Star /></el-icon>
@@ -64,7 +64,7 @@ export default {
       if (response.status === 200) {
         if (response.data.code === 0) {
           this.templates = response.data.temps;
-        } else ElMessage("模板信息获取错误");
+        } else console.log("模板信息获取错误");
       } else console.log("请求返回status不为200")
     }).catch((err) => {
       console.log(err);
@@ -74,7 +74,7 @@ export default {
 
   methods: {
     Col(i) {
-      this.templates[i].iscollection = 'true'
+      this.templates[i].iscollection = true
       console.log(this.templates[i].tempId);
 
       this.$axios.post("/template/like", {
@@ -84,7 +84,7 @@ export default {
         if (response.status === 200) {
           if (response.data.code === 0) {
             console.log("like ok");
-          } else ElMessage("模板信息获取错误");
+          } else console.log("模板信息获取错误");
         } else console.log("请求返回status不为200")
       }).catch((err) => {
         console.log(err);
@@ -92,7 +92,7 @@ export default {
     },
 
     DisCol(i) {
-      this.templates[i].iscollection = 'false'
+      this.templates[i].iscollection = false
 
       this.$axios.post("/template/dislike", {
         userId: this.userId,
@@ -101,7 +101,7 @@ export default {
         if (response.status === 200) {
           if (response.data.code === 0) {
             console.log("dislike ok");
-          } else ElMessage("模板信息获取错误");
+          } else console.log("模板信息获取错误");
         } else console.log("请求返回status不为200")
       }).catch((err) => {
         console.log(err);
