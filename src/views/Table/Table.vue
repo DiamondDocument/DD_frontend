@@ -24,14 +24,14 @@
       </div>
     </el-header>
     <el-container>
-      <el-aside class="Aside" style="width: 140px">
+      <el-aside class="Aside" style="width: auto;">
          <el-menu default-active="1-4-1" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
-            <el-menu-item index="1">
+            <el-menu-item index="1" >
               <el-icon v-if="!isCollapse" @click="isCollapse=!isCollapse" style="float: right; "><DArrowLeft /></el-icon>
               <el-icon v-else @click="isCollapse=!isCollapse" style="float: right;"><DArrowRight /></el-icon>
             </el-menu-item>
-            <el-menu-item index="2" @click="this.$router.push({name: 'recent'})">
-              <el-icon><clock /></el-icon>
+            <el-menu-item class="abc" index="2" @click="this.$router.push({name: 'recent'})">
+              <el-icon ><clock /></el-icon>
               <span slot="title">最近浏览</span>
             </el-menu-item>
             <el-menu-item index="3" @click="this.$router.push({name: 'space'})">
@@ -47,8 +47,8 @@
               <span slot="title">我的团队</span>
             </el-menu-item>
 
-            <el-sub-menu index="6" popper-offset="1">
-              <template #title>
+            <el-sub-menu index="6" popper-offset="1" >
+              <template #title style="padding-right: 10px">
                 <el-icon><tickets /></el-icon>
                 <span>模板</span>
               </template>
@@ -121,6 +121,15 @@ el-main {
 .el-menu-vertical-demo {
   height: 100vh;
   align-items: center;
+
+}
+.el-menu-vertical-demo > * {
+  padding-right: 20px;
+  padding-left: 10px;
+}
+.el-menu-vertical-demo > *:nth-child(6) {
+  padding-right: 0px;
+  padding-left: 0px;
 }
 </style>
 
