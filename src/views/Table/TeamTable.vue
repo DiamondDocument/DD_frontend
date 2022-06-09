@@ -59,7 +59,7 @@
             </el-menu-item-group>
           </el-sub-menu>
 
-          <el-menu-item index="7" @click="this.$router.push({name: 'recycle'})">
+          <el-menu-item index="7" @click="this.$router.push({name: 'recycle',params:{teamId: this.TeamId}})">
             <el-icon><delete /></el-icon>
             <span slot="title">回收站</span>
           </el-menu-item>
