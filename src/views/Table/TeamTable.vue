@@ -1,14 +1,24 @@
 <template >
+
+  <div id="all" style="width: 100%;height: 100%;">
   <el-container>
-    <el-header class="Header" style="height: 50px">
-      <img src="../../assets/logo2.png" style="width: 50px; height: 50px;">
 
+    <el-header class="Header" style="height: 50px; display: flex; justify-content: space-between; align-items: center;">
+
+      <img src="../../assets/logo2_2.png" style="width: 150px;margin-right: 30px; margin-left: 10px">
+      <el-input
+          v-model="userSearchContent"
+          placeholder="搜索用户..."
+          suffix-icon="Search"
+          style="width: 200px;margin-left: 30px;margin-right: auto; "
+          @input="this.$router.push({name: 'userSearch', params:{keyword: this.userSearchContent}})"
+      />
       <div style="display: flex; justify-content: space-between; align-items: center; width: 80px">
-        <el-avatar :src="avatar" style="width: 40px; height: 40px "/>
-        <el-icon @click="this.$router.push('/message')"><Bell /></el-icon>
-
+        <el-icon @click="this.$router.push({name:'message'})" ><Bell /></el-icon>
+        <el-avatar :src="avatar" style="width: 40px; height: 40px " @click="goInformation"/>
       </div>
     </el-header>
+
     <el-container>
       <el-aside class="Aside" style="width: auto">
         <el-menu default-active="1-4-1" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
@@ -50,10 +60,10 @@
     </el-container>
   </el-container>
 
-
+  </div>
 </template>
 
-<style>
+<style scoped>
 * {
   padding: 0;
   margin: 0;
@@ -66,7 +76,7 @@ Aside {
 }
 
 .Header {
-  background-color: #B3C0D1;
+  background-color: #C1D5E0;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -74,6 +84,35 @@ Aside {
 }
 a {
   text-decoration: none;
+}
+el-main {
+  background-color: azure;
+}
+#all{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #FCFCFC;
+  z-index: 1;
+}
+
+.el-menu-vertical-demo:not(.el-menu--collapse) {
+  width: auto;
+  min-height: 400px;
+}
+.el-menu-vertical-demo {
+  height: 100vh;
+  align-items: center;
+
+}
+.el-menu-vertical-demo > * {
+  padding-right: 20px;
+  padding-left: 10px;
+}
+.el-menu-vertical-demo > *:nth-child(6) {
+  padding-right: 0px;
+  padding-left: 0px;
 }
 </style>
 
@@ -104,6 +143,8 @@ export default {
       TeamId: '',
       TeamName: '',
       avatar: '',
+      userSearchContent: '',
+      userSearchComp: false,
     }
   },
   components: {
@@ -114,8 +155,8 @@ export default {
     toMessage() {
       this.type = 'message';
     },
-    toMySpace() {
-
+    goInformation: function (){
+      this.$router.push({name: 'userInformation', params: {userId: this.$store.state.loginUser.userId}});
     },
     toMyCollection() {
       this.type='collection'

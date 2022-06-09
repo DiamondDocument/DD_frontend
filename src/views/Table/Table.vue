@@ -2,6 +2,7 @@
   <div id="all" style="width: 100%;height: 100%;">
 
   <el-container>
+
     <el-header class="Header" style="height: 50px; display: flex; justify-content: space-between; align-items: center;">
 
       <img src="../../assets/logo2_2.png" style="width: 150px;margin-right: 30px; margin-left: 10px">
@@ -13,16 +14,11 @@
           @input="this.$router.push({name: 'userSearch', params:{keyword: this.userSearchContent}})"
       />
       <div style="display: flex; justify-content: space-between; align-items: center; width: 80px">
-
-<!--        <a href="#" style="padding: 0 10px 0 0">头像</a>-->
-<!--  THR: for test     -->
-<!--        <el-button @click="goInformation">-->
-<!--        头像-->
-<!--      </el-button>-->
         <el-icon @click="this.$router.push({name:'message'})" ><Bell /></el-icon>
         <el-avatar :src="url" style="width: 40px; height: 40px " @click="goInformation"/>
       </div>
     </el-header>
+
     <el-container>
       <el-aside class="Aside" style="width: auto;">
          <el-menu default-active="1-4-1" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
@@ -164,9 +160,7 @@ export default {
     this.$store.commit("changeTable", this.$route.params.info);
   },
   methods: {
-    // THR: for test
     goInformation: function (){
-      // this.$router.push({name: 'userInformation', params: {userId: 'u123'}});
       this.$router.push({name: 'userInformation', params: {userId: this.$store.state.loginUser.userId}});
     },
 
