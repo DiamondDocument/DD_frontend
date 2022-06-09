@@ -5,22 +5,27 @@
       <el-page-header content="用户搜索结果..." @back="this.$router.back()" />
       <el-divider/>
       <div style="width: 80%; margin: 0 auto;min-height: 500px">
-        <el-row v-for="(user, index) in userList" :key="user.userId"
-                class="block">
-          <el-avatar :src="user.url" style="margin: 10px; float: left" />
-          <div
-              style="float: right; width: 80%;margin-top: auto;margin-bottom: auto;">
-            <div style="display: flex">
-              <h3 >{{user.nickName}}</h3>
-              <p style="margin-left: 10px;line-height: 25px; color: #4d4d4d">{{user.userId}}</p>
+        <div v-for="(user, index) in userList" :key="user.userId"
+                style="margin: 10px 0;border-style: solid;border-width: 1px;
+                border-color: lightgray;border-radius: 5px;height: 100px;  display: flex;">
+          <div style=";margin: auto 20px;">
+            <el-avatar :size="50"  class="teamImg" >
+              <template #default>
+                <el-avatar :size="48" :src="user.url" fit="cover"/>
+              </template>
+            </el-avatar>
+          </div>
+          <div style="height: 100px">
+            <div style="display: flex;height: 40px">
+              <div style="font-size: 20px;line-height: 20px;margin: auto 10px 0 0;">{{user.nickName}}</div>
+              <p style="font-size: 15px;line-height: 20px;margin: auto 0 0 0;color: #4d4d4d">{{user.userId}}</p>
             </div>
-            <p >{{user.intro}}</p>
+            <p style="margin-bottom: 20px">{{user.intro}}</p>
           </div>
-          <div style="margin: auto 0">
-            <el-button @click="goUser(user.userId)">查看信息</el-button>
+          <div style="margin: auto 20px auto auto">
+            <el-button type="primary" @click="goUser(user.userId)">查看信息</el-button>
           </div>
-        </el-row>
-
+        </div>
       </div>
 
     </el-card>
@@ -79,11 +84,13 @@ export default {
 
 <style scoped>
 .block {
-  margin-bottom: 10px;
-  padding: 10px;
+  margin: 10px 0;
+  /*padding: 10px;*/
   border-style: solid;
   border-width: 1px;
   border-color: lightgray;
   border-radius: 5px;
+  height: 100px;
+  display: flex;
 }
 </style>
