@@ -47,12 +47,11 @@ export default {
     return {
       menuVisible: false,       //右键菜单不显示
       loading: true,           //暂时不用
-      curFileId: Number,
+      curFileId: '',
       curFileAth: Number,
       curFileShared: Boolean,
       exportLink: '',           //下载文件的链接
-      commitFileId: Number,     //确定移动的目标文件夹id
-      folderId: null,
+      folderId: '',
       tableData: [
         {
           fileType: 1,
@@ -115,21 +114,7 @@ export default {
           if (response.data.code === 0) {
             if (isback) this.folderId = response.data.parentId;
 
-            let files = response.data.files;
-            this.tableData = files;
-            for(let i = 0; i < this.tableData.length; i++){
-              let time =  files[i].createTime;
-              time = time.split('+')[0];
-              time = time.split('T')[0] + ' ' + time.split('T')[1].slice(0,-7);
-              this.tableData[i].createInfo = time + '  by ' + files[i].creatorName;
-              if(files[i].modifyTime === null) this.tableData[i].modifyInfo = "无修改记录";
-              else{
-                time =  files[i].modifyTime;
-                time = time.split('+')[0];
-                time = time.split('T')[0] + ' ' + time.split('T')[1].slice(0,-7);
-                this.tableData[i].modifyInfo = time + '  by ' + files[i].modifierName;
-              }
-            }
+            this.tableData = response.data.files;
           } else if (response.data.code === -1) {
             ElMessage({message: '获取列表失败', type: 'warning'});
           }
@@ -143,7 +128,7 @@ export default {
     },
     //跟踪鼠标指向的文件信息
     recordId(row) {
-      this.curFileId = row.id
+      this.curFileId = row.fileId
       this.curFileAth = row.authority
       this.curFileShared = row.shared
     },
@@ -152,7 +137,7 @@ export default {
       this.getFolderData(false)
     },
     commit() {
-      this.$emit('commit', this.commitFileId)
+      this.$emit('commit', this.folderId)
     },
     cancel() {
       this.$emit('cancel')

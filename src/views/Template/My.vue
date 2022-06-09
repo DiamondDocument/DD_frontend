@@ -1,12 +1,12 @@
 <template>
 <!--  space调用的时候才会显示的一个div-->
-  <div v-if="spaceUsing">
-    <el-menu default-active="'/' +this.$route.path.split('/')[1]" >
-      <el-button type="primary" style="float: right; margin-right: 20px;">
-        <span style="vertical-align: middle" @click="this.$emit('cancel')">取消</span>
-      </el-button>
-    </el-menu>
-  </div>
+<!--  <div v-if="this.spaceUsing==='true'">-->
+<!--    <el-menu default-active="'/' +this.$route.path.split('/')[1]" >-->
+<!--      <el-button type="primary" style="float: right; margin-right: 20px;">-->
+<!--        <span style="vertical-align: middle" @click="this.$emit('cancel')">取消</span>-->
+<!--      </el-button>-->
+<!--    </el-menu>-->
+<!--  </div>-->
 <!--  <el-row v-if="!selectPos">-->
 <!--    <el-col-->
 <!--        v-for="(temps, i) in templates"-->
@@ -46,7 +46,15 @@
               />
               <div id="information" style="padding: 5px;padding-left: 25px;background-color:  #F7F7F7">
                 <div>
-                  <el-link id="name" @click="this.$router.push({name: 'templateDetail', params:{templateId:temps.tempId}})" target="_blank">{{temps.tempName}}</el-link>
+                  <el-link id="name"
+                           @click="this.$router.push({name: 'templateDetail',
+                                    params:{
+                                    templateId:temps.tempId,
+                                    templateName:temps.tempName,
+                                    spaceUsing:this.spaceUsing,
+                                    parentId:this.parentId,
+                                     }})"
+                           target="_blank">{{temps.tempName}}</el-link>
                 </div>
                 <div style="display: flex">
                   <el-link @click="$router.push({name:'userInformation', params: {userId : 'visitor'}})" target="_blank">作者：{{temps.creatorName}}</el-link>
@@ -65,7 +73,6 @@
       </el-scrollbar>
     </el-card>
   </div>
-  <tmp-pos ref="tmpPos" v-if="selectPos" @commit="commit" @cancel="selectPos=false"></tmp-pos>
 
 
 
@@ -74,23 +81,17 @@
 
 <script>
 import {ElMessage} from "element-plus";
-import tmpPos from "@/views/Space/tmpPos";
 
 export default {
   name: "MyTemplate.vue",
-  components:{tmpPos},
+  props: [
+    "spaceUsing",
+    "parentId"
+  ],
   data() {
     return {
       userId: '',
-      spaceUsing: false,    //是否正在被space调用
-      selectPos: false,     //是否在选择创建位置
-      curTmpId: Number,     //当前选中的id
-      curTmpName: '',       //当前选中的name
-      templates: [
-        {
-          tempName: 'for space test'
-        }
-      ]
+      templates: []
     }
   },
 
@@ -113,19 +114,26 @@ export default {
   },
   methods:{
     useTmp(tmp){
-      if (this.spaceUsing)
-        this.selectPos=true
-        this.curTmpId=tmp.tempId
-        this.$emit('useTmp', tmp.tempId, tmp.tempName)
+      console.log("in and spaceusing is", this.spaceUsing)
+      if(this.spaceUsing==='true'){
+        this.commit(tmp,this.parentId)
+      }
+      else{
+        this.$router.push({name: 'templateDetail',
+          params:{templateId:tmp.tempId,
+            templateName:tmp.tempName,
+            spaceUsing:this.spaceUsing,
+            parentId:this.parentId}})
+      }
     },
-    commit(id){
+    commit(tmp, id){
+      console.log("parent:",id)
       this.$axios.post("/file/create", {
         "type": 1,
-        "name": this.curTmpName,
-        "templateId": this.curTmpId,
+        "name": tmp.tempName,
+        "templateId": tmp.tempId,
         "authority": 3,
         "creatorId": this.$store.state.loginUser.userId,
-        "parentId": id,
       }).then((response)=>{
         if(response.status === 200){
           if (response.data.code === 0) {
