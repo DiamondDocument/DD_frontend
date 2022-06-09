@@ -239,8 +239,10 @@ export default {
     //处理自动更新事件
     afterNew(){
       console.log('in');
-      this.getFolderData(false);
-      this.altTable=Math.random()
+      setTimeout(() => {
+        this.getFolderData(false);
+        this.altTable=Math.random()
+      }, 1000);
     },
     //从模板创建
     useTmp(tempId,tempName){
