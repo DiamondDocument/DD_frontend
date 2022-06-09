@@ -14,7 +14,6 @@
               @row-contextmenu="rowContextmenu"
               highlight-current-row
               @row-dblclick="edit"
-              :key="Math.random()"
               @cell-mouse-enter="recordId">
       <el-table-column sortable prop="fileName" label="文件名" width="400"></el-table-column>
       <el-table-column sortable prop="createInfo" label="创建时间" width="350"></el-table-column>

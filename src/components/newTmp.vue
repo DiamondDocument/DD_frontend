@@ -5,14 +5,14 @@
         <div class="confirm-wrapper">
           <div class="confirm-content">
             <div style="height: 30px"></div>
-            <header style="line-height: 30px;text-align: center; font-weight: bold;margin-bottom: 20px;">创建文件夹</header>
+            <header style="line-height: 30px;text-align: center; font-weight: bold;margin-bottom: 20px;">创建模板</header>
             <div style="margin-left: 40px;margin-right: 50px;">
-              <el-form  label-width="200px">
+              <el-form  label-width="100px">
                 <el-form-item label="模板名称">
-                  <el-input v-model="nameInput" placeholder="例:请假条通用模板" style=" !important;margin-left: 20px;margin-right: 0;"></el-input>
+                  <el-input v-model="nameInput" placeholder="例:请假条通用模板" style=" !important;margin-left: 10px;margin-right: 0;"></el-input>
                 </el-form-item>
                 <el-form-item label="模板介绍">
-                  <el-input v-model="introInput" placeholder="例:翘课必备,童叟无欺" style=" !important;margin-left: 20px;margin-right: 0;"></el-input>
+                  <el-input v-model="introInput" placeholder="例:翘课必备,童叟无欺" style=" !important;margin-left: 10px;margin-right: 0;"></el-input>
                 </el-form-item>
               </el-form>
               <el-button type="primary" style="bottom: 30px; left: 100px; position: absolute" @click="commit"><span>确定</span></el-button>

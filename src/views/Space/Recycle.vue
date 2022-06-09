@@ -13,7 +13,6 @@
               :cell-style="{padding: '20px'}"
               @row-contextmenu="rowContextmenu"
               highlight-current-row
-              :key="Math.random()"
               @cell-mouse-enter="recordId">
       <el-table-column width="50" label="">
         <template #default="scope">
