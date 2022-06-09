@@ -57,7 +57,7 @@ export default {
     },
     commit () {
       this.hide()
-      this.$emit('altAuthority', this.authority)
+      this.$emit('shareFile', this.authority)
     },
     hide () {
       this.visible = false
@@ -70,7 +70,7 @@ export default {
       }).then((response)=> {
         if(response.status === 200){
           if (response.data.code === 0) {
-            this.link='document/share/'+ this.curFileId
+            this.link='http://43.138.71.108/document/share/'+ this.curFileId
             this.visible = true
           } else if(response.data.code===-1){
             ElMessage('分享失败')

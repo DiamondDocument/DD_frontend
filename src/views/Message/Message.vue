@@ -186,7 +186,7 @@ export default {
                 this.messageNotRead++;
               switch (msg.msgType) {
                 case 1:
-                  msg.title = '系统通知您' + msg.content
+                  msg.title =  msg.content;
                   break;
                 case 2:
                   msg.title = msg.senderName + '申请加入' + '团队：' + msg.teamName
@@ -209,7 +209,7 @@ export default {
                   }
                   break;
                 case 6:
-                  msg.title = msg.senderName + '评论了你的文档：' + msg.msgDocName
+                  msg.title = msg.senderName + '评论了你的文档：' + msg.msgDocName;
                   break;
                 default:
                   msg.title = msg.senderName + '在文档：' + msg.msgDocName + ' 中提到了你'

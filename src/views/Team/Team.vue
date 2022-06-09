@@ -126,7 +126,7 @@
         <el-divider />
 
         <div v-for="mem in memList" :key="mem.id"
-             @click="goUser(mem.userId)"
+
              style="
               margin: 10px auto;
               border-style: solid;
@@ -137,7 +137,7 @@
               width: 80%;
               display: flex;">
           <div style=";margin: auto 20px;">
-            <el-avatar :size="50"  class="teamImg" >
+            <el-avatar :size="50"  class="teamImg" @click="goUser(mem.userId)">
               <template #default>
                 <el-avatar :size="48" :src="mem.url" fit="cover"/>
               </template>

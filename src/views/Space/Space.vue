@@ -52,7 +52,7 @@
                   @authority = "showAuthority()" @notShare="notShare"
          data-popper-placement="top"></index>
   <authority ref="authority" @altAuthority="altAuthority"></authority>
-  <share ref="share" :curFileId="this.curFileId" @altAuthority="altAuthority"></share>
+  <share ref="share" :curFileId="this.curFileId" @shareFile="shareFile"></share>
   <new-file ref="newFile" :fatherId="this.folderId" :teamId="this.teamId" @end="afterNew"></new-file>
   <new-folder ref="newFolder" :fatherId="this.folderId" :teamId="this.teamId" @end="afterNew"></new-folder>
   <new-tmp ref="newTmp" :fileId="this.curFileId"></new-tmp>
@@ -475,6 +475,26 @@ export default {
       }).catch((err) => {
         console.log(err);
       });
+    },
+    shareFile(ath){
+      this.$axios.post("document/share",
+          {
+            auth: ath,
+            docId: this.curFileId,
+          }
+      ).then((response)=>{
+        console.log('分享：', response.data);
+        if (response.status===200 && response.data.code === 0){
+          ElMessage('修改成功');
+          this.curFileShared = ath;
+          console.log(this.curFileShared);
+        }
+        else{
+          ElMessage('修改失败');
+        }
+      }).catch((err)=>{
+        console.log(err)
+      })
     },
     notShare(){
       this.$axios.post("/document/dis-share",

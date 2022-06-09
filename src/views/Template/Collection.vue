@@ -56,7 +56,7 @@ export default {
   },
 
   created() {
-    this.userId = this.$store.state.loginUser.userId
+    this.userId = this.$store.state.loginUser.userId;
     this.$axios.get("/template/list/collection", {
       params: {
         userId: this.userId,

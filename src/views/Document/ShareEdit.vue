@@ -5,7 +5,7 @@
     <div class = "top-ele" style="margin-left: 20px;margin-right: 20px">
       <el-button  icon="House"  @click = "quit" />
     </div>
-    <div class = "top-ele" style="text-align: center;min-width: 100px;  ">{{ myTitle }}</div>
+    <div class = "top-ele" style="text-align: center;min-width: 100px;  ">{{ myTitle }} （游客模式）</div>
     <div class = "top-ele" style="margin-left: 20px;">
       <el-divider style="margin: 0 0;height: 40px" direction="vertical" />
 
@@ -225,7 +225,7 @@ export default {
   },
   created() {
     // this.myEditor = 'Iamzzy';
-    this.myEditor = this.$store.state.loginUser.userId
+    this.myEditor = 'visitor';
     this.myDocId = this.$route.params.documentId;
     this.getDoc();
     this.getComment();

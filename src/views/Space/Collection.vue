@@ -120,7 +120,7 @@ export default {
     },
     //跟踪鼠标指向的文件信息
     recordId(row) {
-      this.curFileId = row.id
+      this.curFileId = row.fileId
       this.curFileAth = row.authority
       this.curFileShared = row.isShared
     },
@@ -265,14 +265,18 @@ export default {
               "docId": this.curFileId
           }
       ).then((response)=>{
+        console.log(this.$store.state.loginUser.userId);
+        console.log(this.curFileId);
+
         if(response.status === 200){
+          console.log(response);
           if (response.data.code === 0) {
             ElMessage('取消收藏成功')
             this.getFolderData(false)
           } else if(response.data.code===-1){
             ElMessage('取消收藏失败')
-          }else{
-            ElMessage('其他错误')
+          }else {
+            ElMessage('取消收藏其他错误');
           }
         }else{
           ElMessage({ message: "status = " + response.status, type: 'warning'});

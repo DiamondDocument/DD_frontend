@@ -140,7 +140,12 @@ const documentEdit = {
   path: '/document/edit/:documentId',
   name: 'documentEdit',
   component:() =>import('../views/Document/Edit.vue'),
-}
+};
+const documentShare = {
+  path: '/document/share/:documentId',
+  name: 'documentShare',
+  component:() =>import('../views/Document/ShareEdit.vue'),
+};
 
 //工作台路由
 const table = {
@@ -232,6 +237,7 @@ const routes = [
   },
   documentEdit,
   table,
+  documentShare,
 
 ]
 
