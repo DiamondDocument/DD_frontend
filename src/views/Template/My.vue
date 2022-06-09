@@ -7,8 +7,6 @@
       </el-button>
     </el-menu>
   </div>
-
-
 <!--  <el-row v-if="!selectPos">-->
 <!--    <el-col-->
 <!--        v-for="(temps, i) in templates"-->
@@ -32,26 +30,43 @@
 <!--      </el-card>-->
 <!--    </el-col>-->
 <!--  </el-row>-->
+  <div style="width: 1043px;margin-left: auto;margin-right: auto;margin-top: 30px; ">
+    <el-card shadow="always" :body-style="{ padding: '40px 20 20 0 ',backgroundColor: '#F7F7F7'  }" >
+      <div style="height: 30px"></div>
+      <el-page-header style="margin-left: 20px" icon="PictureFilled" content="我的模板" title="        " />
+      <el-divider/>
+      <el-scrollbar style="height: 500px;" >
+        <div id="out">
+          <div id="item" v-for="(temps, i) in templates" >
+            <el-card shadow="always" id="image" :body-style="{ padding: '0px' }">
+              <img
+                  :src="temps.url"
+                  id="image"
+                  @click="useTmp(temps)"
+              />
+              <div id="information" style="padding: 5px;padding-left: 25px;background-color:  #F7F7F7">
+                <div>
+                  <el-link id="name" @click="this.$router.push({name: 'templateDetail', params:{templateId:temps.tempId}})" target="_blank">{{temps.tempName}}</el-link>
+                </div>
+                <div style="display: flex">
+                  <el-link @click="$router.push({name:'userInformation', params: {userId : 'visitor'}})" target="_blank">作者：{{temps.creatorName}}</el-link>
+                  <el-icon style="margin-right: 30px;margin-left: auto;" size="large"><CollectionTag /></el-icon>
+                </div>
+                <!--            <p id="name" @click="useTmp(temps)">{{temps.tempName}}</p>-->
+
+              </div>
+            </el-card>
+
+            <!--        <el-button text style="width: 100%"><p style="margin-left: 0;">{{temps.tempName}}</p></el-button>-->
+            <!--        <a href="" id="name" @click=""> </a>-->
+
+          </div>
+        </div>
+      </el-scrollbar>
+    </el-card>
+  </div>
   <tmp-pos ref="tmpPos" v-if="selectPos" @commit="commit" @cancel="selectPos=false"></tmp-pos>
-  <el-scrollbar >
-    <div id="out">
-      <div id="item" v-for="(temps, i) in templates" >
-        <el-card shadow="hover" id="image" :body-style="{ padding: '0px' }">
-          <img
-              :src="temps.url"
-              id="image"
-              @click="this.$router.push({name: 'templateDetail', params:{templateId:temps.tempId}})"
-          />
-          <p id="name" @click="useTmp(temps)">{{temps.tempName}}</p>
-        </el-card>
 
-<!--        <el-button text style="width: 100%"><p style="margin-left: 0;">{{temps.tempName}}</p></el-button>-->
-<!--        <a href="" id="name" @click=""> </a>-->
-
-        <a href="#">作者：{{temps.creatorId}}</a>
-      </div>
-    </div>
-  </el-scrollbar>
 
 
 
@@ -141,6 +156,7 @@ export default {
   margin-left: auto;
   margin-right: auto;
   width: 1000px;
+
 }
 #image {
   /*width: 218px;*/
@@ -152,6 +168,8 @@ export default {
   border: 1px solid #e8e8e8;
 }
 #item {
+  margin-left: auto;
+  margin-right: auto;
   height: 340px;
   width: 220px;
   margin-top: 30px;
@@ -159,10 +177,10 @@ export default {
 }
 #name{
   line-height: 50px;
-  font-size: 15px;
+  font-size: 20px;
   height: 50px;
-  text-align: center;
-  color: rgba(0, 0, 0, 0.7);
+  /*text-align: center;*/
+  /*color: rgba(0, 0, 0, 0.7);*/
   /*flood-color: ;*/
 }
 .bottom {
