@@ -30,7 +30,7 @@
 <!--      </el-card>-->
 <!--    </el-col>-->
 <!--  </el-row>-->
-  <div style="width: 1043px;margin-left: auto;margin-right: auto;margin-top: 30px; ">
+  <div style="width: 1043px;margin-left: auto;margin-right: auto;margin-top: 30px; " v-if="!selectPos">
     <el-card shadow="always" :body-style="{ padding: '40px 20 20 0 ',backgroundColor: '#F7F7F7'  }" >
       <div style="height: 30px"></div>
       <el-page-header style="margin-left: 20px" icon="PictureFilled" content="我的模板" title="        " />
@@ -73,7 +73,7 @@
       </el-scrollbar>
     </el-card>
   </div>
-
+  <tmp-pos ref="tmpPos" v-if="selectPos" @commit="commit" @cancel="selectPos=false"></tmp-pos>
 
 
 
@@ -86,11 +86,12 @@ export default {
   name: "MyTemplate.vue",
   props: [
     "spaceUsing",
-    "parentId"
+    "parentId",
   ],
   data() {
     return {
       userId: '',
+      selectPos: false,
       templates: []
     }
   },
@@ -115,8 +116,8 @@ export default {
   methods:{
     useTmp(tmp){
       console.log("in and spaceusing is", this.spaceUsing)
-      if(this.spaceUsing==='true'){
-        this.commit(tmp,this.parentId)
+      if(this.spaceUsing){
+        this.$emit('useTmp', tmp.tempId, tmp.tempName)
       }
       else{
         this.$router.push({name: 'templateDetail',
@@ -128,20 +129,24 @@ export default {
     },
     commit(tmp, id){
       console.log("parent:",id)
-      this.$axios.post("/file/create", {
-        "type": 1,
-        "name": tmp.tempName,
-        "templateId": tmp.tempId,
-        "authority": 3,
-        "creatorId": this.$store.state.loginUser.userId,
-      }).then((response)=>{
+      let f = new FormData()
+      f.append("type", '1')
+      f.append("name", tempName)
+      f.append("authority", '3')
+      f.append("creatorId", this.$store.state.loginUser.userId)
+      f.append("templateId", tempId)
+      if (this.folderId!=null){
+        f.append("parentId", this.folderId)
+      }
+      this.$axios.post("/file/create", f).then((response)=>{
         if(response.status === 200){
           if (response.data.code === 0) {
             ElMessage('创建成功')
-          } else if(response.data.code===1){
+            this.getFolderData(false)
+          } else if(response.data.code===-1){
+            ElMessage('创建失败')
+          }else if (response.data.code===1){
             ElMessage('文件重名，已修改')
-          }else if(response.data.code===2){
-            ElMessage('您没有权限')
           }else{
             ElMessage('其他错误')
           }

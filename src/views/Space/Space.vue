@@ -54,7 +54,7 @@
   <new-file ref="newFile" :fatherId="this.folderId"></new-file>
   <new-folder ref="newFolder" :fatherId="this.folderId"></new-folder>
   <move ref="move" @commit="move" @cancel="this.moving=false" v-if="moving"></move>
-  <my ref="My" v-if="tmpVisible" :spaceUsing="'true'" :parentId="this.folderId" @useTmp="useTmp" @cancel="tmpVisible=false"></my>
+  <my ref="My" v-if="tmpVisible" :spaceUsing="true" :parentId="this.folderId" @useTmp="useTmp" @cancel="tmpVisible=false"></my>
   <el-dialog title="重命名" v-model="renameVisible" width="30%">
     <span>请输入文件名：</span>
     <el-input v-model="reName" style="width: 20%"></el-input>
@@ -221,15 +221,17 @@ export default {
       console.log(row.fileId, row.authority, row.shared)
     },
     //从模板创建
-    useTmp(id,name){
-      this.$axios.post("/file/create", {
-        "type": 1,
-        "name": name,
-        "authority": 3,
-        "creatorId": this.$store.state.loginUser.userId,
-        "parentId": this.folderId,
-        "templateId": id,
-      }).then((response)=>{
+    useTmp(tempId,tempName){
+      let f = new FormData()
+      f.append("type", '1')
+      f.append("name", tempName)
+      f.append("authority", '3')
+      f.append("creatorId", this.$store.state.loginUser.userId)
+      f.append("templateId", tempId)
+      if (this.folderId!=null){
+        f.append("parentId", this.folderId)
+      }
+      this.$axios.post("/file/create", f).then((response)=>{
         if(response.status === 200){
           if (response.data.code === 0) {
             ElMessage('创建成功')
