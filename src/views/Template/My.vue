@@ -48,10 +48,12 @@
                 <div>
                   <el-link id="name"
                            @click="this.$router.push({name: 'templateDetail',
-                                    params:{templateId:temps.tempId,
+                                    params:{
+                                    templateId:temps.tempId,
                                     templateName:temps.tempName,
                                     spaceUsing:this.spaceUsing,
-                                    parentId:this.parentId}})"
+                                    parentId:this.parentId,
+                                     }})"
                            target="_blank">{{temps.tempName}}</el-link>
                 </div>
                 <div style="display: flex">

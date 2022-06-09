@@ -55,10 +55,9 @@ export default {
       creatorId: '',
       creatorName: '',
       url: '',
+      url2:'',
       urls: '',
-      spaceUsing: false,    //是否正在被space调用
       selectPos: false,     //是否在选择创建位置
-      tempName: '',       //当前选中的name
       info: [
 
       ]
@@ -69,6 +68,7 @@ export default {
     this.tempId = this.$route.params.templateId;
     this.tempName=this.$route.params.templateName;
     this.spaceUsing=this.$route.params.spaceUsing;
+    console.log(this.tempId, this.tempName, this.spaceUsing)
 
     this.$axios.get("/template/thumbnail", {
       params: {
