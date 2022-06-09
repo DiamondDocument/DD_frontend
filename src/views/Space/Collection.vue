@@ -166,7 +166,7 @@ export default {
     edit (row) {
       this.$router.push({
         name: "documentEdit",
-        params: {documentId: row.id}
+        params: {documentId: row.fileId}
       })
     },
     altAuthority(ath) {

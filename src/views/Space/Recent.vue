@@ -15,15 +15,8 @@
               highlight-current-row
               @row-dblclick="edit"
               @cell-mouse-enter="recordId">
-      <el-table-column width="50" label="">
-        <template #default="scope">
-          <el-icon v-if="scope.row.fileType===1"><Document /></el-icon>
-          <el-icon v-else><Folder /></el-icon>
-        </template>
-      </el-table-column>
       <el-table-column sortable prop="fileName" label="文件名" width="400"></el-table-column>
       <el-table-column sortable prop="browserTime" label="浏览时间" width="350"></el-table-column>
-      <el-table-column sortable prop="creatorInfo" label="创建时间" width="350"></el-table-column>
       <el-table-column sortable prop="modifyInfo" label="最后修改" width="350"></el-table-column>
       <el-table-column sortable prop="size" label="大小" ></el-table-column>
     </el-table>
