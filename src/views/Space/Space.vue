@@ -1,7 +1,7 @@
 <template>
   <div style="margin: 15px 0 5px 0;border-bottom: 1px solid #e8e8e8;padding-bottom: 10px" v-if="!moving && !tmpVisible">
     <el-menu default-active="'/' +this.$route.path.split('/')[1]" >
-      <el-button type="primary" icon="ArrowLeft" text @click="getFolderData(true)">返回上一级</el-button>
+      <el-button type="primary" icon="ArrowLeft" text @click="getFolderData(true)" v-if="this.folderId!=null">返回上一级</el-button>
       <el-input v-model="input" placeholder="空间内搜索文件" style="width: 20%"></el-input>
       <el-button type="primary" style="margin-left: 10px"  @click="search">
         <el-icon style="vertical-align: middle;">

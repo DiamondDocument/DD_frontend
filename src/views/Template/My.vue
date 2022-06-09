@@ -74,7 +74,7 @@
       </el-scrollbar>
     </el-card>
   </div>
-  <tmp-pos ref="tmpPos" v-if="this.selectPos" @commit="commit" @cancel="selectPos=false"></tmp-pos>
+  <tmp-pos ref="tmpPos" v-if="this.selectPos" @commit="commit" @cancel="this.selectPos=false"></tmp-pos>
 
 
 
@@ -82,13 +82,15 @@
 
 <script>
 import {ElMessage} from "element-plus";
-
+import tmpPos from "@/views/Space/tmpPos";
+import {ref} from "vue";
 export default {
   name: "MyTemplate.vue",
   props: {
     "spaceUsing": false,
     "parentId": null,
   },
+  components:[tmpPos],
   data() {
     return {
       userId: '',
@@ -96,7 +98,12 @@ export default {
       templates: []
     }
   },
-
+  setup(){
+    const tmpPos = ref()
+    return{
+      tmpPos
+    }
+  },
   created() {
     this.userId = this.$store.state.loginUser.userId
     this.$axios.get("/template/list/my", {
