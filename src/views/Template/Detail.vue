@@ -73,6 +73,7 @@ export default {
     this.$axios.get("/template/thumbnail", {
       params: {
         tempId: this.tempId,
+
       }
     }).then((response) => {
       if (response.status === 200) {
@@ -87,6 +88,7 @@ export default {
     this.$axios.get("/template", {
       params: {
         tempId: this.tempId,
+        userId: this.$store.state.loginUser.userId
       }
     }).then((response) => {
       if (response.status === 200) {
