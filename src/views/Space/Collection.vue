@@ -123,14 +123,21 @@ export default {
     recordId(row) {
       this.curFileId = row.id
       this.curFileAth = row.authority
-      this.curFileShared = row.shared
+      this.curFileShared = row.isShared
     },
     //获得打开的文件夹里面的文件列表
     getFolderData(isback) {
       this.loading=true
+      let spaceType="user"
       let ownerId=this.$store.state.loginUser.userId
-      if(this.$route.params.ownerId!=null){
-        ownerId=this.$route.params.ownerId
+
+      if (this.$store.state.tableType==='other'){
+        this.other=ownerId=this.$store.state.tableId
+        spaceType='user'
+      }
+      else if (this.$store.state.tableType==='team'){
+        this.other=ownerId=this.$store.state.tableId
+        spaceType='team'
       }
       this.$axios.get('/space/collection', {
         params: {

@@ -178,8 +178,8 @@ export default {
     recordId(row) {
       this.curFileId = row.fileId
       this.curFileAth = row.authority
-      this.curFileShared = row.shared
-      console.log(row.fileId, row.authority, row.shared)
+      this.curFileShared = row.isShared
+      console.log(row.fileId, row.authority, row.isShared)
     },
     //从模板创建
     useTmp(tempId,tempName){

@@ -179,7 +179,6 @@ export default {
     }
   },
   mounted() {
-    this.other=this.$route.params.ownerId
     this.getFolderData(false)
   },
   methods: {
@@ -188,14 +187,16 @@ export default {
       this.loading=true
       let spaceType="user"
       let ownerId=this.$store.state.loginUser.userId
-      if (this.$route.params.teamId!=null) {
-        spaceType = "team"
-        ownerId=this.$route.params.teamId
+
+      if (this.$store.state.tableType==='other'){
+        this.other=ownerId=this.$store.state.tableId
+        spaceType='user'
       }
-      if(this.$route.params.ownerId!=null){
-        console.log('other')
-        ownerId=this.$route.params.ownerId
+      else if (this.$store.state.tableType==='team'){
+        this.other=ownerId=this.$store.state.tableId
+        spaceType='team'
       }
+
       console.log(spaceType, ownerId, this.folderId, this.$store.state.loginUser.userId)
       this.$axios.get('/space', {
         params: {
