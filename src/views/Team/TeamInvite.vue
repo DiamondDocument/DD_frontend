@@ -110,7 +110,6 @@ export default {
   created() {
     this.keyword = this.$route.params.keyword;
     this.teamId = this.$route.params.teamId;
-    
     this.$axios.get("team/information", {
       params:{
         teamId: this.teamId
@@ -125,6 +124,8 @@ export default {
     }).catch((err)=>{
       console.log(err);
     });
+
+    if (this.keyword === '') return;
 
     this.$axios.get("search/user", {
       params:{
