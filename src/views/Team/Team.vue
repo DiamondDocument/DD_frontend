@@ -148,7 +148,7 @@
               <div style="font-size: 20px;line-height: 20px;margin: auto 10px 0 0;">{{mem.name}}</div>
               <p style="font-size: 15px;line-height: 20px;margin: auto 0 0 0;color: #4d4d4d">{{mem.userId}}</p>
             </div>
-<!--            <p style="margin-bottom: 20px">{{mem.intro}}</p>-->
+            <p style="margin-bottom: 20px">{{mem.intro}}</p>
           </div>
           <div v-if="userType === 0 && mem.userId !== this.$store.state.loginUser.userId"
                style="margin: auto 20px auto auto">
