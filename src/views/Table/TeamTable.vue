@@ -47,7 +47,7 @@
             <span slot="title" @click="this.$router.push({name: 'team', params: {teamId: this.TeamId}})">团队详情</span>
           </el-menu-item>
 
-          <el-menu-item index="6" @click="this.$router.push({name: 'recycle'})">
+          <el-menu-item index="6" @click="this.$router.push({name: 'recycle',params:{teamId: this.TeamId}})">
             <el-icon><delete /></el-icon>
             <span slot="title">回收站</span>
           </el-menu-item>

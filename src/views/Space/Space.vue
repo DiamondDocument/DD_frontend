@@ -175,13 +175,13 @@ export default {
     //获得打开的文件夹里面的文件列表
     getFolderData(isback) {
       this.loading=true
-      let spaceType='user'
+      let spaceType="user"
       let ownerId=this.$store.state.loginUser.userId
       if (this.$route.params.teamId!=null) {
-        spaceType = 'team'
+        spaceType = "team"
         ownerId=this.$route.params.teamId
       }
-
+      console.log(spaceType, ownerId, this.folderId, this.$store.state.loginUser.userId)
       this.$axios.get('/space', {
         params: {
           type: spaceType,
