@@ -5,7 +5,12 @@
     <div class = "top-ele" style="margin-left: 20px;margin-right: 20px">
       <el-button  icon="House"  @click = "$router.push({name:'table',params:{info: $store.state.tableInfo}})" />
     </div>
-    <div class = "top-ele" style="text-align: center;min-width: 100px;margin-right: auto  ">{{ myTitle }}</div>
+    <div class = "top-ele" style="text-align: center;min-width: 100px;  ">{{ myTitle }}</div>
+    <div class = "top-ele" style="margin-left: 20px;">
+      <el-divider style="margin: 0 0;height: 40px" direction="vertical" />
+
+    </div>
+    <div class = "top-ele" style="margin-left: 30px;margin-right: auto;"> 该文档最后修改于 {{myModifyTime}}</div>
     <!--  <div class = "top-ele" style="margin-right: 20px;"><el-avatar size="small" shape="square"></el-avatar></div>-->
 <!--    <div class = "top-ele"><el-button @click = "$router.push({name:'table',params:{info: $store.state.tableInfo}})"> 分享 </el-button></div>-->
 <!--    <div class = "top-ele"><el-button @click = "saveDoc"> 保存 </el-button></div>-->
@@ -515,7 +520,7 @@ body {
   display: flex;
   border-bottom: 1px solid #e8e8e8;
   padding-left: 0px;
-  height: 40px;
+  height: 50px;
 }
 
 #editor-toolbar {
