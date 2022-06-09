@@ -37,7 +37,7 @@
             <el-divider content-position="center"><p v-if="!isCollapse">{{ TeamName }}</p></el-divider>
           </el-menu-item>
 
-          <el-menu-item index="4" @click="this.$router.push({name: 'space',params:{teamId: this.TeamId}})">
+          <el-menu-item index="4" @click="this.$router.push({name: 'space'})">
             <el-icon><house /></el-icon>
             <span slot="title">团队空间</span>
           </el-menu-item>
@@ -69,7 +69,6 @@
       <el-main style="padding: 0;margin-bottom: 0;height: 100vh">
         <div style="height: 670px;margin-right: auto;margin-left: auto">
           <router-view></router-view>
-          <el-scrollbar style="height: 100%"></el-scrollbar>
         </div>
       </el-main>
     </el-container>
