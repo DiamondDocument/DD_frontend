@@ -1,12 +1,12 @@
 <template>
 <!--  space调用的时候才会显示的一个div-->
-  <div v-if="this.spaceUsing==='true'">
-    <el-menu default-active="'/' +this.$route.path.split('/')[1]" >
-      <el-button type="primary" style="float: right; margin-right: 20px;">
-        <span style="vertical-align: middle" @click="this.$emit('cancel')">取消</span>
-      </el-button>
-    </el-menu>
-  </div>
+<!--  <div v-if="this.spaceUsing==='true'">-->
+<!--    <el-menu default-active="'/' +this.$route.path.split('/')[1]" >-->
+<!--      <el-button type="primary" style="float: right; margin-right: 20px;">-->
+<!--        <span style="vertical-align: middle" @click="this.$emit('cancel')">取消</span>-->
+<!--      </el-button>-->
+<!--    </el-menu>-->
+<!--  </div>-->
 <!--  <el-row v-if="!selectPos">-->
 <!--    <el-col-->
 <!--        v-for="(temps, i) in templates"-->
@@ -82,10 +82,10 @@ import {ElMessage} from "element-plus";
 
 export default {
   name: "MyTemplate.vue",
-  props: {
-    "spaceUsing": 'false',
-    "parentId": Number
-  },
+  props: [
+    "spaceUsing",
+    "parentId"
+  ],
   data() {
     return {
       userId: '',
@@ -126,58 +126,30 @@ export default {
     },
     commit(tmp, id){
       console.log("parent:",id)
-      if (id===''){
-        this.$axios.post("/file/create", {
-          "type": 1,
-          "name": tmp.tempName,
-          "templateId": tmp.tempId,
-          "authority": 3,
-          "creatorId": this.$store.state.loginUser.userId,
-        }).then((response)=>{
-          if(response.status === 200){
-            if (response.data.code === 0) {
-              ElMessage('创建成功')
-            } else if(response.data.code===1){
-              ElMessage('文件重名，已修改')
-            }else if(response.data.code===2){
-              ElMessage('您没有权限')
-            }else{
-              ElMessage('其他错误')
-            }
+      this.$axios.post("/file/create", {
+        "type": 1,
+        "name": tmp.tempName,
+        "templateId": tmp.tempId,
+        "authority": 3,
+        "creatorId": this.$store.state.loginUser.userId,
+      }).then((response)=>{
+        if(response.status === 200){
+          if (response.data.code === 0) {
+            ElMessage('创建成功')
+          } else if(response.data.code===1){
+            ElMessage('文件重名，已修改')
+          }else if(response.data.code===2){
+            ElMessage('您没有权限')
           }else{
-            ElMessage({ message: "status = " + response.status, type: 'warning'});
+            ElMessage('其他错误')
           }
-        }).catch((err) => {
-          console.log(err);
-        })
-        this.selectPos=false
-      }else {
-        this.$axios.post("/file/create", {
-          "type": 1,
-          "name": tmp.tempName,
-          "templateId": tmp.tempId,
-          "authority": 3,
-          "creatorId": this.$store.state.loginUser.userId,
-          "parentId": id,
-        }).then((response) => {
-          if (response.status === 200) {
-            if (response.data.code === 0) {
-              ElMessage('创建成功')
-            } else if (response.data.code === 1) {
-              ElMessage('文件重名，已修改')
-            } else if (response.data.code === 2) {
-              ElMessage('您没有权限')
-            } else {
-              ElMessage('其他错误')
-            }
-          } else {
-            ElMessage({message: "status = " + response.status, type: 'warning'});
-          }
-        }).catch((err) => {
-          console.log(err);
-        })
-        this.selectPos = false
-      }
+        }else{
+          ElMessage({ message: "status = " + response.status, type: 'warning'});
+        }
+      }).catch((err) => {
+        console.log(err);
+      })
+      this.selectPos=false
     },
   }
 }
