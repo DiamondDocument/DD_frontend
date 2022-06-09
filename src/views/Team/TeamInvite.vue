@@ -1,55 +1,64 @@
 <template>
-  <div style="width: 75%; margin: 0 auto;">
 
-    <div style="
+  <div style="width: 75%;margin-left: auto;margin-right: auto;margin-top: 30px; margin-bottom: 200px ">
+    <el-card shadow="always" :body-style="{ padding: '40px 20 20 20px ',backgroundColor: '#F7F7F7'  }" >
+      <div>
+        <div style="
          width: 600px;
          text-align: center;
          margin: 40px auto;">
-      <el-icon size="30px"><Aim /></el-icon>
-      <h2>邀请成员到你的团队{{teamName}}中</h2>
-    </div>
-    <el-input placeholder="请输入用户昵称"
-              @keyup.enter="search"
-              size="large"
-              v-model="keyword"
-              style="
-              margin-bottom: 20px">
-      <template #prepend>
-        <el-icon><Avatar /></el-icon>
-      </template>
-      <template #append>
-        <el-button type="primary" @click="search">
-          搜索
-        </el-button>
-      </template>
-    </el-input>
-
-    <div style="width: 75%; margin: 0 auto;">
-      <el-row v-for="(user, index) in userList" :key="user.userId"
-              class="block">
-        <div @click="goUser(user.userId)"
-             style="float: right; width: 80%">
-          <el-avatar :src="user.url" style="margin: 10px; float: left" />
-          <h3 >
-            {{user.nickName}}
-          </h3>
-          <p >
-            {{user.intro}}
-          </p>
+          <el-icon size="30px"><Aim /></el-icon>
+          <h2>邀请成员到你的团队{{teamName}}中</h2>
         </div>
+        <el-input placeholder="请输入用户昵称"
+                  @keyup.enter="search"
+                  size="large"
+                  v-model="keyword"
+                  style="
+              margin-bottom: 20px">
+          <template #prepend>
+            <el-icon><Avatar /></el-icon>
+          </template>
+          <template #append>
+            <el-button type="primary" @click="search">
+              搜索
+            </el-button>
+          </template>
+        </el-input>
 
-        <el-button type="success"
-                   @click.stop="inviteUser(user.userId)"
-                   style="
+        <div style="width: 75%; margin: 0 auto;">
+          <el-row v-for="(user, index) in userList" :key="user.userId"
+                  class="block">
+            <div @click="goUser(user.userId)"
+                 style="float: right; width: 80%">
+              <el-avatar :src="user.url" style="margin: 10px; float: left" />
+              <h3 >
+                {{user.nickName}}
+              </h3>
+              <p >
+                {{user.intro}}
+              </p>
+            </div>
+
+            <el-button type="success"
+                       @click.stop="inviteUser(user.userId)"
+                       style="
                  float: right;
                  margin: auto 20px;">
-          邀请
-        </el-button>
+              邀请
+            </el-button>
 
-      </el-row>
-    </div>
+          </el-row>
+        </div>
 
+      </div>
+    </el-card>
   </div>
+
+
+
+
+
 
 </template>
 

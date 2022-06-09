@@ -5,7 +5,7 @@
         <div style="height:200px;
                 width: 80%;
                 margin: 10px auto;
-                background-color: #EEF0F1;
+                /*background-color: #EEF0F1;*/
                 /*position: relative;*/
                 border-style: solid;
                 border-width: 1px;
