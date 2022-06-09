@@ -46,7 +46,7 @@
       <el-table-column sortable prop="size" label="大小" ></el-table-column>
     </el-table>
   </div>
-  <index v-if="menuVisible" @foo="foo" ref="index" :spaceType="this.spaceType" :authority=this.curFileAth :shared="this.curFileShared"
+  <index v-if="menuVisible" @foo="foo" ref="index" :spaceType="this.spaceType" :authority=this.curFileAth :shared="this.curFileShared" :other="this.other"
                   @collect="collect" @move="this.moving=true" @remove="remove" @_export="_export"
                   @share="showShare()" @rename="renameVisible=true" @createTmp="showNewTmp()"
                   @authority = "showAuthority()" @notShare="notShare"
@@ -106,6 +106,7 @@ export default {
       renameVisible: false,     //控制重命名对话框显示
       tmpVisible: false,        //控制选择模板的显示
       altTable: Math.random(),
+      other:'',
       tableData: [
         {
           fileType: 1,
@@ -178,6 +179,7 @@ export default {
     }
   },
   mounted() {
+    this.other=this.$route.params.ownerId
     this.getFolderData(false)
   },
   methods: {
@@ -189,6 +191,10 @@ export default {
       if (this.$route.params.teamId!=null) {
         spaceType = "team"
         ownerId=this.$route.params.teamId
+      }
+      if(this.$route.params.ownerId!=null){
+        console.log('other')
+        ownerId=this.$route.params.ownerId
       }
       console.log(spaceType, ownerId, this.folderId, this.$store.state.loginUser.userId)
       this.$axios.get('/space', {

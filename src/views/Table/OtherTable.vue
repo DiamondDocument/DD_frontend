@@ -37,12 +37,12 @@
             <el-divider content-position="center"><p v-if="!isCollapse">{{ Name }}</p></el-divider>
           </el-menu-item>
 
-          <el-menu-item index="4" @click="this.$router.push({name: 'space'})">
+          <el-menu-item index="4" @click="this.$router.push({name: 'space',params:{ownerId: this.otherId}})">
             <el-icon><house /></el-icon>
             <span slot="title">Ta的空间</span>
           </el-menu-item>
 
-          <el-menu-item index="5" @click="this.$router.push({name: 'collection'})">
+          <el-menu-item index="5" @click="this.$router.push({name: 'collection',params:{ownerId: this.otherId}})">
             <el-icon><opportunity /></el-icon>
             <span slot="title">Ta的收藏</span>
           </el-menu-item>

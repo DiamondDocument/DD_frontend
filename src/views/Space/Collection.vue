@@ -21,7 +21,7 @@
       <el-table-column sortable prop="size" label="大小" ></el-table-column>
     </el-table>
   </div>
-  <index v-if="menuVisible" @foo="foo" ref="contextButton" :spaceType="spaceType"
+  <index v-if="menuVisible" @foo="foo" ref="contextButton" :spaceType="spaceType" :other="other"
          @_export="_export" @share="showShare('默认文件名')" @edit="edit" @disCollect="disCollect"
          data-popper-placement="top"></index>
   <share ref="share" :curFileId="this.curFileId" @altAuthority="altAuthority"></share>
@@ -53,6 +53,7 @@ export default {
       curFileShared: Boolean,
       exportLink: '',           //下载文件的链接
       folderId: null,
+      other: '',
       tableData: [
         {
           docId: 0,
@@ -99,6 +100,7 @@ export default {
     }
   },
   mounted() {
+    this.other=this.$route.params.ownerId
     this.getFolderData(false)
   },
   methods: {
@@ -126,9 +128,13 @@ export default {
     //获得打开的文件夹里面的文件列表
     getFolderData(isback) {
       this.loading=true
+      let ownerId=this.$store.state.loginUser.userId
+      if(this.$route.params.ownerId!=null){
+        ownerId=this.$route.params.ownerId
+      }
       this.$axios.get('/space/collection', {
         params: {
-          userId: this.$store.state.loginUser.userId,
+          userId: ownerId,
           visitorId: this.$store.state.loginUser.userId,
         }
       }).then((response) => {
