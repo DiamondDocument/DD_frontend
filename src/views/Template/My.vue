@@ -90,11 +90,12 @@ export default {
     "spaceUsing": false,
     "parentId": null,
   },
-  components:[tmpPos],
+  components:{tmpPos},
   data() {
     return {
       userId: '',
       selectPos: false,
+      tmp: null,
       templates: []
     }
   },
@@ -161,17 +162,17 @@ export default {
         this.$emit('useTmp', tmp.tempId, tmp.tempName)
       }
       else{
+        this.tmp = tmp
         this.selectPos=true
       }
     },
-    commit(tempId, tempName, parentId){
-      console.log("parent:",id)
+    commit(parentId){
       let f = new FormData()
       f.append("type", '1')
-      f.append("name", tempName)
+      f.append("name", this.tmp.tempName)
       f.append("authority", '3')
       f.append("creatorId", this.$store.state.loginUser.userId)
-      f.append("templateId", tempId)
+      f.append("templateId", this.tmp.tempId)
       if (parentId!=null){
         f.append("parentId", parentId)
       }
