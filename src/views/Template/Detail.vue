@@ -34,21 +34,18 @@
           </el-main>
         </el-container>
       </div>
-
     </el-card>
   </div>
-
-
-
+  <tmp-pos ref="tmpPos" v-if="selectPos" @commit="commit" @cancel="selectPos=false"></tmp-pos>
 
 </template>
 
 <script>
 import {ElMessage} from "element-plus";
-
+import tmpPos from "@/views/Space/tmpPos";
 export default {
   name: "Detail.vue",
-
+  components:[tmpPos],
   data() {
     return {
       like: 0,
@@ -59,6 +56,9 @@ export default {
       creatorName: '',
       url: '',
       urls: '',
+      spaceUsing: false,    //是否正在被space调用
+      selectPos: false,     //是否在选择创建位置
+      tempName: '',       //当前选中的name
       info: [
 
       ]
@@ -67,6 +67,8 @@ export default {
 
   created() {
     this.tempId = this.$route.params.templateId;
+    this.tempName=this.$route.params.templateName;
+    this.spaceUsing=this.$route.params.spaceUsing;
 
     this.$axios.get("/template/thumbnail", {
       params: {
@@ -114,9 +116,59 @@ export default {
     }).catch((err) => {
       console.log(err);
     });
-
-
-  }
+    this.$axios.get("user/get-avatar", {
+      params:{
+        userId: this.creatorId,
+      }
+    }).then((response)=>{
+      if (response.status === 200){
+        console.log(response.data)
+        if (response.data.code === 0){
+          this.url2 = response.data.url;
+        }else console.log("用户头像获取错误");
+      }else console.log("请求返回status不为200")
+    }).catch((err)=>{
+      console.log(err);
+    });
+  },
+  methods:{
+    //lyh的函数，非空间组件调用时，调用选择位置的组件; 空间组件调用时（准确说是Space调用My，My路由push到Detail时），直接由传来的参数创建文档
+    useTmp(){
+      if (this.spaceUsing==='false')
+        this.selectPos=true
+      else{
+        this.commit(this.$route.params.parentId)
+      }
+    },
+    //lyh的函数，位置选择界面确定好创建模板的位置id后进入此函数
+    commit(id){
+      this.$axios.post("/file/create", {
+        "type": 1,
+        "name": this.tempName,
+        "templateId": this.tempId,
+        "authority": 3,
+        "creatorId": this.$store.state.loginUser.userId,
+        "parentId": id,
+      }).then((response)=>{
+        if(response.status === 200){
+          if (response.data.code === 0) {
+            ElMessage('创建成功')
+          } else if(response.data.code===1){
+            ElMessage('文件重名，已修改')
+          }else if(response.data.code===2){
+            ElMessage('您没有权限')
+          }else{
+            ElMessage('其他错误')
+          }
+        }else{
+          ElMessage({ message: "status = " + response.status, type: 'warning'});
+        }
+      }).catch((err) => {
+        console.log(err);
+      })
+      this.selectPos=false
+    },
+  },
 }
 </script>
 

@@ -54,7 +54,7 @@
   <new-file ref="newFile" :fatherId="this.folderId"></new-file>
   <new-folder ref="newFolder" :fatherId="this.folderId"></new-folder>
   <move ref="move" @commit="move" @cancel="this.moving=false" v-if="moving"></move>
-  <my ref="My" v-if="tmpVisible" :spaceUsing="true" @useTmp="useTmp" @cancel="tmpVisible=false"></my>
+  <my ref="My" v-if="tmpVisible" :spaceUsing="'true'" :parentId="this.folderId" @useTmp="useTmp" @cancel="tmpVisible=false"></my>
   <el-dialog title="重命名" v-model="renameVisible" width="30%">
     <span>请输入文件名：</span>
     <el-input v-model="reName" style="width: 20%"></el-input>
