@@ -1,31 +1,44 @@
 <template>
+  <div style="width: 1043px;margin-left: auto;margin-right: auto;margin-top: 30px; ">
+    <el-card shadow="always" :body-style="{ padding: '40px 20 20 0 ',backgroundColor: '#F7F7F7'  }" >
+      <el-page-header style="margin-left: 20px" icon="PictureFilled" :content="name+'  详情'" title="        " />
+      <el-divider/>
+      <div class="common-layout" style="height: 500px;">
+        <el-container>
+          <el-aside style="height: 500px; width: 700px;padding: 20px;background-color: #F7F7F7">
+            <img v-for="oneUrl in this.urls" :src="oneUrl" alt="">
+          </el-aside>
+          <el-main>
+            <el-form
+                label-width="100px"
+                style="
+              margin: 20px 20px 20px 10px;
+            ">
+              <el-form-item label="模板名：">
+                {{ name }}
+              </el-form-item>
+              <el-form-item @click="this.$router.push({name: 'userInformation', params: {userId: creatorId}})" >
+                <template #label>
+                  <div style="line-height: 40px;">作者：</div>
+                </template>
+                <el-avatar style="margin-left: 10px" :src="url2"/>
+                <div style="margin-left: 10px">{{ creatorName }}</div>
+              </el-form-item>
+              <el-form-item label="简介：">
+                {{ intro }}
+              </el-form-item>
+            </el-form>
+            <div>
+              <el-button type="primary" round style="float: right" >立即使用</el-button>
+            </div>
+          </el-main>
+        </el-container>
+      </div>
 
-  <div class="common-layout">
-    <el-container>
-      <el-aside style="height: 100vh; width: 700px">
-        <img :src="this.url" style=" width: 600px; height:100vh; align-items: center ">
-
-      </el-aside>
-      <el-container>
-        <el-header style="padding: 100px 100px; height: 200px; text-align: center">
-          <h2>{{name}}</h2>
-        </el-header>
-        <el-main style="padding: 0 100px 0 0">
-          <h3 class="author" style="padding-left: 80px; font-family: 新宋体,sans-serif;"
-              @click="this.$router.push({name: 'userInformation', params: {userId: creatorId}})"
-              >
-            <img :src="url2" style="width: 30px;">
-            {{creatorId}}>
-            </h3> <br>
-          <h3 style="padding-left: 80px; font-family: 'Adobe 宋体 Std L',serif">简介:{{intro}}</h3> <br>
-          <el-divider />
-          <el-icon v-if="like === 0" style="cursor: hand; width: 80px; position: center" @click="like=1"><Star /></el-icon>
-          <el-icon v-else style="cursor: hand; width: 80px; position: center" @click="like=0"><StarFilled /></el-icon>
-          <el-button type="primary" round style="float: right" >立即使用</el-button>
-        </el-main>
-      </el-container>
-    </el-container>
+    </el-card>
   </div>
+
+
 
 
 </template>
@@ -45,7 +58,7 @@ export default {
       creatorId: '',
       creatorName: '',
       url: '',
-      url2: '',
+      urls: '',
       info: [
 
       ]
@@ -80,26 +93,29 @@ export default {
           this.intro = response.data.intro;
           this.creatorId = response.data.creatorId;
           this.creatorName = response.data.creatorName;
+          this.$axios.get("user/get-avatar", {
+            params:{
+              // userId: this.creatorId,
+              userId: this.creatorId,
+            }
+          }).then((response)=>{
+            if (response.status === 200){
+              console.log(response.data)
+              console.log(this.creatorId)
+              if (response.data.code === 0){
+                this.url2 = response.data.url;
+              }else console.log("用户头像获取错误");
+            }else console.log("请求返回status不为200");
+          }).catch((err)=>{
+            console.log(err);
+          });
         } else ElMessage("模板信息获取错误");
       } else console.log("请求返回status不为200")
     }).catch((err) => {
       console.log(err);
     });
 
-    this.$axios.get("user/get-avatar", {
-      params:{
-        userId: this.creatorId,
-      }
-    }).then((response)=>{
-      if (response.status === 200){
-        console.log(response.data)
-        if (response.data.code === 0){
-          this.url2 = response.data.url;
-        }else console.log("用户头像获取错误");
-      }else console.log("请求返回status不为200")
-    }).catch((err)=>{
-      console.log(err);
-    });
+
   }
 }
 </script>
