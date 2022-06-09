@@ -53,8 +53,8 @@
          data-popper-placement="top"></index>
   <authority ref="authority" @altAuthority="altAuthority"></authority>
   <share ref="share" :curFileId="this.curFileId" @altAuthority="altAuthority"></share>
-  <new-file ref="newFile" :fatherId="this.folderId" :teamId="this.$route.params.teamId" @end="afterNew"></new-file>
-  <new-folder ref="newFolder" :fatherId="this.folderId" :teamId="this.$route.params.teamId" @end="afterNew"></new-folder>
+  <new-file ref="newFile" :fatherId="this.folderId" :teamId="this.teamId" @end="afterNew"></new-file>
+  <new-folder ref="newFolder" :fatherId="this.folderId" :teamId="this.teamId" @end="afterNew"></new-folder>
   <new-tmp ref="newTmp" :fileId="this.curFileId"></new-tmp>
   <move ref="move" @commit="move" @cancel="this.moving=false" v-if="moving"></move>
   <my ref="My" v-if="tmpVisible" :spaceUsing="true" :parentId="this.folderId" @useTmp="useTmp" @cancel="tmpVisible=false"></my>
@@ -107,6 +107,7 @@ export default {
       tmpVisible: false,        //控制选择模板的显示
       altTable: Math.random(),
       other:null,
+      teamId:null,
       tableData: [
         {
           fileType: 1,
@@ -193,7 +194,7 @@ export default {
         spaceType='user'
       }
       else if (this.$store.state.tableType==='team'){
-        this.other=ownerId=this.$store.state.tableId
+        ownerId=this.teamId=this.$store.state.tableId
         spaceType='team'
       }
 
