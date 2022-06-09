@@ -14,7 +14,7 @@
                 style="
               margin: 20px 20px 20px 10px;
             ">
-              <el-form-item label="模板名：">
+              <el-form-item label="模板名：" style="margin-left: 14px">
                 {{ name }}
               </el-form-item>
               <el-form-item @click="this.$router.push({name: 'userInformation', params: {userId: creatorId}})" >
@@ -48,17 +48,22 @@ export default {
   components:[tmpPos],
   data() {
     return {
-      like: 0,
+      userId: '',
       tempId: '',
       name: '',
       intro: '',
       creatorId: '',
       creatorName: '',
       url: '',
+<<<<<<< HEAD
+      url2: '',
+      urls: [
+=======
       url2:'',
       urls: '',
       selectPos: false,     //是否在选择创建位置
       info: [
+>>>>>>> fc9e07a9e2a6e45de273cf8b4abf2e8594c14c62
 
       ]
     }
@@ -66,11 +71,15 @@ export default {
 
   created() {
     this.tempId = this.$route.params.templateId;
+<<<<<<< HEAD
+    this.userId = this.$store.state.loginUser.userId;
+=======
     this.tempName=this.$route.params.templateName;
     this.spaceUsing=this.$route.params.spaceUsing;
     console.log(this.tempId, this.tempName, this.spaceUsing)
+>>>>>>> fc9e07a9e2a6e45de273cf8b4abf2e8594c14c62
 
-    this.$axios.get("/template/thumbnail", {
+    this.$axios.get("/template/image", {
       params: {
         tempId: this.tempId,
 
@@ -78,7 +87,7 @@ export default {
     }).then((response) => {
       if (response.status === 200) {
         if (response.data.code === 0) {
-          this.url = response.data.url;
+          this.urls = response.data.url;
         } else ElMessage("模板信息获取错误");
       } else console.log("请求返回status不为200")
     }).catch((err) => {
@@ -88,7 +97,11 @@ export default {
     this.$axios.get("/template", {
       params: {
         tempId: this.tempId,
+<<<<<<< HEAD
+        userId: this.userId,
+=======
         userId: this.$store.state.loginUser.userId
+>>>>>>> fc9e07a9e2a6e45de273cf8b4abf2e8594c14c62
       }
     }).then((response) => {
       if (response.status === 200) {
@@ -175,7 +188,5 @@ export default {
 </script>
 
 <style scoped>
-  .author:hover {
-    cursor: hand;
-  }
+
 </style>
