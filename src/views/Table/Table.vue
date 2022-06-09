@@ -4,11 +4,7 @@
   <el-container>
     <el-header class="Header" style="height: 50px; display: flex; justify-content: space-between; align-items: center;">
 
-      <img src="../../assets/logo2.png" style="width: 50px; height: 50px;">
-
-      <div style="display: flex; justify-content: space-between; align-items: center;">
-
-      <img src="../../assets/logo2_2.png" style="width: 150px;margin-right: 30px; margin-left: 200px">
+      <img src="../../assets/logo2_2.png" style="width: 150px;margin-right: 30px; margin-left: 10px">
       <el-input
           v-model="userSearchContent"
           placeholder="搜索用户..."
@@ -16,7 +12,6 @@
           style="width: 200px;margin-left: 30px;margin-right: auto; "
           @input="this.$router.push({name: 'userSearch', params:{keyword: this.userSearchContent}})"
       />
-      </div>
       <div style="display: flex; justify-content: space-between; align-items: center; width: 80px">
 
 <!--        <a href="#" style="padding: 0 10px 0 0">头像</a>-->
@@ -24,8 +19,8 @@
 <!--        <el-button @click="goInformation">-->
 <!--        头像-->
 <!--      </el-button>-->
-        <el-avatar :src="url" style="width: 40px; height: 40px " @click="goInformation"/>
         <el-icon @click="this.$router.push({name:'message'})" ><Bell /></el-icon>
+        <el-avatar :src="url" style="width: 40px; height: 40px " @click="goInformation"/>
       </div>
     </el-header>
     <el-container>
