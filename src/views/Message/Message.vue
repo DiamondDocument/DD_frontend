@@ -15,7 +15,7 @@
                 <span>{{messages[i-1].title}}</span>
                 <!--        仅申请和邀请有可能打开详情，即跳转到对应的团队详情页和个人信息页，另外还有文档被评论-->
                 <el-button type="text" v-if="messages[i-1].msgType===2 || messages[i-1].msgType===4 || messages[i-1].msgType===6"
-                           @click="showConfirm(messages[i-1].msgType, messages[i-1].content, messages[i-1])">详情</el-button>
+                           @click="this.read(i-1);showConfirm(messages[i-1].msgType, messages[i-1].content, messages[i-1])">详情</el-button>
                 <el-button type="text" v-if="messages[i-1].isRead===false" @click="read(i-1)">标记已读</el-button>
                 <el-tag type="success" v-else style="width: 100px; height: 30px">已读</el-tag>
               </div>

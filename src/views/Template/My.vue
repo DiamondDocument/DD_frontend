@@ -56,7 +56,10 @@
                 </div>
                 <div style="display: flex">
                   <el-link @click="$router.push({name:'userInformation', params: {userId : 'visitor'}})" target="_blank">作者：{{temps.creatorName}}</el-link>
-                  <el-icon style="margin-right: 30px;margin-left: auto;" size="large"><CollectionTag /></el-icon>
+                  <el-icon v-if="temps.iscollection === 'true'" @click="DisCol(i)"
+                           style="margin-right: 30px;margin-left: auto;" size="large"><StarFilled /></el-icon>
+                  <el-icon v-else @click="Col(i)"
+                           style="margin-right: 30px;margin-left: auto;" size="large"><Star /></el-icon>
                 </div>
                 <!--            <p id="name" @click="useTmp(temps)">{{temps.tempName}}</p>-->
 
@@ -71,7 +74,7 @@
       </el-scrollbar>
     </el-card>
   </div>
-  <tmp-pos ref="tmpPos" v-if="this.selectPos" @commit="commit" @cancel="selectPos=false"></tmp-pos>
+  <tmp-pos ref="tmpPos" v-if="this.selectPos" @commit="commit" @cancel="this.selectPos=false"></tmp-pos>
 
 
 
@@ -79,21 +82,29 @@
 
 <script>
 import {ElMessage} from "element-plus";
-
+import tmpPos from "@/views/Space/tmpPos";
+import {ref} from "vue";
 export default {
   name: "MyTemplate.vue",
   props: {
     "spaceUsing": false,
     "parentId": null,
   },
+  components:{tmpPos},
   data() {
     return {
       userId: '',
       selectPos: false,
+      tmp: null,
       templates: []
     }
   },
-
+  setup(){
+    const tmpPos = ref()
+    return{
+      tmpPos
+    }
+  },
   created() {
     this.userId = this.$store.state.loginUser.userId
     this.$axios.get("/template/list/my", {
@@ -104,7 +115,6 @@ export default {
       if (response.status === 200) {
         if (response.data.code === 0) {
           this.templates = response.data.temps;
-          console.log(this.templates[0].url)
         } else ElMessage("模板信息获取错误");
       } else console.log("请求返回status不为200")
     }).catch((err) => {
@@ -112,35 +122,64 @@ export default {
     });
   },
   methods:{
+    Col(i) {
+      this.templates[i].iscollection = 'true'
+      console.log(this.templates[i].tempId);
+
+      this.$axios.post("/template/like", {
+          userId: this.userId,
+          tempId: this.templates[i].tempId
+      }).then((response) => {
+        if (response.status === 200) {
+          if (response.data.code === 0) {
+            console.log("like ok");
+          } else ElMessage("模板信息获取错误");
+        } else console.log("请求返回status不为200")
+      }).catch((err) => {
+        console.log(err);
+      });
+    },
+
+    DisCol(i) {
+      this.templates[i].iscollection = 'false'
+
+      this.$axios.post("/template/dislike", {
+          userId: this.userId,
+          tempId: this.templates[i].tempId
+      }).then((response) => {
+        if (response.status === 200) {
+          if (response.data.code === 0) {
+            console.log("dislike ok");
+          } else ElMessage("模板信息获取错误");
+        } else console.log("请求返回status不为200")
+      }).catch((err) => {
+        console.log(err);
+      });
+    },
     useTmp(tmp){
       console.log("in and spaceusing is", this.spaceUsing)
       if(this.spaceUsing){
         this.$emit('useTmp', tmp.tempId, tmp.tempName)
       }
       else{
-        this.$router.push({name: 'templateDetail',
-          params:{templateId:tmp.tempId,
-            templateName:tmp.tempName,
-            spaceUsing:this.spaceUsing,
-            parentId:this.parentId}})
+        this.tmp = tmp
+        this.selectPos=true
       }
     },
-    commit(tmp, id){
-      console.log("parent:",id)
+    commit(parentId){
       let f = new FormData()
       f.append("type", '1')
-      f.append("name", tempName)
+      f.append("name", this.tmp.tempName)
       f.append("authority", '3')
       f.append("creatorId", this.$store.state.loginUser.userId)
-      f.append("templateId", tempId)
-      if (this.folderId!=null){
-        f.append("parentId", this.folderId)
+      f.append("templateId", this.tmp.tempId)
+      if (parentId!=null){
+        f.append("parentId", parentId)
       }
       this.$axios.post("/file/create", f).then((response)=>{
         if(response.status === 200){
           if (response.data.code === 0) {
             ElMessage('创建成功')
-            this.getFolderData(false)
           } else if(response.data.code===-1){
             ElMessage('创建失败')
           }else if (response.data.code===1){
