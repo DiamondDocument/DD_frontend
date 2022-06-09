@@ -1,6 +1,9 @@
 <template>
 
-  <div style="width: 75%;margin-left: auto;margin-right: auto;margin-top: 30px; margin-bottom: 200px ">
+
+
+
+  <div style="width: 75%;margin-left: auto;margin-right: auto;margin-top: 30px;">
     <el-card shadow="always" :body-style="{ padding: '40px 20 20 20px ',backgroundColor: '#F7F7F7'  }" >
       <div>
         <div style="
@@ -26,29 +29,28 @@
           </template>
         </el-input>
 
-        <div style="width: 75%; margin: 0 auto;">
-          <el-row v-for="(user, index) in userList" :key="user.userId"
-                  class="block">
-            <div @click="goUser(user.userId)"
-                 style="float: right; width: 80%">
-              <el-avatar :src="user.url" style="margin: 10px; float: left" />
-              <h3 >
-                {{user.nickName}}
-              </h3>
-              <p >
-                {{user.intro}}
-              </p>
+        <div v-for="(user, index) in userList" :key="user.userId"
+             style="margin: 10px auto;border-style: solid;border-width: 1px;
+             width: 80%;
+          border-color: lightgray;border-radius: 5px;height: 100px;  display: flex;">
+
+          <div style=";margin: auto 20px;" @click="goUser(user.userId)">
+            <el-avatar :size="50"  class="teamImg" >
+              <template #default>
+                <el-avatar :size="48" :src="user.url" fit="cover"/>
+              </template>
+            </el-avatar>
+          </div>
+          <div style="height: 100px" @click="goUser(user.userId)">
+            <div style="display: flex;height: 40px">
+              <div style="font-size: 20px;line-height: 20px;margin: auto 10px 0 0;">{{user.nickName}}</div>
+              <p style="font-size: 15px;line-height: 20px;margin: auto 0 0 0;color: #4d4d4d">{{user.userId}}</p>
             </div>
-
-            <el-button type="success"
-                       @click.stop="inviteUser(user.userId)"
-                       style="
-                 float: right;
-                 margin: auto 20px;">
-              邀请
-            </el-button>
-
-          </el-row>
+            <p style="margin-bottom: 20px">{{user.intro}}</p>
+          </div>
+          <div style="margin: auto 20px auto auto">
+            <el-button type="success" @click="inviteUser(user.userId)">邀请</el-button>
+          </div>
         </div>
 
       </div>

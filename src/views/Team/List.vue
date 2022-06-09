@@ -31,25 +31,56 @@
       </div>
       <el-divider />
       <div style="min-height: 500px">
-        <el-row v-for="(team, index) in teamList" :key="team.id"
-                class="block">
-          <el-avatar :src="team.url" style="margin: 10px 30px; float: left" />
-          <div style="float: left;">
-            <h3 >
-              {{team.name}}
-            </h3>
-            <p >
-              {{team.intro}}
-            </p>
-          </div>
 
-          <div style="float: right; position: absolute; right: 80px; top: 20px">
-            <el-button type="" @click="goTeam(index)">
-              进入团队
-            </el-button>
+        <div v-for="(team, index) in teamList" :key="team.id"
+              style="
+              margin: 10px auto;
+              border-style: solid;
+              border-width: 1px;
+              border-color: lightgray;
+              border-radius: 5px;
+              height: 100px;
+              width: 80%;
+              display: flex;">
+          <div style=";margin: auto 20px;">
+            <el-avatar :size="50"  class="teamImg" >
+              <template #default>
+                <el-avatar :size="48" :src="team.url" fit="cover"/>
+              </template>
+            </el-avatar>
           </div>
+          <div style="height: 100px">
+            <div style="display: flex;height: 40px">
+              <div style="font-size: 20px;line-height: 20px;margin: auto 10px 0 0;">{{team.name}}</div>
+<!--              <p style="font-size: 15px;line-height: 20px;margin: auto 0 0 0;color: #4d4d4d">{{user.userId}}</p>-->
+            </div>
+            <p style="margin-bottom: 20px">{{team.intro}}</p>
+          </div>
+          <div style="margin: auto 20px auto auto">
+            <el-button type="primary" @click="goTeam(index)">进入团队</el-button>
+<!--            <el-button type="primary" @click="goUser(user.userId)">查看信息</el-button>-->
+          </div>
+        </div>
 
-        </el-row>
+<!--        <el-row v-for="(team, index) in teamList" :key="team.id"-->
+<!--                class="block">-->
+<!--          <el-avatar :src="team.url" style="margin: 10px 30px; float: left" />-->
+<!--          <div style="float: left;">-->
+<!--            <h3 >-->
+<!--              {{team.name}}-->
+<!--            </h3>-->
+<!--            <p >-->
+<!--              {{team.intro}}-->
+<!--            </p>-->
+<!--          </div>-->
+
+<!--          <div style="float: right; position: absolute; right: 80px; top: 20px">-->
+<!--            <el-button type="" @click="goTeam(index)">-->
+<!--              进入团队-->
+<!--            </el-button>-->
+<!--          </div>-->
+
+<!--        </el-row>-->
       </div>
     </el-card>
 
