@@ -3,20 +3,20 @@
     <el-menu default-active="'/' +this.$route.path.split('/')[1]" >
       <el-button type="primary" icon="ArrowLeft" text @click="getFolderData(true)" v-if="this.folderId!=null">返回上一级</el-button>
       <el-button type="primary" icon="ArrowRight" text v-else>根目录</el-button>
-      <el-input v-model="input" placeholder="空间内搜索文件" style="width: 20%"></el-input>
-      <el-button type="primary" style="margin-left: 10px"  @click="search">
+      <el-input v-model="input" placeholder="空间内搜索文件" style="width: 20%" v-if="other==null"></el-input>
+      <el-button type="primary" style="margin-left: 10px"  @click="search" v-if="other==null">
         <el-icon style="vertical-align: middle;">
           <search />
         </el-icon>
         <span style="vertical-align: middle;">搜索</span>
       </el-button>
-      <el-button type="primary" style="float: right; margin-right: 20px" icon="Plus">
+      <el-button type="primary" style="float: right; margin-right: 20px" icon="Plus" v-if="other==null">
         <span style="vertical-align: middle" @click="showNewFolder" >新建文件夹</span>
       </el-button>
-      <el-button type="primary" style="float: right; margin-right: 20px" icon="Plus">
+      <el-button type="primary" style="float: right; margin-right: 20px" icon="Plus" v-if="other==null">
         <span style="vertical-align: middle" @click="showNewFile" >新建文件</span>
       </el-button>
-      <el-button type="primary" style="float: right; margin-right: 20px" icon="Plus">
+      <el-button type="primary" style="float: right; margin-right: 20px" icon="Plus" v-if="other==null">
         <span style="vertical-align: middle" @click="tmpVisible=true" >从模板新建</span>
       </el-button>
     </el-menu>
@@ -117,7 +117,7 @@ export default {
           modifierName: 'lyh',
           authority: 1,
           size: '20K',
-          shared: false,
+          isShared: false,
           isFolder: false,
         },
       ],
@@ -239,8 +239,8 @@ export default {
     recordId(row) {
       this.curFileId = row.fileId
       this.curFileAth = row.authority
-      this.curFileShared = row.shared
-      console.log(row.fileId, row.authority, row.shared)
+      this.curFileShared = row.isShared
+      console.log(row.fileId, row.authority, row.isShared)
     },
     //处理自动更新事件
     afterNew(){
