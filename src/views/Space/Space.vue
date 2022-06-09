@@ -106,7 +106,7 @@ export default {
       renameVisible: false,     //控制重命名对话框显示
       tmpVisible: false,        //控制选择模板的显示
       altTable: Math.random(),
-      other:'',
+      other:null,
       tableData: [
         {
           fileType: 1,

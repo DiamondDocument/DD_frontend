@@ -53,7 +53,7 @@ export default {
       curFileShared: Boolean,
       exportLink: '',           //下载文件的链接
       folderId: null,
-      other: '',
+      other: null,
       tableData: [
         {
           docId: 0,
@@ -100,7 +100,6 @@ export default {
     }
   },
   mounted() {
-    this.other=this.$route.params.ownerId
     this.getFolderData(false)
   },
   methods: {
