@@ -14,7 +14,7 @@
                 style="
               margin: 20px 20px 20px 10px;
             ">
-              <el-form-item label="模板名：">
+              <el-form-item label="模板名：" style="margin-left: 14px">
                 {{ name }}
               </el-form-item>
               <el-form-item @click="this.$router.push({name: 'userInformation', params: {userId: creatorId}})" >
@@ -51,15 +51,15 @@ export default {
 
   data() {
     return {
-      like: 0,
+      userId: '',
       tempId: '',
       name: '',
       intro: '',
       creatorId: '',
       creatorName: '',
       url: '',
-      urls: '',
-      info: [
+      url2: '',
+      urls: [
 
       ]
     }
@@ -67,15 +67,16 @@ export default {
 
   created() {
     this.tempId = this.$route.params.templateId;
+    this.userId = this.$store.state.loginUser.userId;
 
-    this.$axios.get("/template/thumbnail", {
+    this.$axios.get("/template/image", {
       params: {
         tempId: this.tempId,
       }
     }).then((response) => {
       if (response.status === 200) {
         if (response.data.code === 0) {
-          this.url = response.data.url;
+          this.urls = response.data.url;
         } else ElMessage("模板信息获取错误");
       } else console.log("请求返回status不为200")
     }).catch((err) => {
@@ -85,6 +86,7 @@ export default {
     this.$axios.get("/template", {
       params: {
         tempId: this.tempId,
+        userId: this.userId,
       }
     }).then((response) => {
       if (response.status === 200) {
@@ -121,7 +123,5 @@ export default {
 </script>
 
 <style scoped>
-  .author:hover {
-    cursor: hand;
-  }
+
 </style>
