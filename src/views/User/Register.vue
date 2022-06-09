@@ -4,10 +4,10 @@
       <div style="margin-left: auto;margin-right: auto;width: 200px">
         <img src="../../assets/logo2.png" alt="logo" style="width: 200px"/>
       </div>
-      <div style="margin:20px auto; width: 80px; ">
+      <div style="margin:0px auto 10px auto; width: 80px; ">
         <h2 class="title" style="margin:0 auto">注册</h2>
       </div>
-      <div class="Wireframe">
+      <div class="Wireframe" style="background-color: rgba(255,255,255,0.5)">
 
         <el-form
             label-position= "top"

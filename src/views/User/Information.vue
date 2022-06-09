@@ -1,186 +1,197 @@
 <template>
-  <div>
-    <div v-if="isOwner === true">
-      <el-tabs v-model="cardSite" type="border-card" @tab-click="clean">
-        <el-tab-pane label="个人信息" name="1">
+  <div style="width: 1200px;margin-left: auto;margin-right: auto;margin-top: 30px;">
+    <el-card shadow="always" :body-style="{ padding: '0 0 0 0 ' }">
+      <div v-if="isOwner === true" >
+        <el-tabs v-model="cardSite" type="border-card" @tab-click="clean">
+          <el-tab-pane label="个人信息" name="1">
 
-          <div style="width: 80%; margin: 0 auto">
-            <input type="file"
-                   ref="clearFile"
-                   style="display:none"
-                   @change="upload($event)"/>
-
-            <el-avatar :size="200" :src="url"  v-if="avatarUpdater" style="float: left; " @click="changeImg"/>
-            <el-form
-                label-position="Right"
-                label-width="100px"
-                style="
+            <div style="width: 80%; margin: 0 auto">
+              <input type="file"
+                     ref="clearFile"
+                     style="display:none"
+                     @change="upload($event)"/>
+              <el-avatar :size="200" style="float: left; " @click="changeImg">
+                <template #default>
+                  <el-avatar :size="195" :src="url"/>
+                </template>
+              </el-avatar>
+              <el-form
+                  label-position="Right"
+                  label-width="100px"
+                  style="
               max-width: 100%;
               margin: 20px;
             ">
-              <el-form-item label="用户名：">
-                {{ userId }}
-              </el-form-item>
+                <el-form-item label="用户名：">
+                  {{ userId }}
+                </el-form-item>
 
-              <el-form-item label="用户昵称：">
-                {{ nickName }}
-              </el-form-item>
+                <el-form-item label="用户昵称：">
+                  {{ nickName }}
+                </el-form-item>
 
-              <el-form-item label="邮箱：">
-                {{ email }}
-              </el-form-item>
+                <el-form-item label="邮箱：">
+                  {{ email }}
+                </el-form-item>
 
-              <el-form-item label="用户简介：">
-                {{ introduction }}
-              </el-form-item>
-            </el-form>
+                <el-form-item label="用户简介：">
+                  {{ introduction }}
+                </el-form-item>
+              </el-form>
 
-            <el-button type="danger" @click="logout" style="margin-left: 300px">
-              退出登录
-            </el-button>
-          </div>
+              <el-button type="danger" @click="logout" style="margin-left: 300px">
+                退出登录
+              </el-button>
+            </div>
 
-        </el-tab-pane>
+          </el-tab-pane>
 
-        <!--      切换清空 邮箱 密码 时无法消除错误提示    -->
+          <!--      切换清空 邮箱 密码 时无法消除错误提示    -->
 
-        <el-tab-pane label="修改信息" name="2">
+          <el-tab-pane label="修改信息" name="2">
 
-          <div style="width: 80%; margin: 0 auto">
-            <el-form
-                label-position="Right"
-                label-width="100px"
-                style="max-width: 460px"
-            >
-              <el-form-item label="用户昵称：">
-                <el-input type="text"
-                          style="margin-bottom: 10px"
-                          v-model="c_nickName"
-                />
-              </el-form-item>
+            <div style="width: 80%; margin: 0 auto">
+              <el-form
+                  label-position="Right"
+                  label-width="100px"
+                  style="max-width: 460px"
+              >
+                <el-form-item label="用户昵称：">
+                  <el-input type="text"
+                            style="margin-bottom: 10px"
+                            v-model="c_nickName"
+                  />
+                </el-form-item>
 
-              <el-form-item label="用户简介：">
-                <el-input type="textarea" :autosize="{ minRows: 2, maxRows: 4 }"
-                          style="margin-bottom: 10px"
-                          v-model="c_introduction"
-                />
-              </el-form-item>
+                <el-form-item label="用户简介：">
+                  <el-input type="textarea" :autosize="{ minRows: 2, maxRows: 4 }"
+                            style="margin-bottom: 10px"
+                            v-model="c_introduction"
+                  />
+                </el-form-item>
 
-              <el-form-item label="邮箱：">
-                <el-input type="text"
-                          style="margin-bottom: 10px"
-                          v-model="c_email"
-                          @change="checkEmail">
-                  <template #append>
-                    <el-button  @click="sendCode" :disabled="!(emailCheckRes === 0)">发送验证码</el-button>
-                  </template>
-                </el-input>
-                <p v-if="emailCheckRes === 1" style="
+                <el-form-item label="邮箱：">
+                  <el-input type="text"
+                            style="margin-bottom: 10px"
+                            v-model="c_email"
+                            @change="checkEmail">
+                    <template #append>
+                      <el-button  @click="sendCode" :disabled="!(emailCheckRes === 0)">发送验证码</el-button>
+                    </template>
+                  </el-input>
+                  <p v-if="emailCheckRes === 1" style="
                font-size: 12px;
                color: red;
           ">
-                  邮箱格式错误
-                </p>
-              </el-form-item>
+                    邮箱格式错误
+                  </p>
+                </el-form-item>
 
-              <el-form-item label="验证码">
-                <el-input type="text"
-                          v-model="c_code"
-                          style="
+                <el-form-item label="验证码">
+                  <el-input type="text"
+                            v-model="c_code"
+                            style="
                       width: 200px;
                       float: left ;"/>
-              </el-form-item>
+                </el-form-item>
 
 
-            </el-form>
-            <el-button type="success"
-                       @click="commit"
-                       style="margin-left: 100px">
-              提交修改
-            </el-button>
-          </div>
+              </el-form>
+              <el-button type="success"
+                         @click="commit"
+                         style="margin-left: 100px">
+                提交修改
+              </el-button>
+            </div>
 
-        </el-tab-pane>
+          </el-tab-pane>
 
 
-        <el-tab-pane label="修改密码" name="3">
+          <el-tab-pane label="修改密码" name="3">
 
-          <div style="width: 80%; margin: 0 auto">
-            <el-form
-                label-position="Right"
-                label-width="100px"
-                style="max-width: 460px"
-            >
-              <el-form-item label="原密码：">
-                <el-input v-model="oldPwd" type="password"/>
-              </el-form-item>
+            <div style="width: 80%; margin: 0 auto">
+              <el-form
+                  label-position="Right"
+                  label-width="100px"
+                  style="max-width: 460px"
+              >
+                <el-form-item label="原密码：">
+                  <el-input v-model="oldPwd" type="password"/>
+                </el-form-item>
 
-              <el-form-item label="新密码：">
-                <el-input v-model="newPwd" type="password" @change="checkPwd"/>
-                <p v-if="(pwdCheckRes === 1 || pwdCheckRes === 2)" style="
+                <el-form-item label="新密码：">
+                  <el-input v-model="newPwd" type="password" @change="checkPwd"/>
+                  <p v-if="(pwdCheckRes === 1 || pwdCheckRes === 2)" style="
                font-size: 12px;
                color: red;
                 ">
-                  密码只能由6-20个数字，英文字母或下划线组成
-                </p>
-              </el-form-item>
+                    密码只能由6-20个数字，英文字母或下划线组成
+                  </p>
+                </el-form-item>
 
 
 
-              <el-form-item label="确认密码：">
-                <el-input v-model="confirm" type="password" />
-              </el-form-item>
+                <el-form-item label="确认密码：">
+                  <el-input v-model="confirm" type="password" />
+                </el-form-item>
 
-              <div style="margin-left: 200px;">
-                <el-button type="success" @click="changePwd">
-                  提交修改
-                </el-button>
-              </div>
+                <div style="margin-left: 200px;">
+                  <el-button type="success" @click="changePwd">
+                    提交修改
+                  </el-button>
+                </div>
 
-            </el-form>
-          </div>
+              </el-form>
+            </div>
 
-        </el-tab-pane>
+          </el-tab-pane>
 
-      </el-tabs>
-    </div>
-
-    <div v-if="isOwner === false">
-      <div style="float: left; margin-left: 20px; margin-right: 50px; margin-top: 20px;">
-        <el-avatar :size="200" :src="url" />
+        </el-tabs>
       </div>
 
-      <div style="float:left">
-        <el-form
-            label-position="Right"
-            label-width="100px"
-            style="
+      <div v-if="isOwner === false">
+
+        <div style="width: 80%; margin: 60px auto">
+          <input type="file"
+                 ref="clearFile"
+                 style="display:none"
+                 @change="upload($event)"/>
+          <el-avatar :size="200" style="float: left;" >
+            <template #default>
+              <el-avatar :size="195" :src="url"/>
+            </template>
+          </el-avatar>
+          <el-form
+              label-position="Right"
+              label-width="100px"
+              style="
               max-width: 100%;
               margin: 20px;
-        ">
-          <el-form-item label="用户名：">
-            {{ userId }}
-          </el-form-item>
+            ">
+            <el-form-item label="用户名：">
+              {{ userId }}
+            </el-form-item>
 
-          <el-form-item label="用户昵称：">
-            {{ nickName }}
-          </el-form-item>
+            <el-form-item label="用户昵称：">
+              {{ nickName }}
+            </el-form-item>
 
-          <el-form-item label="邮箱：">
-            {{ email }}
-          </el-form-item>
+            <el-form-item label="邮箱：">
+              {{ email }}
+            </el-form-item>
 
-          <el-form-item label="用户简介：">
-            {{ introduction }}
-          </el-form-item>
-        </el-form>
+            <el-form-item label="用户简介：">
+              {{ introduction }}
+            </el-form-item>
+          </el-form>
 
-        <el-button type="success" @click="goTable" style="margin-left: 50px">
-          进入TA的工作台
-        </el-button>
+          <el-button type="success" @click="goTable" style="margin-left: 300px">
+            进入TA的工作台
+          </el-button>
+        </div>
       </div>
+    </el-card>
 
-    </div>
 
   </div>
 </template>
@@ -439,7 +450,14 @@ export default {
 
     this.getInformation();
     this.getAvatar();
-  }
+  },
+  updated() {
+    this.isOwner = (this.$route.params.userId === this.$store.state.loginUser.userId);
+    this.userId = this.$route.params.userId;
+
+    this.getInformation();
+    this.getAvatar();
+  },
 }
 </script>
 

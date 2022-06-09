@@ -1,21 +1,35 @@
 <template>
-  <el-menu default-active="'/' +this.$route.path.split('/')[1]">
-    <el-button type="primary" style="margin-left: 20px" @click="allRead">全部已读</el-button>
-    <span style="margin-left: 20px">未读数量：{{messageNotRead}}</span>
-  </el-menu>
-  <el-card v-for="i in messages.length" class="box-card" >
-    <template #header>
-      <div class="card-header">
-        <span>{{messages[i-1].title}}</span>
-<!--        仅申请和邀请有可能打开详情，即跳转到对应的团队详情页和个人信息页，另外还有文档被评论-->
-        <el-button type="text" v-if="messages[i-1].msgType===2 || messages[i-1].msgType===4 || messages[i-1].msgType===6"
-                   @click="showConfirm(messages[i-1].msgType, messages[i-1].content, messages[i-1].msgDocId)">详情</el-button>
-        <el-button type="text" v-if="messages[i-1].isRead===false" @click="read(i-1)">标记已读</el-button>
-        <el-tag type="success" v-else style="width: 100px; height: 30px">已读</el-tag>
+  <div style="width: 1000px;margin-left: auto;margin-right: auto;margin-top: 30px; ">
+    <el-card shadow="always" :body-style="{ padding: '40px 20 20 0 ',  }">
+      <el-page-header  title="我的通知" >
+        <template #content>
+          <el-button type="primary" style="margin-left: auto" @click="allRead">全部已读</el-button>
+          <span style="margin-left: 20px">未读数量：{{messageNotRead}}</span>
+        </template>
+      </el-page-header>
+      <div style="display: grid;grid-template-columns: 1fr 1fr;margin-left: auto;margin-right: auto;min-height: 480px">
+        <div v-for="i in messages.length" style="margin-left: auto;margin-right: auto;">
+          <el-card  class="box-card" >
+            <template #header>
+              <div class="card-header">
+                <span>{{messages[i-1].title}}</span>
+                <!--        仅申请和邀请有可能打开详情，即跳转到对应的团队详情页和个人信息页，另外还有文档被评论-->
+                <el-button type="text" v-if="messages[i-1].msgType===2 || messages[i-1].msgType===4 || messages[i-1].msgType===6"
+                           @click="showConfirm(messages[i-1].msgType, messages[i-1].content, messages[i-1])">详情</el-button>
+                <el-button type="text" v-if="messages[i-1].isRead===false" @click="read(i-1)">标记已读</el-button>
+                <el-tag type="success" v-else style="width: 100px; height: 30px">已读</el-tag>
+              </div>
+            </template>
+            <div class="text item">{{messages[i-1].abstract}}</div>
+          </el-card>
+        </div>
+
       </div>
-    </template>
-    <div class="text item">{{messages[i-1].abstract}}</div>
-  </el-card>
+
+    </el-card>
+  </div>
+
+
   <file-comment ref="fileComment" @toFile="toFile"></file-comment>
   <join-request ref="joinRequest" @agree="agree" @refuse="refuse"></join-request>
   <request-result ref="requestResult"></request-result>
@@ -27,6 +41,7 @@ import fileComment from "@/components/fileComment";
 import requestResult from "@/components/requestResult";
 import joinRequest from "@/components/joinRequest";
 import {ElMessage} from "element-plus";
+import {useRouter} from "vue-router";
 export default {
   name: "Message",
   components: {
@@ -38,21 +53,24 @@ export default {
     const fileComment = ref()
     const joinRequest = ref()
     const requestResult = ref()
-    function showConfirm (type, s, fileId) {
+    const router = useRouter();
+    function showConfirm (type, s, msg) {
       switch (type) {
         case 2:
-          ElMessage('跳到个人信息页')
+          ElMessage('跳到个人信息页');
+          router.push({name: 'userApply', params: {teamId : msg.teamId, userId : msg.senderId}});
           break;
         case 4:
-          ElMessage('跳转到团队详情页')
+          ElMessage('跳转到团队详情页');
+          router.push({name: 'team', params: {teamId : msg.teamId}});
           break;
         case 6:
-          fileComment.value.show(s, fileId)
+          fileComment.value.show(s, msg);
           break;
         case 7:
           this.$router.push({
             name: "documentEdit",
-            params: {documentId: fileId}
+            params: {documentId: msg}
           })
           break;
         default:
@@ -269,9 +287,9 @@ export default {
     margin-bottom: 18px;
   }
   .box-card {
-    margin-left: 20px;
-    margin-top: 20px;
-    width: 480px;
-    float: left;
+    /*margin-left: auto;*/
+    /*margin-top: 20px;*/
+    /*width: 400px;*/
+    /*float: left;*/
   }
 </style>

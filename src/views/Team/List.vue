@@ -1,59 +1,57 @@
 <template>
-  <div>
+  <div style="width: 1000px;margin-left: auto;margin-right: auto;margin-top: 30px; ">
+    <el-card shadow="always" :body-style="{ padding: '0 0 0 0 ',  }">
 
-    <div style="
-    padding: 30px;
-    ">
-      <div style="text-align: center;
+    <div style="padding: 30px;">
+        <div style="text-align: center;
       width: 80%;
       margin: 0 auto;">
-        <el-input placeholder="请输入内容"
-                  @keyup.enter="search"
-                  v-model="key"
-                  size="large"
-                  style="
+          <el-input placeholder="请输入内容"
+                    @keyup.enter="search"
+                    v-model="key"
+                    size="large"
+                    style="
                 margin-right: 50px;
                 width: 75%"
-        >
-          <template #prepend>
-            <el-icon><Search/></el-icon>
-          </template>
-          <template #append>
-            <el-button type="primary" @click="search">
-              搜索
-            </el-button>
-          </template>
-        </el-input>
+          >
+            <template #prepend>
+              <el-icon><Search/></el-icon>
+            </template>
+            <template #append>
+              <el-button type="primary" @click="search">
+                搜索
+              </el-button>
+            </template>
+          </el-input>
 
-        <el-button type="success" style="margin-bottom: 5px" @click="createTeam">
-          新建团队
-        </el-button>
-      </div>
-    </div>
-
-
-    <div>
-      <el-row v-for="(team, index) in teamList" :key="team.id"
-              class="block">
-        <el-avatar :src="team.url" style="margin: 10px 30px; float: left" />
-        <div style="float: left;">
-          <h3 >
-            {{team.name}}
-          </h3>
-          <p >
-            {{team.intro}}
-          </p>
-        </div>
-
-        <div style="float: right; position: absolute; right: 80px; top: 20px">
-          <el-button type="" @click="goTeam(index)">
-            进入团队
+          <el-button type="success" style="margin-bottom: 5px" @click="createTeam">
+            新建团队
           </el-button>
         </div>
+      </div>
+      <el-divider />
+      <div style="min-height: 500px">
+        <el-row v-for="(team, index) in teamList" :key="team.id"
+                class="block">
+          <el-avatar :src="team.url" style="margin: 10px 30px; float: left" />
+          <div style="float: left;">
+            <h3 >
+              {{team.name}}
+            </h3>
+            <p >
+              {{team.intro}}
+            </p>
+          </div>
 
-      </el-row>
-    </div>
+          <div style="float: right; position: absolute; right: 80px; top: 20px">
+            <el-button type="" @click="goTeam(index)">
+              进入团队
+            </el-button>
+          </div>
 
+        </el-row>
+      </div>
+    </el-card>
 
   </div>
 </template>

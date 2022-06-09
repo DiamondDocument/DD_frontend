@@ -1,204 +1,189 @@
 <template>
-  <div>
-
-    <div style="height:200px;
+  <div style="width: 1000px;margin-left: auto;margin-right: auto;margin-top: 30px; ">
+    <el-card shadow="always" :body-style="{ padding: '40px 20 20 0 ',  }">
+      <div>
+        <div style="height:200px;
                 width: 80%;
                 margin: 10px auto;
-                background-color: #ddfde8;
-                position: relative;
+                background-color: #EEF0F1;
+                /*position: relative;*/
                 border-style: solid;
                 border-width: 1px;
                 border-color: lightgray;
                 border-radius: 5px;
+                display: flex;
     ">
-
-      <el-image v-if="userType === 0"
-                @click="changeImg"
-                class="teamImg"
-                :src="team_img"
-                fit="fill" />
-      <el-image v-else class="teamImg" :src="team_img" fit="fill" />
-
-      <div class="information" v-if="changing === 0">
-        <h2 style="font-size: 35px">
-          {{ team_name }}
-        </h2>
-        <p style="font-size: 20px">
-          {{ team_introduction }}
-        </p>
-      </div>
-
-      <div class="information" v-if="changing === 1">
-        <el-input type="text"
-                  v-model="team_name"
-                  placeholder="请输入团队名称"/>
-        <el-input type="textarea"
-                  v-model="team_introduction"
-                  placeholder="请输入团队简介"
-                  style="margin-top: 10px"/>
-      </div>
-
-      <div style="
-      height: 200px;
-      position: absolute;
-      top: 15px;
-      right: 100px;
-      ">
-
-        <div style="margin-top: 20px">
-
-          <el-popconfirm
-              v-if="userType === 0"
-              confirm-button-text="确认"
-              cancel-button-text="取消"
-              title="确认要解散团队吗?"
-              @confirm="dropTeam"
-          >
-            <template #reference>
-              <el-button  type="danger" >
-                解散团队
-              </el-button>
+<!--          <el-image v-if="userType === 0"-->
+<!--                    @click=" changeImg"-->
+<!--                    class="teamImg"-->
+<!--                    :src="team_img"-->
+<!--                    fit="fill" />-->
+<!--          <el-image v-else class="teamImg" :src="team_img" fit="fill" />-->
+          <el-avatar :size="150" style="float: left; " @click="changeImg" class="teamImg" >
+            <template #default>
+              <el-avatar :size="146" :src="team_img" fit="cover"/>
             </template>
-          </el-popconfirm>
+          </el-avatar>
+          <div class="information"  style="height: 100%; ">
+            <div style="margin-top: 20px;height: 70%">
+              <div v-if="changing === 0" >
+                <h2 style="font-size: 35px">
+                  {{ team_name }}
+                </h2>
+                <p style="font-size: 18px;color:  #5B6266;margin-top: 10px">
+                  {{ team_introduction }}
+                </p>
+              </div>
+              <div v-else>
+                <div>
+                  <el-input type="text"
+                            v-model="team_name"
+                            placeholder="请输入团队名称" style="width: 100px;margin-right: auto"/>
+                </div>
 
-
-          <el-popconfirm
-              v-else-if="userType === 1"
-              confirm-button-text="确认"
-              cancel-button-text="取消"
-              title="确认要离开团队吗?"
-              @confirm="leaveTeam"
-          >
-            <template #reference>
-              <el-button  type="danger" >
-                离开团队
+                <el-input type="textarea"
+                          v-model="team_introduction"
+                          placeholder="请输入团队简介"
+                          style="margin-top: 10px;width: 150px" />
+              </div>
+            </div>
+            <div style="margin-bottom: 20px;margin-top: auto;">
+              <el-button v-if="userType === 0 && changing === 0"
+                         @click="change">修改</el-button>
+              <input type="file"
+                     ref="clearFile"
+                     style="display:none"
+                     @change="upload($event)"/>
+              <el-button v-if="userType === 0 && changing === 1"
+                         @click="endChange">
+                完成
               </el-button>
-            </template>
-          </el-popconfirm>
-
-
-          <el-button v-else-if="userType === 2" type="info" disabled="true">
-            待审核
-          </el-button>
-
-          <el-button v-else-if="userType === 3" type="success" @click="accept">
-            同意邀请
-          </el-button>
-
-          <el-button v-else-if="userType === 4" type="success" @click="apply">
-            申请加入
-          </el-button>
-
-          <div v-else type="info" disabled="true">
-            请先登录
+            </div>
           </div>
+          <div style="margin: auto;">
+
+            <div style="">
+              <el-popconfirm
+                  v-if="userType === 0"
+                  confirm-button-text="确认"
+                  cancel-button-text="取消"
+                  title="确认要解散团队吗?"
+                  @confirm="dropTeam"
+              >
+                <template #reference>
+                  <el-button  type="danger" style="width: 150px" >
+                    解散团队
+                  </el-button>
+                </template>
+              </el-popconfirm>
+              <el-popconfirm
+                  v-else-if="userType === 1"
+                  confirm-button-text="确认"
+                  cancel-button-text="取消"
+                  title="确认要离开团队吗?"
+                  @confirm="leaveTeam"
+              >
+                <template #reference>
+                  <el-button  type="danger" style="width: 150px" >
+                    离开团队
+                  </el-button>
+                </template>
+              </el-popconfirm>
+
+
+              <el-button v-else-if="userType === 2" type="info" disabled="true" style="width: 150px">
+                待审核
+              </el-button>
+
+              <el-button v-else-if="userType === 3" type="success" @click="accept" style="width: 150px">
+                同意邀请
+              </el-button>
+
+              <el-button v-else-if="userType === 4" type="success" @click="apply" style="width: 150px">
+                申请加入
+              </el-button>
+
+              <div v-else type="info" disabled="true" style="width: 150px">
+                请先登录
+              </div>
+            </div>
+            <el-button v-if="userType === 0"
+                       @click="invite"
+                       type="primary"
+                       style="margin-top: 10px;width: 150px">
+              邀请新成员
+            </el-button>
+            <br>
+            <el-button @click="enterTable"
+                       type="success"
+                       style="margin-top: 10px;width: 150px">
+              进入团队工作台
+            </el-button>
+          </div >
         </div>
+        <div style="height: 20px"></div>
+        <el-page-header  icon="Avatar" content="团队成员" title="        " />
+        <el-divider />
 
-        <el-button v-if="userType === 0"
-                   @click="invite"
-                   type="primary"
-                   style="margin-top: 10px">
-          邀请新成员
-        </el-button>
-        <br>
-
-        <el-button @click="enterTable"
-                   type="success"
-                   style="margin-top: 10px">
-          进入团队工作台
-        </el-button>
-
-
-
-      </div>
-
-      <div style="
-           /*margin-top: 120px;*/
-           width: 30%;
-           position: absolute;
-           top: 137px;
-           left: 310px;
-      ">
-        <el-button v-if="userType === 0 && changing === 0"
-                   @click="change">
-          修改
-        </el-button>
-        <input type="file"
-                  ref="clearFile"
-                  style="display:none"
-                  @change="upload($event)"/>
-        <el-button v-if="userType === 0 && changing === 1"
-                   @click="changeImg">
-        修改头像
-        </el-button>
-        <el-button v-if="userType === 0 && changing === 1"
-                   @click="endChange">
-          完成
-        </el-button>
-      </div>
-
-
-    </div>
-
-    <div style="margin-top: 10px;
-                /*position: relative;*/
-                top:180px;
-                padding: 20px ">
-      <el-row v-for="mem in memList" :key="mem.id" class="block">
-        <div @click="goUser(mem.userId)"
-             style="
+        <div style="">
+          <el-row v-for="mem in memList" :key="mem.id" class="block" style="width: 80%;height: 70px;">
+            <div @click="goUser(mem.userId)"
+                 style="
              float: right;
              width: 80%">
-          <el-avatar :src="mem.url"
-                     style="
+              <el-avatar :src="mem.url"
+                         style="
                      margin-left: 20px;
                      float: left;
                      margin-top: 20px"/>
-          <div style="float: left; margin-left: 25px; margin-top: 25px">
-            {{mem.name}}
-          </div>
-        </div>
-        <div v-if="userType === 0 && mem.userId !== this.$store.state.loginUser.userId"
-             style="
+              <div style="float: left; margin-left: 25px; margin-top: 25px">
+                {{mem.name}}
+              </div>
+            </div>
+            <div v-if="userType === 0 && mem.userId !== this.$store.state.loginUser.userId"
+                 style="
              height: 80px;
               position: absolute;
               right: 15px;
               float: right;">
 
-          <el-popconfirm
-              confirm-button-text="确认"
-              cancel-button-text="取消"
-              title="确认将该成员移除团队吗?"
-              @confirm="removeMem(mem.userId)"
-          >
-            <template #reference>
-              <el-button  type="danger" style="margin: 5px">
-                移除成员
-              </el-button>
-            </template>
-          </el-popconfirm>
+              <el-popconfirm
+                  confirm-button-text="确认"
+                  cancel-button-text="取消"
+                  title="确认将该成员移除团队吗?"
+                  @confirm="removeMem(mem.userId)"
+              >
+                <template #reference>
+                  <el-button  type="danger" style="margin: 5px">
+                    移除成员
+                  </el-button>
+                </template>
+              </el-popconfirm>
 
-          <br>
+              <br>
 
-          <el-popconfirm
-              confirm-button-text="确认"
-              cancel-button-text="取消"
-              title="确认要将队长权限转让给该成员吗?"
-              @confirm="transPri(mem.userId)"
-          >
-            <template #reference>
-              <el-button style="margin: 5px">
-                转让权限
-              </el-button>
-            </template>
-          </el-popconfirm>
+              <el-popconfirm
+                  confirm-button-text="确认"
+                  cancel-button-text="取消"
+                  title="确认要将队长权限转让给该成员吗?"
+                  @confirm="transPri(mem.userId)"
+              >
+                <template #reference>
+                  <el-button style="margin: 5px">
+                    转让权限
+                  </el-button>
+                </template>
+              </el-popconfirm>
 
+            </div>
+
+          </el-row>
         </div>
 
-      </el-row>
-    </div>
-
+      </div>
+    </el-card>
   </div>
+
 </template>
 
 <script>
@@ -264,6 +249,7 @@ export default {
     },
 
     changeImg: function (){
+      if(this.userType!==0)return;
       console.log("changeImg is called!");
       console.log('with userType' + this.userType);
       this.$refs.clearFile.click();
@@ -311,14 +297,17 @@ export default {
         if(response.status === 200){
           console.log('dropTeam data = ');
           console.log(response.data);
-          if (response.data.code === 0) ElMessage("解散成功！");
+          if (response.data.code === 0) {
+            ElMessage("解散成功！");
+            this.$router.back();
+          }
           else if (response.data.code === 1) ElMessage('你不是队长');
           else ElMessage('系统错误');
         }else console.log("status is not 200!");
       }).catch((err)=>{
         console.log(err);
       });
-      this.$router.push({name: 'table', params:{info: 'my'}});
+      // this.$router.push({name: 'table', params:{info: 'my'}});
     },
 
     // 无接口？！！
@@ -511,6 +500,7 @@ export default {
     this.teamId = this.$route.params.teamId;
     this.checkUserType();
     this.getTeamInformation();
+    console.log('parseInt(0.0000005) = ',parseInt(0.0000005));
   }
 }
 
@@ -518,9 +508,9 @@ export default {
 
 <style scoped>
 .information {
-  position: absolute;
-  top: 20px;
-  left: 257px;
+  /*position: absolute;*/
+  /*top: 20px;*/
+  /*left: 257px;*/
 }
 .teamImg {
   float: left;
@@ -530,9 +520,9 @@ export default {
 }
 .block {
   margin: 10px auto;
-  padding: 10px;
-  width: 60%;
-  height: 100px;
+  /*padding: 10px;*/
+  /*width: 60%;*/
+  /*height: 100px;*/
   border-style: solid;
   border-width: 1px;
   border-color: lightgray;

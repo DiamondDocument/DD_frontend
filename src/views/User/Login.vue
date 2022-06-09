@@ -3,10 +3,10 @@
     <div style="margin-left: auto;margin-right: auto;width: 300px">
       <img src="../../assets/logo2.png" alt="logo" style="width: 300px"/>
     </div>
-    <div style="margin-top:0px ;margin-left: auto;margin-right: auto; width: 80px; ">
+    <div style="margin:0px auto 10px auto; width: 80px; ">
       <h2 class="title" style="margin:0 auto">登录</h2>
     </div>
-    <div class="Wireframe">
+    <div class="Wireframe" style="background-color: rgba(255,255,255,0.5)">
       <el-tabs :model-value="activeName" class="demo-tabs" stretch="true" @tab-click="handleClick">
         <el-tab-pane label="用户名登录" name="first">
 

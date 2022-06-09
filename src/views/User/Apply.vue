@@ -120,8 +120,8 @@ export default {
       return this.axios.get("team/team-status",{
         params:{
           teamId: this.teamId,
-          // userId: this.$store.state.loginUser.userId,
-          userId: 'admin',
+          userId: this.$store.state.loginUser.userId,
+          // userId: 'admin',
         }
       }).then(res => {
         console.log('userType data =  ');

@@ -2,7 +2,7 @@
 <!--  space调用的时候才会显示的一个div-->
   <div v-if="spaceUsing">
     <el-menu default-active="'/' +this.$route.path.split('/')[1]" >
-      <el-button type="primary" style="float: right; margin-right: 20px">
+      <el-button type="primary" style="float: right; margin-right: 20px;">
         <span style="vertical-align: middle" @click="this.$emit('cancel')">取消</span>
       </el-button>
     </el-menu>
