@@ -122,7 +122,7 @@
           </div >
         </div>
         <div style="height: 20px"></div>
-        <el-page-header  icon="Avatar" content="团队成员" title="        " />
+        <el-page-header style="margin-left: 20px;" icon="Avatar" content="团队成员" title="        " />
         <el-divider />
 
         <div style="">
