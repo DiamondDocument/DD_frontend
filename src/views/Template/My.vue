@@ -118,14 +118,10 @@ export default {
         this.$emit('useTmp', tmp.tempId, tmp.tempName)
       }
       else{
-        this.$router.push({name: 'templateDetail',
-          params:{templateId:tmp.tempId,
-            templateName:tmp.tempName,
-            spaceUsing:this.spaceUsing,
-            parentId:this.parentId}})
+        this.selectPos=true
       }
     },
-    commit(tmp, id){
+    commit(tempId, tempName, parentId){
       console.log("parent:",id)
       let f = new FormData()
       f.append("type", '1')
@@ -133,14 +129,13 @@ export default {
       f.append("authority", '3')
       f.append("creatorId", this.$store.state.loginUser.userId)
       f.append("templateId", tempId)
-      if (this.folderId!=null){
-        f.append("parentId", this.folderId)
+      if (parentId!=null){
+        f.append("parentId", parentId)
       }
       this.$axios.post("/file/create", f).then((response)=>{
         if(response.status === 200){
           if (response.data.code === 0) {
             ElMessage('创建成功')
-            this.getFolderData(false)
           } else if(response.data.code===-1){
             ElMessage('创建失败')
           }else if (response.data.code===1){

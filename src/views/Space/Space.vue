@@ -234,7 +234,6 @@ export default {
         if(response.status === 200){
           if (response.data.code === 0) {
             ElMessage('创建成功')
-            this.getFolderData(false)
           } else if(response.data.code===-1){
             ElMessage('创建失败')
           }else if (response.data.code===1){
