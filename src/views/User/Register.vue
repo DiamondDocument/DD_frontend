@@ -21,7 +21,7 @@
           <div>
             <p v-if="nameCheckRes === 0" style="
                font-size: 12px;
-               color: lightgreen;
+               color: green;
           ">
               可用的用户名
             </p>
