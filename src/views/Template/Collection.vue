@@ -1,6 +1,6 @@
 <template>
 
-  <div style="width: 1043px;margin-left: auto;margin-right: auto;margin-top: 30px; ">
+  <div style="width: 1043px;margin-left: auto;margin-right: auto;margin-top: 30px; " v-if="!this.selectPos">
     <el-card shadow="always" :body-style="{ padding: '40px 20 20 0 ',backgroundColor: '#F7F7F7'  }" >
       <div style="height: 30px"></div>
       <el-page-header style="margin-left: 20px" icon="PictureFilled" content="收藏模板" title="        " />
@@ -45,12 +45,27 @@
 
 <script>
 import {ElMessage} from "element-plus";
+import tmpPos from "@/views/Space/tmpPos";
+import {ref} from "vue";
 
 export default {
   name: "Collection.vue",
+  props: {
+    "spaceUsing": false,
+    "parentId": null,
+  },
+  components: {tmpPos},
+  setup(){
+    const tmpPos = ref()
+    return{
+      tmpPos
+    }
+  },
   data() {
     return {
       userId: '',
+      selectPos: false,
+      tmp: null,
       templates: []
     }
   },
@@ -106,6 +121,45 @@ export default {
       }).catch((err) => {
         console.log(err);
       });
+    },
+    useTmp(tmp){
+      console.log("in and spaceusing is", this.spaceUsing)
+      if(this.spaceUsing){
+        this.$emit('useTmp', tmp.tempId, tmp.tempName)
+      }
+      else{
+        this.tmp = tmp
+        this.selectPos=true
+      }
+    },
+    commit(parentId){
+      let f = new FormData()
+      f.append("type", '1')
+      f.append("name", this.tmp.tempName)
+      f.append("authority", '3')
+      f.append("creatorId", this.$store.state.loginUser.userId)
+      f.append("templateId", this.tmp.tempId)
+      if (parentId!=null){
+        f.append("parentId", parentId)
+      }
+      this.$axios.post("/file/create", f).then((response)=>{
+        if(response.status === 200){
+          if (response.data.code === 0) {
+            ElMessage('创建成功')
+          } else if(response.data.code===-1){
+            ElMessage('创建失败')
+          }else if (response.data.code===1){
+            ElMessage('文件重名，已修改')
+          }else{
+            ElMessage('其他错误')
+          }
+        }else{
+          ElMessage({ message: "status = " + response.status, type: 'warning'});
+        }
+      }).catch((err) => {
+        console.log(err);
+      })
+      this.selectPos=false
     },
   }
 }
