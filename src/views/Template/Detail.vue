@@ -1,5 +1,5 @@
 <template>
-  <div style="width: 1043px;margin-left: auto;margin-right: auto;margin-top: 30px; ">
+  <div v-if="!selectPos" style="width: 1043px;margin-left: auto;margin-right: auto;margin-top: 30px; ">
     <el-card shadow="always" :body-style="{ padding: '40px 20 20 0 ',backgroundColor: '#F7F7F7'  }" >
       <el-page-header style="margin-left: 20px" icon="PictureFilled" :content="name+'  详情'" title="        " />
       <el-divider/>
@@ -29,7 +29,7 @@
               </el-form-item>
             </el-form>
             <div>
-              <el-button type="primary" round style="float: right" >立即使用</el-button>
+<!--              <el-button type="primary" round style="float: right" @click="useTmp">立即使用</el-button>-->
             </div>
           </el-main>
         </el-container>
@@ -43,11 +43,13 @@
 <script>
 import {ElMessage} from "element-plus";
 import tmpPos from "@/views/Space/tmpPos";
+import {ref} from "vue";
 export default {
   name: "Detail.vue",
-  components:[tmpPos],
+  components:{tmpPos},
   data() {
     return {
+      tmp: '',
       userId: '',
       tempId: '',
       name: '',
@@ -62,7 +64,12 @@ export default {
       ],
     }
   },
-
+  setup(){
+    const tmpPos = ref()
+    return{
+      tmpPos
+    }
+  },
   created() {
     this.tempId = this.$route.params.templateId;
     this.userId = this.$store.state.loginUser.userId;
@@ -135,13 +142,7 @@ export default {
   },
   methods:{
     //lyh的函数，非空间组件调用时，调用选择位置的组件; 空间组件调用时（准确说是Space调用My，My路由push到Detail时），直接由传来的参数创建文档
-    useTmp(){
-      if (this.spaceUsing==='false')
-        this.selectPos=true
-      else{
-        this.commit(this.$route.params.parentId)
-      }
-    },
+
     //lyh的函数，位置选择界面确定好创建模板的位置id后进入此函数
     commit(id){
       this.$axios.post("/file/create", {
@@ -169,6 +170,19 @@ export default {
         console.log(err);
       })
       this.selectPos=false
+    },
+    useTmp(){
+      console.log("in and spaceusing is", this.spaceUsing)
+      if(this.spaceUsing){
+        this.$emit('useTmp', this.tempId, this.name)
+      }
+      else{
+        this.tmp = {
+          tempId: this.tempId,
+          tempName: this.name,
+        }
+        this.selectPos=true
+      }
     },
   },
 }
